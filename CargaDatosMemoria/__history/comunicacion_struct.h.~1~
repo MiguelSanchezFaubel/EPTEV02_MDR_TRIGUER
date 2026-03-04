@@ -1,0 +1,114 @@
+/*
+*   File: comunicacion_struct.h
+*   
+*   Descripción: Header file que describe los parámetros 
+*      necesarios para la comunicación Sauron->Orco con structs
+*   
+*   Proyecto:EPTE V2.1
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+
+/******************************** Definicion de constantes/variables *****************************************/
+// Identificación de paquetes
+#define MODO_CHECK_ALIVE        1         // 1 - Identifica un paquete del tipo check alive
+#define MODO_START_STOP         2         // 2 - Identifica un paquete del tipo START/STOP
+#define MODO_TRAT_ELECT         3         // 3 - Identifica un paquete del tipo de configuración del tratamiento en electroestimulación
+#define MODO_TRAT_ELECT_ACTIVO  4         // 4 - Identifica un paquete del tipo de tratamiento de electroestimulación en activo
+#define MODO_MEDIDAS_OBTENIDAS  5         // 5 - Identifica un paquete del tipo de medidas obtenidas para representación
+#define MODO_ERRORES            6         // 6 - Identifica un paquete del tipo de errores
+#define MODO_ACK                7         // 7 - Identifica un paquete del tipo ACK
+
+// Comandos de funcionamiento
+#define COMANDO_START               0xAA        // Comando de START
+#define COMANDO_STOP                0xBB        // Comando de STOP
+#define COMANDO_CHECK_ALIVE         0xCA        // Comando Check Alive
+#define COMANDO_ACK                 0xCC        // Comando identificador del ACK
+
+// Tipos de errores
+#define ERROR_ELECTRODO_CHA     0x0001      // Indica que hay un error de electrodo en el canal A               
+#define ERROR_ELECTRODO_CHB     0x0002      // Indica que hay un error de electrodo en el canal B           
+#define ERROR_ELECTRODO_CHC     0x0004      // Indica que hay un error de electrodo en el canal C           
+#define ERROR_SIMETRIA_CHA      0x0008      // Indica que hay un error de simetría en el canal A
+#define ERROR_SIMETRIA_CHB      0x0010      // Indica que hay un error de simetría en el canal B
+#define ERROR_SIMETRIA_CHC      0x0020      // Indica que hay un error de simetría en el canal C
+#define ERROR_CALIBRADO_CHA     0x0040      // Indica que hay un error de calibrado en el canal A
+#define ERROR_CALIBRADO_CHB     0x0080      // Indica que hay un error de calibrado en el canal B
+#define ERROR_CALIBRADO_CHC     0x0100      // Indica que hay un error de calibrado en el canal C
+#define ERROR_ACK               0x0200      // Indica que hay un error de ACK 
+#define ERROR_CHECHSUM          0x0400      // Indica que hay un error de CHECKSUM    
+#define ERROR_ACELEROMETRO      0x0800      // Indica que hay un error del acelerómmetro (caida libre) 
+
+// Otras definiciones
+//#define CHECKSUM                     // Si está descomentado, se hace uso del checksum
+
+#ifdef CHECKSUM                         // Si se ha definido el uso de CHECKSUM
+int8 gi8CheckSum;                       // Crea la variable para el checksum
+#endif
+
+#define BUFFER_SIZE_COM 250             // Define el tamaño del buffer
+int8 i8BufferEntrada[BUFFER_SIZE_COM];  // Define el buffer del tamaño definido anteriormente
+
+int16 i16ErroresOcurridos=0;            // Variable que indican los errores ocurridos
+
+/********************************* Definición de structs ***********************************************/
+struct __attribute__((packed)){
+    int8 si8CanalesElec;
+    int8 si8SimetriaCanales;
+    int1 sbSimetriaElec[3];
+    int1 sbPolaridadElec[3];
+    int16 si16TacElec;
+    int16 si16TdElec;
+    int16 si16TfElec12;
+    int16 si16TfElec23;
+    int8 si8TrElec;
+    int8 si8Nrep;
+    int16 si16IElec[3];
+    int16 si16FrecElec[3];
+    int16 si16PW_plusElec[3]; 
+    int16 si16PW_minusElec[3];
+    int8 si8Checksum;
+}structTratamientoElectro;
+char acBufferTratamientoElectro[sizeof(structTratamientoElectro)];
+
+struct __attribute__((packed)){
+    int8 si8CanalesElec;
+    int16 si16IElec[3];
+    int8 si8Checksum;
+}structTratamientoElectroActivo;
+char acBufferTratamientoElectroActivo[sizeof(structTratamientoElectroActivo)];
+
+struct __attribute__((packed)){
+    int16 si16IMedElec[3];
+    int16 si16IMedElec[3];
+    int8 si8Checksum;
+}structMedidasElectro;
+char acBufferMedidasElectro[sizeof(structMedidasElectro)];
+
+/********************************* Prototipo de funciones ***********************************************/
+
+int8 enviaPaquete(int8 i8ModoStruct);
+
+int8 enviaPaquete(int8 i8ModoStruct,int6 i8InputData);
+
+
+
+
+#ifdef CHECKSUM
+/*
+*   Función: calculaChecksum
+*
+*   Descripción: Calcula el chekcsum del valor introducido
+*
+*   Parámetros de entrada:
+*      - gi8CheckSum: Valor a calcular del checksum
+*
+*   Parámetros de salida:
+*      - int8      - Valor calculado del checksum
+*/
+int8 calculaChecksum(int8 gi8CheckSum);
+#endif
+
+

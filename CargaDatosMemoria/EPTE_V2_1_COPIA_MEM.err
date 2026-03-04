@@ -1,0 +1,20 @@
+>>> Warning 237 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\glcd_fonts.h" Line 180(40,41): Extra comma
+>>> Warning 237 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\glcd_fonts.h" Line 283(40,41): Extra comma
+>>> Warning 237 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\glcd_fonts.h" Line 450(80,81): Extra comma
+>>> Warning 237 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\xlargeFont.c" Line 2571(20,21): Extra comma
+>>> Warning 237 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\icon.h" Line 88(83,84): Extra comma
+>>> Warning 237 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\Pictures\main_logo.c" Line 76(184,185): Extra comma
+>>> Warning 237 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Idiomas\castellano_mem.c" Line 274(7,8): Extra comma
+>>> Warning 237 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Idiomas\ingles_mem.c" Line 274(7,8): Extra comma
+>>> Warning 202 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\fat.c" Line 20(7,31): Variable never used:   i32OffsetDireccionIdioma
+>>> Warning 202 "C:\Program Files (x86)\PICC\Drivers\math.h" Line 1285(39,41): Variable never used:   ICON_PIRATA
+>>> Warning 202 "C:\Program Files (x86)\PICC\Drivers\math.h" Line 1292(6,11): Variable never used:   ICON_EPTE
+>>> Warning 202 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\Pictures\main_logo.c" Line 79(7,15): Variable never used:   iImagRow
+>>> Warning 202 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Drivers\Pictures\main_logo.c" Line 80(7,15): Variable never used:   iImagCol
+>>> Warning 202 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Sauron\internal_eeprom_registers.h" Line 29(6,26): Variable never used:   i8OffsetErrorParcial
+>>> Warning 202 "C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\Sauron\internal_eeprom_registers.h" Line 46(6,25): Variable never used:   i8OffsetContParcial
+>>> Warning 202 "EPTE_V2_1_COPIA_MEM.c" Line 132(11,18): Variable never used:   cstring
+>>> Warning 202 "EPTE_V2_1_COPIA_MEM.c" Line 133(11,16): Variable never used:   iConv
+      Memory usage:   ROM=32%      RAM=6% - 6%
+      0 Errors,  17 Warnings.
+Build Successful.

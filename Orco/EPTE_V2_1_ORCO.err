@@ -1,0 +1,59 @@
+>>> Warning 225 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ComLib\comunicacion_struct.h" Line 60(24,75): Duplicate #define
+>>> Warning 225 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ComLib\comunicacion_struct.h" Line 61(24,75): Duplicate #define
+>>> Warning 225 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ProtocolosTest\protocolos_test.h" Line 76(22,81): Duplicate #define
+>>> Warning 225 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ProtocolosTest\protocolos_test.h" Line 77(22,81): Duplicate #define
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DIV3232)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DTOF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@MULFF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DIVFF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@FLT)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@MUL1616)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@SFTOI)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@ITOF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (read_adc_chupi_piruli)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@ADDFF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (@FTOSD)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaIncrementosFrecuencia)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (IncrementaFrecuencia)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (ConfiguraDutyMAxyMin)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculatiempoActual)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaDutyActualAM)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (CargaPWMActual)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10861(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaYCargaValorTimer1)
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 472(6,16): Variable never used:   bEnviaOrco
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 473(6,23): Variable never used:   bPrimeraIteracion
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 474(6,27): Variable never used:   bComprobacionMaxValue
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 475(6,33): Variable never used:   bComprobacionErrorElectrodo
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 506(6,16): Variable never used:   i8PulsosTB
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 507(6,26): Variable never used:   i8PulsosEjecutadosTB
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 618(7,23): Variable never used:   i16DutyNanterior
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 619(7,23): Variable never used:   i16DutyPanterior
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 628(7,20): Variable never used:   i32TDesfaseTB
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 669(7,15): Variable never used:   i16Debug
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 670(7,18): Variable never used:   i32Contador
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 689(7,21): Variable never used:   fDutyFinalTren
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 705(6,36): Variable never used:   i8ContadorIncrementosDecimales
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 719(6,32): Variable never used:   bHayPulsoEn100msAnteriores
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 725(7,15): Variable never used:   fDutyAMI
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 730(7,26): Variable never used:   i32TiempoOffsetTMR1
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 732(6,32): Variable never used:   i8DivTimer1NuevaFrecuencia
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 733(7,32): Variable never used:   gi16Timer1NuevaFrecuencia
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 735(6,34): Variable never used:   bPrimerPulsoDespuesDelOffset
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 737(7,22): Variable never used:   gi16Timer1Ofset
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 757(6,21): Variable never used:   bUltimoTiempoAM
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\Orco\EPTE_V2_1_ORCO.h" Line 758(6,21): Variable never used:   bPrimerTiempoAM
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ComLib\comunicacion_struct.h" Line 160(6,19): Variable never used:   bAguantaEnvio
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ComLib\comunicacion_struct.h" Line 169(6,19): Variable never used:   bEsperandoACK
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ProtocolosTest\protocolos_test.h" Line 96(6,25): Variable never used:   i8BufferEntradaTest
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ProtocolosTest\protocolos_test.h" Line 98(6,23): Variable never used:   i8BufferIndexTest
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ProtocolosTest\protocolos_test.h" Line 99(6,24): Variable never used:   i8DatoRecibidoTest
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ProtocolosTest\protocolos_test.h" Line 100(6,23): Variable never used:   bCasiRecibidoTest
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ProtocolosTest\protocolos_test.h" Line 101(6,23): Variable never used:   bDatoRecibidoTest
+>>> Warning 202 "G:\Mi unidad\MIGUEL drive\Escritorio\FIRMAWARE EPTEV02\EPTEV02_MDR\ProtocolosTest\protocolos_test.h" Line 113(6,20): Variable never used:   i8LengthHeader
+>>> Warning 202 "EPTE_V2_1_ORCO.c" Line 0(0,0): Variable never used:   START_TEST
+>>> Warning 202 "EPTE_V2_1_ORCO.c" Line 0(0,0): Variable never used:   STOP_TEST
+>>> Warning 202 "EPTE_V2_1_ORCO.c" Line 0(0,0): Variable never used:   PROTO_TEST
+>>> Warning 202 "EPTE_V2_1_ORCO.c" Line 6779(11,27): Variable never used:   tras_i8increDuty
+      Memory usage:   ROM=89%      RAM=41% - 45%
+      0 Errors,  56 Warnings.
+Build Successful.

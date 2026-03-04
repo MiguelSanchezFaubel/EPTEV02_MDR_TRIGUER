@@ -1,0 +1,801 @@
+/*
+*   Header File: protocolos_test.h
+*   
+*   Descripción: Definiciones de los registros EEPROM 
+*   
+*   Proyecto: EPTE 2
+*   Versión: 3.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+// ---------------------------- Definiciones ----------------------------
+#define PACKET_SAURON       0       // Define que el paquete de test es para Sauron
+#define PACKET_ORCO         1       // Define que el paquete de test es para Orco
+
+// Partes
+#define PARTE_ALIMENTACION_30V      0x00000001    
+#define PARTE_ALIMENTACION_CANAL_A  0x00000002        
+#define PARTE_ALIMENTACION_CANAL_B  0x00000004        
+#define PARTE_ALIMENTACION_CANAL_C  0x00000008        
+#define PARTE_PWM_CANAL_A           0x00000010
+#define PARTE_PWM_CANAL_B           0x00000020
+#define PARTE_PWM_CANAL_C           0x00000040
+#define PARTE_PULSO_1_CANAL_A       0x00000080    
+#define PARTE_PULSO_2_CANAL_A       0x00000100    
+#define PARTE_PULSO_1_CANAL_B       0x00000200    
+#define PARTE_PULSO_2_CANAL_B       0x00000400    
+#define PARTE_PULSO_1_CANAL_C       0x00000800    
+#define PARTE_PULSO_2_CANAL_C       0x00001000    
+#define PARTE_POR_DEFINIR_1         0x00002000
+#define PARTE_POR_DEFINIR_2         0x00004000
+#define PARTE_POR_DEFINIR_3         0x00008000
+#define PARTE_POR_DEFINIR_4         0x00010000
+#define PARTE_POR_DEFINIR_5         0x00020000
+#define PARTE_POR_DEFINIR_6         0x00040000
+#define PARTE_POR_DEFINIR_7         0x00080000
+#define PARTE_POR_DEFINIR_8         0x00100000
+#define PARTE_POR_DEFINIR_9         0x00200000
+#define PARTE_POR_DEFINIR_10        0x00400000
+#define PARTE_POR_DEFINIR_11        0x00800000
+#define PARTE_POR_DEFINIR_12        0x01000000
+#define PARTE_POR_DEFINIR_13        0x02000000
+#define PARTE_POR_DEFINIR_14        0x04000000
+#define PARTE_POR_DEFINIR_15        0x08000000
+#define PARTE_POR_DEFINIR_16        0x10000000
+#define PARTE_POR_DEFINIR_17        0x20000000
+#define PARTE_POR_DEFINIR_18        0x40000000
+#define PARTE_POR_DEFINIR_19        0x80000000
+
+// Definiciones para las partes
+#define OFF                 0
+#define ON                  1
+
+#define POSITIVO            0
+#define NEGATIVO            1
+
+// Protocolos
+#define PROTOCOLO_CANAL_A   0       // Asigna el valor del protocolo del canal A
+#define PROTOCOLO_CANAL_B   1       // Asigna el valor del protocolo del canal B
+#define PROTOCOLO_CANAL_C   2       // Asigna el valor del protocolo del canal C
+#define PROTOCOLO_xxxxx     3       // Asigna el valor del protocolo a xxxxx
+
+// Pasos
+#define PASO_0              0       // Asigna el valor del paso 0
+#define PASO_1              1       // Asigna el valor del paso 1
+#define PASO_2              2       // Asigna el valor del paso 2
+#define PASO_3              3       // Asigna el valor del paso 3
+#define PASO_4              4       // Asigna el valor del paso 4
+#define PASO_5              5       // Asigna el valor del paso 5
+#define PASO_6              6       // Asigna el valor del paso 6
+#define PASO_7              7       // Asigna el valor del paso 7
+#define PASO_8              8       // Asigna el valor del paso 8
+#define PASO_9              9       // Asigna el valor del paso 9
+
+// Ramas
+#define RAMA_POSITIVA       0       // Asigna el valor del test de rama positiva
+#define RAMA_NEGATIVA       1       // Asigna el valor del test de rama negativa
+
+#define BUFFER_TEST_LENGTH  30      // Define el tamaño del buffer de entrada para el test
+
+#define POSICION_DATO_PROTO 6       // Asigna la posición del dato del protocolo
+#define POSICION_DATO_PASO  9       // Asigna la posición del dato del paso
+#define POSICION_DATO_RAMA  12      // Asigna la posición del dato de la rama
+#define POSICION_DATO_DUTY  14      // Asigna la posición del dato del duty
+
+#define DUTY_MAX_CORRIENTE  900     // Duty para la máxima corriente
+
+// ---------------------------- Prototipo de funciones ----------------------------
+int8 lecturaPaqueteTest();
+int8 obtencionProtocoloSeleccionado();
+int8 obtencionPasoSeleccionado();
+int8 obtencionRamaSeleccionada();
+int16 obtencionDutySeleccionado();
+
+// ---------------------------- Variables Globales ----------------------------
+char i8BufferEntradaTest[BUFFER_TEST_LENGTH];   // Define el buffer de entrada de datos del test
+char i8BufferCopiaTest[BUFFER_TEST_LENGTH];     // Define el buffer de entrada de datos del test
+int8 i8BufferIndexTest=0;                       // Determina la longitud del paquete recibido
+int8 i8DatoRecibidoTest=0;                      // Dato recibido en el buffer 
+int1 bCasiRecibidoTest=0;                       // Flag que indica que casi se ha recibido el fin de trama, dependerá del siguiente dato recibido
+int1 bDatoRecibidoTest=0;                       // Flag que indica que se ha recibido el paquete correctamente
+int8 i8ProtocoloSeleccionado=0;
+int8 i8PasoSeleccionado=0;
+int8 i8RamaSeleccionada=0;
+int8 i16DutySeleccionado=0;
+int16 i16MedidaTensionCargaRaw=0;
+float fTensionCarga=0;
+int16 i16MedidaCorrienteCargaRaw=0;
+int16 i16CorrienteCarga=0;
+  
+// ---------------------------- Códigos ----------------------------
+int8 i8LengthHeader=6;                          // La cabezera se compone de 6 caracteres
+const char START_TEST[] =   "$ST_TS";           // Cabezera START TEST
+const char STOP_TEST[] =    "$SP_TS";           // Cabezera STOP TEST
+const char PROTO_TEST[] =   "$PROTO";           // Cabezera PROTO - Usar con sprintf y enviar string resultante
+const char PARTE_TEST[] =   "$PARTE";           // Cabezera PARTE - Usar con sprintf y enviar string resultante
+
+// ---------------------------- Código para Sauron ----------------------------
+#ifdef SAURON           // Aqui se definen las funciones que van a ser utilizadas por Sauron
+int8 lecturaPaqueteTest(){
+    
+    int8 i8Return=0;
+    
+    if(strncmp(START_TEST,i8BufferEntradaTest,i8LengthHeader)==0){          // Si recibimos el comando de conexión
+        representarTextoUART(sPROTOCOLO_TEST_HABILITADO);
+        funcionSaltoLinea();
+        bModoTestActivado=1;                                                // Activo el modo de test
+        ST7529_clear();                                                     // Limpia la pantaalla
+        ST7529_printf("MODO",30,40,L_,NORMAL);                              // Muestra por pantalla el indicativo de que se encuentra en modo test
+        ST7529_printf("TEST",30,60,L_,NORMAL);
+    }else if(strncmp(STOP_TEST,i8BufferEntradaTest,i8LengthHeader)==0){     // Si recibimos el comando de desconexión
+        representarTextoUART(sPROTOCOLO_TEST_DESHABILITADO);
+        funcionSaltoLinea();
+        bModoTestActivado=0;                                                // Desactivo el modo de test
+        bAlMenuPrincipal=1;                                                 // Indico que vaya al menú principal
+    }else if(strncmp(PROTO_TEST,i8BufferEntradaTest,i8LengthHeader)==0){    // Si recibimos el comando de un protocolo a testear
+        if(bModotestActivado){                                              // Si estamos en modo test
+            i8ProtocoloSeleccionado=obtencionProtocoloSeleccionado();       // Cambio de ASCII a decimal
+            structProtocoloTest.si8ProtocoloSeleccionado=i8ProtocoloSeleccionado;           // Guardo dato en paquete de comunicaciones
+            switch(i8ProtocoloSeleccionado){                                                // Dependiendo del número del protocolo
+                case PROTOCOLO_CANAL_A:                                                     // Canal A
+                    representarTextoUART(sPROTOCOLO_TEST_CANAL_A);
+                    funcionSaltoLinea();
+                    
+                    i8PasoSeleccionado=obtencionPasoSeleccionado();                         // Cambio de ASCII a decimal
+                    structProtocoloTest.si8PasoSeleccionado=i8PasoSeleccionado;             // Guardo dato en paquete de comunicaciones
+                    
+                    i8RamaSeleccionada=obtencionRamaSeleccionada();                         // Cambio de ASCII a decimal
+                    structProtocoloTest.si8RamaSeleccionada=i8RamaSeleccionada;             // Guardo dato en paquete de comunicaciones
+                    
+                    i16DutySeleccionado=obtencionDutySeleccionado();                        // Obtención del duty es ASCII a decimal
+                    structProtocoloTest.si16DutySeleccionado=i16DutySeleccionado;           // Guardo dato en paquete de comunicaciones
+                    
+                    fputc('0'+i8PasoSeleccionado,DEBUG_UART);
+                    fputc('0'+i8RamaSeleccionada,DEBUG_UART);
+                    funcionSaltoLinea();
+                    
+                    if(RAMA_POSITIVA==i8RamaSeleccionada){                                  // Si vamos a comprobar la rama positiva
+                        switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                            case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                                // Apagado de los protocolos
+                                control_DC(0,EN_30);
+                                reset_orco();
+                                break;
+                            case PASO_1:                                                        // Paso 1 - Detección de corriente al iniciar alimentaciones
+                                control_DC(1,EN_30);                                            // Habilito DC/DC de 30V
+                                break;
+                            case PASO_2:                                                        // Paso 2 - Tensión en la carga con todo a cero
+                                output_high(SEL_PGM);
+                                break;
+                            case PASO_3:                                                        // Paso 3 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 OFF
+                        
+                                break;
+                            case PASO_4:                                                        // Paso 4 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 ON
+                        
+                                break;
+                            case PASO_5:                                                        // Paso 5 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 OFF
+                        
+                                break;    
+                            case PASO_6:                                                        // Paso 6 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 ON
+                        
+                                break;
+                            case PASO_7:                                                        // Paso 7 - Alimentación del relé
+                        
+                                break; 
+                        }
+                    }else if(RAMA_NEGATIVA==i8RamaSeleccionada){                            // Si vamos a comprobar la rama negativa
+                        switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                            case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                        
+                                break;
+                            case PASO_1:                                                        // Paso 1 -
+                        
+                                break;
+                            case PASO_2:                                                        // Paso 2 - 
+                        
+                                break;
+                            case PASO_3:                                                        // Paso 3 - 
+                        
+                                break;
+                            case PASO_4:                                                        // Paso 4 - 
+                        
+                                break;
+                            case PASO_5:                                                        // Paso 5 - 
+                        
+                                break;    
+                            case PASO_6:                                                        // Paso 6 - 
+                        
+                                break;
+                            case PASO_7:                                                        // Paso 7 - 
+                        
+                                break;
+                            case PASO_8:                                                        // Paso 8 - 
+                        
+                                break;
+                            case PASO_9:                                                        // Paso 9 - 
+                        
+                                break;    
+                        }
+                    }
+                    // Coniguro paquete para el envio
+                    if(i8PasoSeleccionado!=PASO_0){
+                        configuraDatos(MODO_PROTOCOLO_TEST);
+                    }
+                    break;
+                case PROTOCOLO_CANAL_B:                                                     // Canal B
+                    representarTextoUART(sPROTOCOLO_TEST_CANAL_B);
+                    funcionSaltoLinea();
+                    
+                    i8PasoSeleccionado=obtencionPasoSeleccionado();                         // Cambio de ASCII a decimal
+                    structProtocoloTest.si8PasoSeleccionado=i8PasoSeleccionado;             // Guardo dato en paquete de comunicaciones
+                    
+                    i8RamaSeleccionada=obtencionRamaSeleccionada();                         // Cambio de ASCII a decimal
+                    structProtocoloTest.si8RamaSeleccionada=i8RamaSeleccionada;             // Guardo dato en paquete de comunicaciones
+                    
+                    i16DutySeleccionado=obtencionDutySeleccionado();                        // Obtención del duty es ASCII a decimal
+                    structProtocoloTest.si16DutySeleccionado=i16DutySeleccionado;           // Guardo dato en paquete de comunicaciones
+                    
+                    fputc('0'+i8PasoSeleccionado,DEBUG_UART);
+                    fputc('0'+i8RamaSeleccionada,DEBUG_UART);
+                    funcionSaltoLinea();
+                    
+                    if(RAMA_POSITIVA==i8RamaSeleccionada){                                  // Si vamos a comprobar la rama positiva
+                        switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                            case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                                // Apagado de los protocolos
+                                control_DC(0,EN_30);
+                                reset_orco();
+                                break;
+                            case PASO_1:                                                        // Paso 1 - Detección de corriente al iniciar alimentaciones
+                                control_DC(1,EN_30);                                            // Habilito DC/DC de 30V
+                                break;
+                            case PASO_2:                                                        // Paso 2 - Tensión en la carga con todo a cero
+                                
+                                break;
+                            case PASO_3:                                                        // Paso 3 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 OFF
+                        
+                                break;
+                            case PASO_4:                                                        // Paso 4 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 ON
+                        
+                                break;
+                            case PASO_5:                                                        // Paso 5 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 OFF
+                        
+                                break;    
+                            case PASO_6:                                                        // Paso 6 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 ON
+                        
+                                break;
+                            case PASO_7:                                                        // Paso 7 - Alimentación del relé
+                        
+                                break; 
+                        }
+                    }else if(RAMA_NEGATIVA==i8RamaSeleccionada){                            // Si vamos a comprobar la rama negativa
+                        switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                            case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                        
+                                break;
+                            case PASO_1:                                                        // Paso 1 -
+                        
+                                break;
+                            case PASO_2:                                                        // Paso 2 - 
+                        
+                                break;
+                            case PASO_3:                                                        // Paso 3 - 
+                        
+                                break;
+                            case PASO_4:                                                        // Paso 4 - 
+                        
+                                break;
+                            case PASO_5:                                                        // Paso 5 - 
+                        
+                                break;    
+                            case PASO_6:                                                        // Paso 6 - 
+                        
+                                break;
+                            case PASO_7:                                                        // Paso 7 - 
+                        
+                                break;
+                            case PASO_8:                                                        // Paso 8 - 
+                        
+                                break;
+                            case PASO_9:                                                        // Paso 9 - 
+                        
+                                break;    
+                        }
+                    }
+                    // Coniguro paquete para el envio
+                    if(i8PasoSeleccionado!=PASO_0){
+                        configuraDatos(MODO_PROTOCOLO_TEST);
+                    }
+                    break;
+                case PROTOCOLO_CANAL_C:                                                     // Canal C
+                    representarTextoUART(sPROTOCOLO_TEST_CANAL_C);
+                    funcionSaltoLinea();
+                    
+                    i8PasoSeleccionado=obtencionPasoSeleccionado();                         // Cambio de ASCII a decimal
+                    structProtocoloTest.si8PasoSeleccionado=i8PasoSeleccionado;             // Guardo dato en paquete de comunicaciones
+                    
+                    i8RamaSeleccionada=obtencionRamaSeleccionada();                         // Cambio de ASCII a decimal
+                    structProtocoloTest.si8RamaSeleccionada=i8RamaSeleccionada;             // Guardo dato en paquete de comunicaciones
+                    
+                    i16DutySeleccionado=obtencionDutySeleccionado();                        // Obtención del duty es ASCII a decimal
+                    structProtocoloTest.si16DutySeleccionado=i16DutySeleccionado;           // Guardo dato en paquete de comunicaciones
+                    
+                    fputc('0'+i8PasoSeleccionado,DEBUG_UART);
+                    fputc('0'+i8RamaSeleccionada,DEBUG_UART);
+                    funcionSaltoLinea();
+                    
+                    if(RAMA_POSITIVA==i8RamaSeleccionada){                                  // Si vamos a comprobar la rama positiva
+                        switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                            case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                                // Apagado de los protocolos
+                                control_DC(0,EN_30);
+                                reset_orco();
+                                break;
+                            case PASO_1:                                                        // Paso 1 - Detección de corriente al iniciar alimentaciones
+                                control_DC(1,EN_30);                                            // Habilito DC/DC de 30V
+                                break;
+                            case PASO_2:                                                        // Paso 2 - Tensión en la carga con todo a cero
+                            case PASO_3:                                                        // Paso 3 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 OFF
+                            case PASO_4:                                                        // Paso 4 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 ON
+                            case PASO_5:                                                        // Paso 5 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 OFF
+                            case PASO_6:                                                        // Paso 6 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 ON
+                                output_high(SEL_PGM);
+                                bRealizaPasosProtocolo=1;
+                                break;
+                            case PASO_7:                                                        // Paso 7 - Alimentación del relé
+                        
+                                break; 
+                        }
+                    }else if(RAMA_NEGATIVA==i8RamaSeleccionada){                            // Si vamos a comprobar la rama negativa
+                        switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                            case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                                // Apagado de los protocolos
+                                control_DC(0,EN_30);
+                                reset_orco();
+                                break;
+                            case PASO_1:                                                        // Paso 1 - Detección de corriente al iniciar alimentaciones
+                                control_DC(1,EN_30);                                            // Habilito DC/DC de 30V
+                                break;
+                            case PASO_2:                                                        // Paso 2 - Tensión en la carga con todo a cero
+                            case PASO_3:                                                        // Paso 3 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 OFF
+                            case PASO_4:                                                        // Paso 4 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 ON
+                            case PASO_5:                                                        // Paso 5 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 OFF 
+                            case PASO_6:                                                        // Paso 6 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 ON
+                            case PASO_7:                                                        // Paso 7 - Alimentación del relé
+                        
+                                break; 
+                        }
+                    }
+                    // Coniguro paquete para el envio
+                    if(i8PasoSeleccionado!=PASO_0){
+                        configuraDatos(MODO_PROTOCOLO_TEST);
+                    }
+                    break;
+                case '3':
+                    break;
+                case '4':
+                    break;
+                case '5':
+                    break;
+                case '6':
+                    break;
+            }
+        }else{                                                              // ...si el modo test no se encuentra habilitado
+            representarTextoUART(sPROTOCOLO_TEST_ERROR_DESHABILITADO);
+            funcionSaltoLinea();
+        }
+    }else if(strncmp(PARTE_TEST,i8BufferEntradaTest,i8LengthHeader)==0){    // Si resibimos el comando de una parte a testear
+        // TEst
+        
+    }else{                                                                  // Si recibimos un comando desconocido
+        representarTextoUART(sPROTOCOLO_TEST_ERROR_COMANDO);
+        funcionSaltoLinea();
+    }
+    
+    return i8Return;
+}
+
+int8 obtencionProtocoloSeleccionado(){
+    int8 i8ReturnProtocolo=0;
+    
+    i8ReturnProtocolo=(10*(i8BufferEntradaTest[POSICION_DATO_PROTO]-'0'));
+    i8ReturnProtocolo+=(i8BufferEntradaTest[POSICION_DATO_PROTO+1]-'0');
+    
+    return i8ReturnProtocolo;
+}
+
+int8 obtencionPasoSeleccionado(){
+    int8 i8ReturnPaso=0;
+    
+    i8ReturnPaso=(10*(i8BufferEntradaTest[POSICION_DATO_PASO]-'0'));
+    i8ReturnPaso+=(i8BufferEntradaTest[POSICION_DATO_PASO+1]-'0');
+    
+    return i8ReturnPaso;
+}
+
+int8 obtencionRamaSeleccionada(){
+    int8 i8ReturnRama=0;
+    
+    i8ReturnRama=(i8BufferEntradaTest[POSICION_DATO_RAMA]-'0');
+    
+    return i8ReturnRama;
+}
+
+int16 obtencionDutySeleccionado(){
+    int16 i16ReturnDuty=0;                                                  // Variable de retorno del duty
+    
+    i16ReturnDuty=1000*(i8BufferEntradaTest[POSICION_DATO_DUTY]-'0');       // Cambio de ASCII a decimal
+    i16ReturnDuty+=(100*(i8BufferEntradaTest[POSICION_DATO_DUTY+1]-'0'));   // Cambio de ASCII a decimal
+    i16ReturnDuty+=(10*(i8BufferEntradaTest[POSICION_DATO_DUTY+2]-'0'));    // Cambio de ASCII a decimal
+    i16ReturnDuty+=(i8BufferEntradaTest[POSICION_DATO_DUTY+3]-'0');         // Cambio de ASCII a decimal
+    
+    return i16ReturnDuty;                                                   // Devuelvo el duty
+}
+
+#endif
+
+// ---------------------------- Código para Orco ----------------------------
+#ifdef ORCO             // Aqui se definen las funciones que van a ser utilizadas por Orco
+int8 lecturaPaqueteTest(){
+
+    int8 i8Return=0;
+    
+    // Carga de datos
+    
+    i8ProtocoloSeleccionado=structProtocoloTest.si8ProtocoloSeleccionado;     // Guardo dato del paquete de comunicaciones
+    i8PasoSeleccionado=structProtocoloTest.si8PasoSeleccionado;             // Guardo dato del paquete de comunicaciones
+    i8RamaSeleccionada=structProtocoloTest.si8RamaSeleccionada;             // Guardo dato del paquete de comunicaciones
+    i16DutySeleccionado=structProtocoloTest.si16DutySeleccionado;           // Guardo dato del paquete de comunicaciones
+
+    switch(i8ProtocoloSeleccionado){
+        case PROTOCOLO_CANAL_A:
+            if(RAMA_POSITIVA==i8RamaSeleccionada){                                  // Si vamos a comprobar la rama positiva
+                switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                    case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                        // Apagado de los protocolos
+                        //reset_cpu();
+                        break;
+                    case PASO_1:                                                        // Paso 1 - Detección de corriente al iniciar alimentaciones
+                        control_DC(1,EN_VCC_CH_C);              // Encendido VCC CHA 
+                        break;
+                    case PASO_2:                                                        // Paso 2 - Tensión en la carga con todo a cero
+                        // Encendido Positivo
+                        set_pwm7_duty(0);
+                        setup_ccp7(CCP_PWM);
+                        
+                        break;
+                    case PASO_3:                                                        // Paso 3 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 OFF
+                
+                        break;
+                    case PASO_4:                                                        // Paso 4 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 ON
+                
+                        break;
+                    case PASO_5:                                                        // Paso 5 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 OFF
+                
+                        break;    
+                    case PASO_6:                                                        // Paso 6 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 ON
+                
+                        break;
+                    case PASO_7:                                                        // Paso 7 - Alimentación del relé
+                
+                        break; 
+                }
+            }else if(RAMA_NEGATIVA==i8RamaSeleccionada){                            // Si vamos a comprobar la rama negativa
+                switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                    case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                
+                        break;
+                    case PASO_1:                                                        // Paso 1 -
+                
+                        break;
+                    case PASO_2:                                                        // Paso 2 - 
+                        
+                        break;
+                    case PASO_3:                                                        // Paso 3 - 
+                
+                        break;
+                    case PASO_4:                                                        // Paso 4 - 
+                
+                        break;
+                    case PASO_5:                                                        // Paso 5 - 
+                
+                        break;    
+                    case PASO_6:                                                        // Paso 6 - 
+                
+                        break;
+                    case PASO_7:                                                        // Paso 7 - 
+                
+                        break;
+                    case PASO_8:                                                        // Paso 8 - 
+                
+                        break;
+                    case PASO_9:                                                        // Paso 9 - 
+                
+                        break;    
+                }
+            }
+            break;
+        case PROTOCOLO_CANAL_B:
+            if(RAMA_POSITIVA==i8RamaSeleccionada){                                  // Si vamos a comprobar la rama positiva
+                switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                    case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                        // Apagado de los protocolos
+                        //reset_cpu();
+                        break;
+                    case PASO_1:                                                        // Paso 1 - Detección de corriente al iniciar alimentaciones
+                        control_DC(1,EN_VCC_CH_C);              // Encendido VCC CHA 
+                        break;
+                    case PASO_2:                                                        // Paso 2 - Tensión en la carga con todo a cero
+                        
+                        break;
+                    case PASO_3:                                                        // Paso 3 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 OFF
+                
+                        break;
+                    case PASO_4:                                                        // Paso 4 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 ON
+                
+                        break;
+                    case PASO_5:                                                        // Paso 5 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 OFF
+                
+                        break;    
+                    case PASO_6:                                                        // Paso 6 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 ON
+                
+                        break;
+                    case PASO_7:                                                        // Paso 7 - Alimentación del relé
+                
+                        break; 
+                }
+            }else if(RAMA_NEGATIVA==i8RamaSeleccionada){                            // Si vamos a comprobar la rama negativa
+                switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                    case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                
+                        break;
+                    case PASO_1:                                                        // Paso 1 -
+                
+                        break;
+                    case PASO_2:                                                        // Paso 2 - 
+                
+                        break;
+                    case PASO_3:                                                        // Paso 3 - 
+                
+                        break;
+                    case PASO_4:                                                        // Paso 4 - 
+                
+                        break;
+                    case PASO_5:                                                        // Paso 5 - 
+                
+                        break;    
+                    case PASO_6:                                                        // Paso 6 - 
+                
+                        break;
+                    case PASO_7:                                                        // Paso 7 - 
+                
+                        break;
+                    case PASO_8:                                                        // Paso 8 - 
+                
+                        break;
+                    case PASO_9:                                                        // Paso 9 - 
+                
+                        break;    
+                }
+            }
+            break;
+        case PROTOCOLO_CANAL_C:
+            if(RAMA_POSITIVA==i8RamaSeleccionada){                                  // Si vamos a comprobar la rama positiva
+                switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                    case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                        // Apagado de los protocolos
+                        //reset_cpu();
+                        break;
+                    case PASO_1:                                                        // Paso 1 - Detección de corriente al iniciar alimentaciones
+                        control_DC(1,EN_VCC_CH_C);              // Encendido VCC CHC
+                        break;
+                    case PASO_2:                                                        // Paso 2 - Tensión en la carga con todo a cero
+                        // Encendido Positivo
+                        output_high(ORCO_ENVIANDO);
+
+                        set_pwm5_duty(0);
+                        setup_ccp5(CCP_PWM);
+                        
+                        output_low(PULSO_1p_CHC);
+                        output_low(PULSO_2m_CHC);
+                        
+                        // Set rango alto
+                        output_high(R_CH_C);        // Rango a 1 CHB
+                        
+                        // Configura ADC y lee rama positiva
+                        set_adc_channel(ADC_VP_CHC);            // Selección del canal medicion tension positiva canal C          
+                        delay_us(DELAY_INT_SIG);                             // Delay set ADC                                                  
+                        i16MedidaTensionCargaRaw=read_adc();               // Leer valor de la tension de la carga positiva canal C
+                        fTensionCarga=calculoTension(i16MedidaTensionCargaRaw,1);     // Cálculo de la tensión a partir de la medida en crudo
+
+                        // Muestra por pantalla el resultado
+                        delay_ms(500);
+                        
+                        //representarTextoUART(sPROTOCOLO_TEST_TENSION_CARGA);
+                        //funcionSaltoLinea();
+                        fprintf(DEBUG_UART,"%f V\r\n",fTensionCarga);
+                        
+                        output_low(ORCO_ENVIANDO);
+                        break;
+                    case PASO_3:                                                        // Paso 3 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 OFF
+                    case PASO_4:                                                        // Paso 4 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 ON
+                    case PASO_5:                                                        // Paso 5 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 OFF
+                    case PASO_6:                                                        // Paso 6 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 ON
+                        output_high(ORCO_ENVIANDO);
+                        
+                        // Ajusta el duty a max corriente - TODO  AJUSTAR
+                        set_pwm5_duty(900);
+                        delay_ms(1500);
+                        
+                        // Combinación de pulsos
+                        output_low(PULSO_1m_CHC);
+                        output_low(PULSO_2p_CHC);
+                        
+                        delay_us(100);
+
+                        switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                            case PASO_3:
+                                output_low(PULSO_1p_CHC);
+                                output_low(PULSO_2m_CHC);
+                                break;
+                            case PASO_4:
+                                output_low(PULSO_1p_CHC);
+                                output_high(PULSO_2m_CHC);
+                                break;
+                            case PASO_5:
+                                output_high(PULSO_1p_CHC);
+                                output_low(PULSO_2m_CHC);
+                                break;
+                            case PASO_6:
+                                output_high(PULSO_1p_CHC);
+                                output_high(PULSO_2m_CHC);
+                                break;
+                        }
+                        
+                        // Configuro ADC y lee tensión rama positiva
+                        set_adc_channel(ADC_VP_CHC);            // Selección del canal medicion tension positiva canal C          
+                        delay_us(DELAY_INT_SIG);                             // Delay set ADC                                                  
+                        i16MedidaTensionCargaRaw=read_adc();               // Leer valor de la tension de la carga positiva canal C
+                        fTensionCarga=calculoTension(i16MedidaTensionCargaRaw,1);     // Cálculo de la tensión a partir de la medida en crudo
+                        
+                        delay_us(DELAY_ESPERA_MEDIDA_CORRIENTE);
+                        
+                        // Configuro ADC y lee corriente rama positiva
+                        set_adc_channel(ADC_SHUNT_CHC);         // Selección del canal medicion corriente positiva canal C        
+                        delay_us(DELAY_INT_SIG);                             // Delay set ADC                                                  
+                        i16MedidaCorrienteCargaRaw=read_adc();               // Leer valor del shunt       
+                        i16CorrienteCarga=calculoCorriente(i16MedidaCorrienteCargaRaw);   
+                        
+                        // Muestra por pantalla el resultado
+                        delay_ms(500);
+                        
+                        //representarTextoUART(sPROTOCOLO_TEST_TENSION_CARGA);
+                        //funcionSaltoLinea();
+                        fprintf(DEBUG_UART,"%f V\r\n",fTensionCarga);
+                        
+                        representarTextoUART(sPROTOCOLO_TEST_CORRIENTE_CARGA);
+                        funcionSaltoLinea();
+                        fprintf(DEBUG_UART,"%lu uA\r\n",i16CorrienteCarga);
+                        
+                        output_low(ORCO_ENVIANDO);
+                        break;
+                    case PASO_7:                                                        // Paso 7 - Alimentación del relé
+                
+                        break; 
+                }
+            }else if(RAMA_NEGATIVA==i8RamaSeleccionada){                            // Si vamos a comprobar la rama negativa
+                switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                    case PASO_0:                                                        // Paso 0 - Desactivación del protocolo
+                        // Apagado de los protocolos
+                        //reset_cpu();
+                        break;
+                    case PASO_1:                                                        // Paso 1 - Detección de corriente al iniciar alimentaciones
+                        control_DC(1,EN_VCC_CH_C);              // Encendido VCC CHC
+                        break;
+                    case PASO_2:                                                        // Paso 2 - Tensión en la carga con todo a cero
+                        // Encendido Negativo
+                        output_high(ORCO_ENVIANDO);
+
+                        set_pwm4_duty(0);
+                        setup_ccp4(CCP_PWM);
+                        
+                        output_low(PULSO_1m_CHC);
+                        output_low(PULSO_2p_CHC);
+                        
+                        // Set rango alto
+                        output_high(R_CH_C);        // Rango a 1 CHB
+                        
+                        // Configura ADC y lee rama negativa
+                        set_adc_channel(ADC_VN_CHC);            // Selección del canal medicion tension negativa canal C          
+                        delay_us(DELAY_INT_SIG);                             // Delay set ADC                                                  
+                        i16MedidaTensionCargaRaw=read_adc();               // Leer valor de la tension de la carga negativa canal C
+                        fTensionCarga=calculoTension(i16MedidaTensionCargaRaw,1);     // Cálculo de la tensión a partir de la medida en crudo
+
+                        // Muestra por pantalla el resultado
+                        delay_ms(500);
+                        
+                        //representarTextoUART(sPROTOCOLO_TEST_TENSION_CARGA);
+                        //funcionSaltoLinea();
+                        fprintf(DEBUG_UART,"%f V\r\n",fTensionCarga);
+                        
+                        output_low(ORCO_ENVIANDO);
+                        break;
+                    case PASO_3:                                                        // Paso 3 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 OFF
+                    case PASO_4:                                                        // Paso 4 - Valor de corriente por el shunt y tensión en la carga - Pulso1 OFF Pulso2 ON
+                    case PASO_5:                                                        // Paso 5 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 OFF  
+                    case PASO_6:                                                        // Paso 6 - Valor de corriente por el shunt y tensión en la carga - Pulso1 ON Pulso2 ON
+                        output_high(ORCO_ENVIANDO);
+                        
+                        // Ajusta el duty a max corriente - TODO  AJUSTAR
+                        set_pwm4_duty(900);
+                        delay_ms(1500);
+                        
+                        // Combinación de pulsos
+                        output_low(PULSO_1m_CHC);
+                        output_low(PULSO_2p_CHC);
+                        
+                        delay_us(100);
+
+                        switch(i8PasoSeleccionado){                                             // Dependiendo del paso seleccionado
+                            case PASO_3:   
+                                output_low(PULSO_1m_CHC);
+                                output_low(PULSO_2p_CHC);
+                                    break;
+                            case PASO_4:
+                                output_low(PULSO_1m_CHC);
+                                output_high(PULSO_2p_CHC);
+                                    break;
+                            case PASO_5:
+                                output_high(PULSO_1m_CHC);
+                                output_low(PULSO_2p_CHC);
+                                    break;
+                            case PASO_6:
+                                output_high(PULSO_1m_CHC);
+                                output_high(PULSO_2p_CHC);
+                                    break;
+                        }
+
+                        // Configuro ADC y lee tensión rama negativa
+                        set_adc_channel(ADC_VN_CHC);            // Selección del canal medicion tension negativa canal C          
+                        delay_us(DELAY_INT_SIG);                             // Delay set ADC                                                  
+                        i16MedidaTensionCargaRaw=read_adc();               // Leer valor de la tension de la carga negativa canal C
+                        fTensionCarga=calculoTension(i16MedidaTensionCargaRaw,1);     // Cálculo de la tensión a partir de la medida en crudo
+                        
+                        delay_us(DELAY_ESPERA_MEDIDA_CORRIENTE);
+                        
+                        // Configuro ADC y lee corriente rama negativa
+                        set_adc_channel(ADC_SHUNT_CHC);         // Selección del canal medicion corriente negativa canal C        
+                        delay_us(DELAY_INT_SIG);                             // Delay set ADC                                                  
+                        i16MedidaCorrienteCargaRaw=read_adc();               // Leer valor del shunt       
+                        i16CorrienteCarga=calculoCorriente(i16MedidaCorrienteCargaRaw);   
+                        
+                        // Muestra por pantalla el resultado
+                        delay_ms(500);
+                        
+                        //representarTextoUART(sPROTOCOLO_TEST_TENSION_CARGA);
+                        //funcionSaltoLinea();
+                        fprintf(DEBUG_UART,"%f V\r\n",fTensionCarga);
+                        
+                        //representarTextoUART(sPROTOCOLO_TEST_CORRIENTE_CARGA);
+                        //funcionSaltoLinea();
+                        fprintf(DEBUG_UART,"%lu uA\r\n",i16CorrienteCarga);
+                        
+                        output_low(ORCO_ENVIANDO);
+                        break;
+                    case PASO_7:                                                        // Paso 7 - Alimentación del relé
+                
+                        break; 
+                }
+            }
+            break;
+        case '3':
+            break;
+    
+    }
+    
+    return i8Return;
+}
+
+
+#endif 

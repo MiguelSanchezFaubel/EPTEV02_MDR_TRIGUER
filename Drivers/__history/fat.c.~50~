@@ -1,0 +1,530 @@
+// Se guardan dos bytes para la direcciÃ³n
+// La FAT_XXX contiene la direccion de memoria donde se encuentra la direcciÃ³n de los datos
+// Es mas que nada por tener un orden en texto i no en numericos
+
+// Idiomas
+#define NUM_IDIOMAS 2
+#define SPANISH 0
+#define ENGLISH 1
+
+#define TAM_DIR_BYTES       3   
+
+#define MAX_LINEAS          300         // Permito ubn máximo de 300 líneas de texto (hay aprox 250)
+#define OFFSET_DIR_SPANISH  0           // offset spanish
+#define OFFSET_DIR_ENGLISH  TAM_DIR_BYTES*MAX_LINEAS  //     
+
+#define OFFSET_FAT           TAM_DIR_BYTES*300
+#define TAM_FAT_TOTAL        TAM_DIR_BYTES*MAX_LINEAS*NUM_IDIOMAS+OFFSET_FAT
+
+int32 i32OffsetDireccionIdioma=OFFSET_DIR_SPANISH;
+
+// Direcciones
+
+#define FAT_S                           0
+#define FAT_M                           FAT_S+TAM_DIR_BYTES
+#define FAT_L                           FAT_M+TAM_DIR_BYTES
+#define FAT_XL                          FAT_L+TAM_DIR_BYTES
+#define FAT_ICON                        FAT_XL+TAM_DIR_BYTES
+#define FAT_IMAGEN                      FAT_ICON+TAM_DIR_BYTES
+// Si se añaden imágenes o algo más que no sea texto, debe ser de aqui hacia arriba
+// OJO: SI se ñadaden cosas, cambiar índice de FAT_Co_ELECTRICA
+#define PRIMERA_POS_FAT                 TAM_DIR_BYTES+FAT_IMAGEN
+
+#ifdef CARGA_DATOS
+    #define FAT_Co_ELECTRICA                TAM_DIR_BYTES+FAT_IMAGEN
+    #define FAT_FRECUENCIA                  TAM_DIR_BYTES+FAT_Co_ELECTRICA        
+    #define FAT_POLARIDAD                   TAM_DIR_BYTES+FAT_FRECUENCIA        
+    #define FAT_MONOPOLAR                   TAM_DIR_BYTES+FAT_POLARIDAD        
+    #define FAT_BIPOLAR                     TAM_DIR_BYTES+FAT_MONOPOLAR    
+    #define FAT_MICRO_CORRIENTES            TAM_DIR_BYTES+FAT_BIPOLAR                
+    #define FAT_SIMETRIA                    TAM_DIR_BYTES+FAT_MICRO_CORRIENTES        
+    #define FAT_TIEMPO_RAMPA                TAM_DIR_BYTES+FAT_SIMETRIA            
+    #define FAT_Ca_ELECTRICA                TAM_DIR_BYTES+FAT_TIEMPO_RAMPA            
+    #define FAT_ASIMETRICA                  TAM_DIR_BYTES+FAT_Ca_ELECTRICA        
+    #define FAT_SIMETRICA                   TAM_DIR_BYTES+FAT_ASIMETRICA        
+    #define FAT_ELECTRO_ESTIMULACION        TAM_DIR_BYTES+FAT_SIMETRICA                    
+    #define FAT_SMP                         TAM_DIR_BYTES+FAT_ELECTRO_ESTIMULACION
+    #define FAT_GALV                        TAM_DIR_BYTES+FAT_SMP    
+    #define FAT_GALVANICA_MICRO             TAM_DIR_BYTES+FAT_GALV            
+    #define FAT_Canal_A                     TAM_DIR_BYTES+FAT_GALVANICA_MICRO    
+    #define FAT_Canal_B                     TAM_DIR_BYTES+FAT_Canal_A    
+    #define FAT_Canal_C                     TAM_DIR_BYTES+FAT_Canal_B    
+    #define FAT_Canal_POINTER               TAM_DIR_BYTES+FAT_Canal_C            
+    #define FAT_SimetriaCanalesNO           TAM_DIR_BYTES+FAT_Canal_POINTER                
+    #define FAT_SimetriaCanalesAB           TAM_DIR_BYTES+FAT_SimetriaCanalesNO                
+    #define FAT_SimetriaCanalesABC          TAM_DIR_BYTES+FAT_SimetriaCanalesAB                
+    #define FAT_CONFIG_TRAT                 TAM_DIR_BYTES+FAT_SimetriaCanalesABC        
+    #define FAT_MENU_PRINCIPAL              TAM_DIR_BYTES+FAT_CONFIG_TRAT            
+    #define FAT_MENU_CONFIG                 TAM_DIR_BYTES+FAT_MENU_PRINCIPAL        
+    #define FAT_MENU_GALV                   TAM_DIR_BYTES+FAT_MENU_CONFIG        
+    #define FAT_MENU_GALVMICRO              TAM_DIR_BYTES+FAT_MENU_GALV      
+    #define FAT_MENU_TRANSCRANEAL           TAM_DIR_BYTES+FAT_MENU_GALVMICRO 
+    #define FAT_MENU_ELECTRO                TAM_DIR_BYTES+FAT_MENU_TRANSCRANEAL            
+    #define FAT_MENU_SMP                    TAM_DIR_BYTES+FAT_MENU_ELECTRO    
+    #define FAT_MENU_PRESETS                TAM_DIR_BYTES+FAT_MENU_SMP  
+    #define FAT_MENU_TEST                   TAM_DIR_BYTES+FAT_MENU_PRESETS        
+    #define FAT_CONFIG                      TAM_DIR_BYTES+FAT_MENU_TEST    
+    #define FAT_CONFIG_ILUM                 TAM_DIR_BYTES+FAT_CONFIG        
+    #define FAT_CONFIG_PITO                 TAM_DIR_BYTES+FAT_CONFIG_ILUM        
+    #define FAT_CONFIG_VERS                 TAM_DIR_BYTES+FAT_CONFIG_PITO        
+    #define FAT_CONFIG_CONT                 TAM_DIR_BYTES+FAT_CONFIG_VERS        
+    #define FAT_CONFIG_IDIO                 TAM_DIR_BYTES+FAT_CONFIG_CONT        
+    #define FAT_CONFIG_VERS_MAYUS           TAM_DIR_BYTES+FAT_CONFIG_IDIO                
+    #define FAT_CONFIG_CONT_MAYUS           TAM_DIR_BYTES+FAT_CONFIG_VERS_MAYUS                
+    #define FAT_CONFIG_IDIO_MAYUS           TAM_DIR_BYTES+FAT_CONFIG_CONT_MAYUS                
+    #define FAT_TEST                        TAM_DIR_BYTES+FAT_CONFIG_IDIO_MAYUS    
+    #define FAT_TEST_LEDS                   TAM_DIR_BYTES+FAT_TEST        
+    #define FAT_TEST_PITO                   TAM_DIR_BYTES+FAT_TEST_LEDS        
+    #define FAT_TEST_PULS                   TAM_DIR_BYTES+FAT_TEST_PITO        
+    #define FAT_TEST_ILUM                   TAM_DIR_BYTES+FAT_TEST_PULS        
+    #define FAT_TEST_ACCE                   TAM_DIR_BYTES+FAT_TEST_ILUM        
+    #define FAT_TEST_AEXT                   TAM_DIR_BYTES+FAT_TEST_ACCE        
+    #define FAT_TEST_SCAR                   TAM_DIR_BYTES+FAT_TEST_AEXT        
+    #define FAT_TEST_DC12                   TAM_DIR_BYTES+FAT_TEST_SCAR        
+    #define FAT_TEST_DC30                   TAM_DIR_BYTES+FAT_TEST_DC12        
+    #define FAT_TEST_RELE                   TAM_DIR_BYTES+FAT_TEST_DC30        
+    #define FAT_TEST_BQ34                   TAM_DIR_BYTES+FAT_TEST_RELE        
+    #define FAT_TEST_CPIC                   TAM_DIR_BYTES+FAT_TEST_BQ34        
+    #define FAT_TEST_ECHA                   TAM_DIR_BYTES+FAT_TEST_CPIC        
+    #define FAT_TEST_ECHB                   TAM_DIR_BYTES+FAT_TEST_ECHA        
+    #define FAT_TEST_ECHC                   TAM_DIR_BYTES+FAT_TEST_ECHB        
+    #define FAT_RANGO_100_10                TAM_DIR_BYTES+FAT_TEST_ECHC            
+    #define FAT_RANGO_100_1                 TAM_DIR_BYTES+FAT_RANGO_100_10        
+    #define FAT_PW_POS                      TAM_DIR_BYTES+FAT_RANGO_100_1    
+    #define FAT_PW_NEG                      TAM_DIR_BYTES+FAT_PW_POS    
+    #define FAT_PW_GEN                      TAM_DIR_BYTES+FAT_PW_NEG    
+    #define FAT_SIM_CANALES                 TAM_DIR_BYTES+FAT_PW_GEN        
+    #define FAT_PW_SIM                      TAM_DIR_BYTES+FAT_SIM_CANALES    
+    #define FAT_PW_ASIM                     TAM_DIR_BYTES+FAT_PW_SIM    
+    #define FAT_SEL_CANAL                   TAM_DIR_BYTES+FAT_PW_ASIM        
+    #define FAT_TIEMPO_ACT                  TAM_DIR_BYTES+FAT_SEL_CANAL        
+    #define FAT_TIEMPO_REP                  TAM_DIR_BYTES+FAT_TIEMPO_ACT        
+    #define FAT_TIEMPO_DESF                 TAM_DIR_BYTES+FAT_TIEMPO_REP        
+    #define FAT_TIEMPO_ACT_LEYENDA          TAM_DIR_BYTES+FAT_TIEMPO_DESF                
+    #define FAT_TIEMPO_REP_LEYENDA          TAM_DIR_BYTES+FAT_TIEMPO_ACT_LEYENDA                
+    #define FAT_TIEMPO_RAMPA_LEYENDA        TAM_DIR_BYTES+FAT_TIEMPO_REP_LEYENDA            
+    #define FAT_FRECUENCIA_LEYENDA          TAM_DIR_BYTES+FAT_TIEMPO_RAMPA_LEYENDA            
+    #define FAT_CORRIENTE_LEYENDA           TAM_DIR_BYTES+FAT_FRECUENCIA_LEYENDA            
+    #define FAT_POLARIDAD_LEYENDA           TAM_DIR_BYTES+FAT_CORRIENTE_LEYENDA                
+    #define FAT_ILIMITADO                   TAM_DIR_BYTES+FAT_POLARIDAD_LEYENDA        
+    #define FAT_NUM_REPS                    TAM_DIR_BYTES+FAT_ILIMITADO        
+    #define FAT_LED_CHC                     TAM_DIR_BYTES+FAT_NUM_REPS    
+    #define FAT_LED_CHB                     TAM_DIR_BYTES+FAT_LED_CHC    
+    #define FAT_LED_CHA                     TAM_DIR_BYTES+FAT_LED_CHB    
+    #define FAT_LED_GAL                     TAM_DIR_BYTES+FAT_LED_CHA    
+    #define FAT_TEXTO_PULSADORES            TAM_DIR_BYTES+FAT_LED_GAL                
+    #define FAT_ALIMENTACION                TAM_DIR_BYTES+FAT_TEXTO_PULSADORES            
+    #define FAT_CONECTADA                   TAM_DIR_BYTES+FAT_ALIMENTACION        
+    #define FAT_DESCONECTADA                TAM_DIR_BYTES+FAT_CONECTADA            
+    #define FAT_CARGADO                     TAM_DIR_BYTES+FAT_DESCONECTADA    
+    #define FAT_ENCARGA                     TAM_DIR_BYTES+FAT_CARGADO    
+    #define FAT_DC12_OK                     TAM_DIR_BYTES+FAT_ENCARGA    
+    #define FAT_DC12_NOK                    TAM_DIR_BYTES+FAT_DC12_OK        
+    #define FAT_DC30_OK                     TAM_DIR_BYTES+FAT_DC12_NOK    
+    #define FAT_DC30_NOK                    TAM_DIR_BYTES+FAT_DC30_OK        
+    #define FAT_RELE_GALV                   TAM_DIR_BYTES+FAT_DC30_NOK        
+    #define FAT_RELE_ECHA                   TAM_DIR_BYTES+FAT_RELE_GALV        
+    #define FAT_RELE_ECHB                   TAM_DIR_BYTES+FAT_RELE_ECHA        
+    #define FAT_RELE_ECHC                   TAM_DIR_BYTES+FAT_RELE_ECHB        
+    #define FAT_RELE_PROG                   TAM_DIR_BYTES+FAT_RELE_ECHC        
+    #define FAT_DEV_OK                      TAM_DIR_BYTES+FAT_RELE_PROG    
+    #define FAT_DEV_NOK                     TAM_DIR_BYTES+FAT_DEV_OK    
+    #define FAT_INTENSIDAD                  TAM_DIR_BYTES+FAT_DEV_NOK        
+    #define FAT_CARGA                       TAM_DIR_BYTES+FAT_INTENSIDAD    
+    #define FAT_TIEMPO                      TAM_DIR_BYTES+FAT_CARGA    
+    #define FAT_PULSOS                      TAM_DIR_BYTES+FAT_TIEMPO    
+    #define FAT_OHM                         TAM_DIR_BYTES+FAT_PULSOS
+    #define FAT_IMED                        TAM_DIR_BYTES+FAT_OHM    
+    #define FAT_VMED                        TAM_DIR_BYTES+FAT_IMED    
+    #define FAT_RMED                        TAM_DIR_BYTES+FAT_VMED    
+    #define FAT_ERROR_ELECTRODO             TAM_DIR_BYTES+FAT_RMED            
+    #define FAT_ERROR_TRANSISTORES          TAM_DIR_BYTES+FAT_ERROR_ELECTRODO                
+    #define FAT_ERROR_SISTEMA_MEDIDA        TAM_DIR_BYTES+FAT_ERROR_TRANSISTORES                    
+    #define FAT_ERROR_COMS1                 TAM_DIR_BYTES+FAT_ERROR_SISTEMA_MEDIDA        
+    #define FAT_ERROR_COMS2                 TAM_DIR_BYTES+FAT_ERROR_COMS1        
+    #define FAT_TACTIVO                     TAM_DIR_BYTES+FAT_ERROR_COMS2    
+    #define FAT_TREPOSO                     TAM_DIR_BYTES+FAT_TACTIVO    
+    #define FAT_A                           TAM_DIR_BYTES+FAT_TREPOSO
+    #define FAT_B                           TAM_DIR_BYTES+FAT_A
+    #define FAT_C                           TAM_DIR_BYTES+FAT_B
+    #define FAT_P                           TAM_DIR_BYTES+FAT_C
+    #define FAT_CHA_EE                      TAM_DIR_BYTES+FAT_P    
+    #define FAT_CHB_EE                      TAM_DIR_BYTES+FAT_CHA_EE    
+    #define FAT_CHC_EE                      TAM_DIR_BYTES+FAT_CHB_EE    
+    #define FAT_AUTOAPAG_1                  TAM_DIR_BYTES+FAT_CHC_EE        
+    #define FAT_AUTOAPAG_2                  TAM_DIR_BYTES+FAT_AUTOAPAG_1        
+    #define FAT_AUTOAPAG_3                  TAM_DIR_BYTES+FAT_AUTOAPAG_2        
+    #define FAT_APAGADO_EQUIPO              TAM_DIR_BYTES+FAT_AUTOAPAG_3            
+    #define FAT_CARGA_COMPLETA              TAM_DIR_BYTES+FAT_APAGADO_EQUIPO            
+    #define FAT_CARGA_CURSO                 TAM_DIR_BYTES+FAT_CARGA_COMPLETA        
+    #define FAT_ORCO_SAURON                 TAM_DIR_BYTES+FAT_CARGA_CURSO        
+    #define FAT_ACC_NOK                     TAM_DIR_BYTES+FAT_ORCO_SAURON    
+    #define FAT_APAG_TRAT_ACT1              TAM_DIR_BYTES+FAT_ACC_NOK            
+    #define FAT_APAG_TRAT_ACT2              TAM_DIR_BYTES+FAT_APAG_TRAT_ACT1            
+    #define FAT_ACC_DETECT1                 TAM_DIR_BYTES+FAT_APAG_TRAT_ACT2        
+    #define FAT_ACC_DETECT2                 TAM_DIR_BYTES+FAT_ACC_DETECT1        
+    #define FAT_ERROR_ALIM1                 TAM_DIR_BYTES+FAT_ACC_DETECT2        
+    #define FAT_ERROR_ALIM2                 TAM_DIR_BYTES+FAT_ERROR_ALIM1        
+    #define FAT_MAX_A                       TAM_DIR_BYTES+FAT_ERROR_ALIM2    
+    #define FAT_MAX_B                       TAM_DIR_BYTES+FAT_MAX_A    
+    #define FAT_MAX_C                       TAM_DIR_BYTES+FAT_MAX_B    
+    #define FAT_MAX_AB                      TAM_DIR_BYTES+FAT_MAX_C    
+    #define FAT_MAX_AC                      TAM_DIR_BYTES+FAT_MAX_AB    
+    #define FAT_MAX_BC                      TAM_DIR_BYTES+FAT_MAX_AC    
+    #define FAT_MAX_ABC                     TAM_DIR_BYTES+FAT_MAX_BC    
+    #define FAT_CC_A                        TAM_DIR_BYTES+FAT_MAX_ABC    
+    #define FAT_CC_B                        TAM_DIR_BYTES+FAT_CC_A    
+    #define FAT_CC_C                        TAM_DIR_BYTES+FAT_CC_B    
+    #define FAT_CC_AB                       TAM_DIR_BYTES+FAT_CC_C    
+    #define FAT_CC_AC                       TAM_DIR_BYTES+FAT_CC_AB    
+    #define FAT_CC_BC                       TAM_DIR_BYTES+FAT_CC_AC    
+    #define FAT_CC_ABC                      TAM_DIR_BYTES+FAT_CC_BC    
+    #define FAT_ESPACIO                     TAM_DIR_BYTES+FAT_CC_ABC
+    #define FAT_TEXTO_NO                    TAM_DIR_BYTES+FAT_ESPACIO 
+    #define FAT_TEXTO_AB                    TAM_DIR_BYTES+FAT_TEXTO_NO
+    #define FAT_TEXTO_ABC                   TAM_DIR_BYTES+FAT_TEXTO_AB
+    #define FAT_CODIGO_ERROR                TAM_DIR_BYTES+FAT_TEXTO_ABC
+    #define FAT_DESF_PULSOS_LEYENDA         TAM_DIR_BYTES+FAT_CODIGO_ERROR       
+    #define FAT_PW_LEYENDA                  TAM_DIR_BYTES+FAT_DESF_PULSOS_LEYENDA
+    #define FAT_PWP_LEYENDA                 TAM_DIR_BYTES+FAT_PW_LEYENDA         
+    #define FAT_PWN_LEYENDA                 TAM_DIR_BYTES+FAT_PWP_LEYENDA        
+    #define FAT_SIM_CAN_N_LEYENDA           TAM_DIR_BYTES+FAT_PWN_LEYENDA        
+    #define FAT_SIM_CAN_AB_LEYENDA          TAM_DIR_BYTES+FAT_SIM_CAN_N_LEYENDA  
+    #define FAT_SIM_CAN_ABC_LEYENDA         TAM_DIR_BYTES+FAT_SIM_CAN_AB_LEYENDA 
+    #define FAT_REPS_LEYENDA                TAM_DIR_BYTES+FAT_SIM_CAN_ABC_LEYENDA
+    #define FAT_ILUM_LEYENDA                TAM_DIR_BYTES+FAT_REPS_LEYENDA       
+    #define FAT_CONTR_LEYENDA               TAM_DIR_BYTES+FAT_ILUM_LEYENDA       
+    #define FAT_ACUSTICA_LEYENDA            TAM_DIR_BYTES+FAT_CONTR_LEYENDA      
+    #define FAT_IDIOMA_LEYENDA              TAM_DIR_BYTES+FAT_ACUSTICA_LEYENDA   
+    #define FAT_SELECCION_CANAL             TAM_DIR_BYTES+FAT_IDIOMA_LEYENDA 
+    #define FAT_RANGO_2_100_FREC_LEYENDA    TAM_DIR_BYTES+FAT_SELECCION_CANAL
+    #define FAT_RANGO_0_100_PER_LECTURA     TAM_DIR_BYTES+FAT_RANGO_2_100_FREC_LEYENDA
+    #define FAT_RANGO_10_100_PER_LECTURA    TAM_DIR_BYTES+FAT_RANGO_0_100_PER_LECTURA
+    #define FAT_PRESET_1                    TAM_DIR_BYTES+FAT_RANGO_10_100_PER_LECTURA      
+    #define FAT_PRESET_2                    TAM_DIR_BYTES+FAT_PRESET_1        
+    #define FAT_PRESET_3                    TAM_DIR_BYTES+FAT_PRESET_2        
+    #define FAT_PRESET_4                    TAM_DIR_BYTES+FAT_PRESET_3        
+    #define FAT_PRESET_5                    TAM_DIR_BYTES+FAT_PRESET_4        
+    #define FAT_PRESET_6                    TAM_DIR_BYTES+FAT_PRESET_5        
+    #define FAT_PRESET_7                    TAM_DIR_BYTES+FAT_PRESET_6        
+    #define FAT_PRESET_8                    TAM_DIR_BYTES+FAT_PRESET_7        
+    #define FAT_PRESET_9                    TAM_DIR_BYTES+FAT_PRESET_8        
+    #define FAT_PRESET_10                   TAM_DIR_BYTES+FAT_PRESET_9       
+    #define FAT_PRESET_VACIO                TAM_DIR_BYTES+FAT_PRESET_10
+    #define FAT_PRESET_ELECTRO              TAM_DIR_BYTES+FAT_PRESET_VACIO    
+    #define FAT_PRESET_GALV                 TAM_DIR_BYTES+FAT_PRESET_ELECTRO  
+    #define FAT_PRESET_GALVMICRO            TAM_DIR_BYTES+FAT_PRESET_GALV         
+    #define FAT_PRESET_TRANSCR              TAM_DIR_BYTES+FAT_PRESET_GALVMICRO
+    #define FAT_PRESET_SMP                  TAM_DIR_BYTES+FAT_PRESET_TRANSCR  
+    #define FAT_TRANS                       TAM_DIR_BYTES+FAT_PRESET_SMP
+    #define FAT_SUPERFICIE_ELECTRODO        TAM_DIR_BYTES+FAT_TRANS
+    #define FAT_SUPERFICIE_ELECTRODO_LEYENDA        TAM_DIR_BYTES+FAT_SUPERFICIE_ELECTRODO
+    #define FAT_TODO                        TAM_DIR_BYTES+FAT_SUPERFICIE_ELECTRODO_LEYENDA
+    #define FAT_PRESET                      TAM_DIR_BYTES+FAT_TODO
+    #define FAT_REGISTRO_ERRORES            TAM_DIR_BYTES+FAT_PRESET            
+    #define FAT_ASTERISCOS                  TAM_DIR_BYTES+FAT_REGISTRO_ERRORES    
+    #define FAT_GUIONES                     TAM_DIR_BYTES+FAT_ASTERISCOS
+    #define FAT_LEYEMDA_REGISTRO_ERRORES    TAM_DIR_BYTES+FAT_GUIONES                    
+    #define FAT_INFORME_INGENIERIA          TAM_DIR_BYTES+FAT_LEYEMDA_REGISTRO_ERRORES            
+    #define FAT_LEYENDA_INFORME_INGENIERIA  TAM_DIR_BYTES+FAT_INFORME_INGENIERIA                    
+    #define FAT_INF_ING_CICLOS_BAT          TAM_DIR_BYTES+FAT_LEYENDA_INFORME_INGENIERIA            
+    #define FAT_INF_ING_VECES_ON            TAM_DIR_BYTES+FAT_INF_ING_CICLOS_BAT            
+    #define FAT_INF_ING_TRAT_A              TAM_DIR_BYTES+FAT_INF_ING_VECES_ON        
+    #define FAT_INF_ING_TRAT_B              TAM_DIR_BYTES+FAT_INF_ING_TRAT_A        
+    #define FAT_INF_ING_TRAT_C              TAM_DIR_BYTES+FAT_INF_ING_TRAT_B        
+    #define FAT_INF_ING_POINTER             TAM_DIR_BYTES+FAT_INF_ING_TRAT_C        
+    #define FAT_INF_ING_GALV                TAM_DIR_BYTES+FAT_INF_ING_POINTER        
+    #define FAT_INF_ING_GALVMICRO           TAM_DIR_BYTES+FAT_INF_ING_GALV            
+    #define FAT_INF_ING_TRANS               TAM_DIR_BYTES+FAT_INF_ING_GALVMICRO        
+    #define FAT_INF_ING_SMP                 TAM_DIR_BYTES+FAT_INF_ING_TRANS    
+    #define FAT_INF_ING_TIEMPO_CANAL_A      TAM_DIR_BYTES+FAT_INF_ING_SMP                
+    #define FAT_INF_ING_TIEMPO_CANAL_B      TAM_DIR_BYTES+FAT_INF_ING_TIEMPO_CANAL_A                
+    #define FAT_INF_ING_TIEMPO_CANAL_C      TAM_DIR_BYTES+FAT_INF_ING_TIEMPO_CANAL_B  
+    #define FAT_PROTOCOLO_TEST_HABILITADO           TAM_DIR_BYTES+    FAT_INF_ING_TIEMPO_CANAL_C
+    #define FAT_PROTOCOLO_TEST_DESHABILITADO        TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_HABILITADO        
+    #define FAT_PROTOCOLO_TEST_CANAL_A              TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_DESHABILITADO
+    #define FAT_PROTOCOLO_TEST_CANAL_B              TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_CANAL_A
+    #define FAT_PROTOCOLO_TEST_CANAL_C              TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_CANAL_B
+    #define FAT_PROTOCOLO_TEST_ERROR_DESHABILITADO  TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_CANAL_C            
+    #define FAT_PROTOCOLO_TEST_ERROR_COMANDO        TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_ERROR_DESHABILITADO        
+    #define FAT_PROTOCOLO_TEST_TENSION_CARGA        TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_ERROR_COMANDO        
+    #define FAT_PROTOCOLO_TEST_CORRIENTE_CARGA      TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_TENSION_CARGA        
+    #define FAT_TIEMPO_ACTIVO_ILIMITADO     TAM_DIR_BYTES+FAT_PROTOCOLO_TEST_CORRIENTE_CARGA           
+    #define FAT_GUARDAR_PRESET              TAM_DIR_BYTES+FAT_TIEMPO_ACTIVO_ILIMITADO 
+    #define FAT_IDIOMA_ESPANOL              TAM_DIR_BYTES+FAT_GUARDAR_PRESET     
+    #define FAT_IDIOMA_INGLES               TAM_DIR_BYTES+FAT_IDIOMA_ESPANOL     
+    #define FAT_ISET                        TAM_DIR_BYTES+FAT_IDIOMA_INGLES     
+    #define FAT_HIGH_VOLTAGE                TAM_DIR_BYTES+FAT_ISET     
+    #define FAT_HIGH_VOLTAGE_VACIO          TAM_DIR_BYTES+FAT_HIGH_VOLTAGE       
+    #define FAT_BQ_VOLTAJE                  TAM_DIR_BYTES+FAT_HIGH_VOLTAGE_VACIO      
+    #define FAT_BQ_CORRIENTE                TAM_DIR_BYTES+FAT_BQ_VOLTAJE 
+    #define FAT_BQ_CAPACIDAD                TAM_DIR_BYTES+FAT_BQ_CORRIENTE     
+    #define FAT_BQ_PORCENTAJE               TAM_DIR_BYTES+FAT_BQ_CAPACIDAD     
+    #define FAT_BQ_TEMPERATURA              TAM_DIR_BYTES+FAT_BQ_PORCENTAJE     
+    #define FAT_BQ_CICLOS                   TAM_DIR_BYTES+FAT_BQ_TEMPERATURA     
+    #define FAT_CORRIENTE_MEDIDA_EQUIPO     TAM_DIR_BYTES+FAT_BQ_CICLOS 
+    #define FAT_SELEC_TITULO            TAM_DIR_BYTES+FAT_CORRIENTE_MEDIDA_EQUIPO
+    #define FAT_SELEC_CANAL_A           TAM_DIR_BYTES+FAT_SELEC_TITULO
+    #define FAT_SELEC_CANAL_B           TAM_DIR_BYTES+FAT_SELEC_CANAL_A
+    #define FAT_SELEC_CANAL_C           TAM_DIR_BYTES+FAT_SELEC_CANAL_B
+    #define FAT_SELEC_CANAL_AB          TAM_DIR_BYTES+FAT_SELEC_CANAL_C
+    #define FAT_SELEC_CANAL_BC          TAM_DIR_BYTES+FAT_SELEC_CANAL_AB
+    #define FAT_SELEC_CANAL_AC          TAM_DIR_BYTES+FAT_SELEC_CANAL_BC
+    #define FAT_SELEC_CANAL_ABC         TAM_DIR_BYTES+FAT_SELEC_CANAL_AC
+    #define FAT_RANGO_10_80_PER_LECTURA     TAM_DIR_BYTES+FAT_SELEC_CANAL_ABC
+    #define FAT_RANGO_100_5             TAM_DIR_BYTES+FAT_RANGO_10_80_PER_LECTURA
+    #define FAT_LINEA_SEPARACION        TAM_DIR_BYTES+FAT_RANGO_100_5
+    #define FAT_TEXTO_GRIS              TAM_DIR_BYTES+FAT_LINEA_SEPARACION
+    #define FAT_TEXTO_NEGRO             TAM_DIR_BYTES+FAT_TEXTO_GRIS
+    #define FAT_FINAL                   TAM_DIR_BYTES+FAT_TEXTO_NEGRO
+#endif
+
+#ifdef USO_MEMORIA
+enum{    
+    sCo_ELECTRICA=0,
+    sFRECUENCIA,
+    sPOLARIDAD,
+    sMONOPOLAR,
+    sBIPOLAR,
+    sMICRO_CORRIENTES,
+    sSIMETRIA,
+    sTIEMPO_RAMPA,
+    sCa_ELECTRICA,
+    sASIMETRICA,
+    sSIMETRICA,
+    sELECTRO_ESTIMULACION,
+    sSMP,
+    sGALV,
+    sGALVANICA_MICRO,
+    sCanal_A,
+    sCanal_B,
+    sCanal_C,
+    sCanal_POINTER,
+    sSimetriaCanalesNO,
+    sSimetriaCanalesAB,
+    sSimetriaCanalesABC,
+    sCONFIG_TRAT,
+    sMENU_PRINCIPAL,
+    sMENU_CONFIG,
+    sMENU_GALV,
+    sMENU_GALVMICRO,
+    sMENU_TRANSCRANEAL,
+    sMENU_ELECTRO,
+    sMENU_SMP,
+    sMENU_PRESETS,
+    sMENU_TEST,
+    sCONFIG,
+    sCONFIG_ILUM,
+    sCONFIG_PITO,
+    sCONFIG_VERS,
+    sCONFIG_CONT,
+    sCONFIG_IDIO,
+    sCONFIG_VERS_MAYUS,
+    sCONFIG_CONT_MAYUS,
+    sCONFIG_IDIO_MAYUS,
+    sTEST,
+    sTEST_LEDS,
+    sTEST_PITO,
+    sTEST_PULS,
+    sTEST_ILUM,
+    sTEST_ACCE,
+    sTEST_AEXT,
+    sTEST_SCAR,
+    sTEST_DC12,
+    sTEST_DC30,
+    sTEST_RELE,
+    sTEST_BQ34,
+    sTEST_CPIC,
+    sTEST_ECHA,
+    sTEST_ECHB,
+    sTEST_ECHC,
+    sRANGO_100_10,
+    sRANGO_100_1,
+    sPW_POS,
+    sPW_NEG,
+    sPW_GEN,
+    sSIM_CANALES,
+    sPW_SIM,
+    sPW_ASIM,
+    sSEL_CANAL,
+    sTIEMPO_ACT,
+    sTIEMPO_REP,
+    sTIEMPO_DESF,
+    sTIEMPO_ACT_LEYENDA,
+    sTIEMPO_REP_LEYENDA,
+    sTIEMPO_RAMPA_LEYENDA,
+    sFRECUENCIA_LEYENDA,
+    sCORRIENTE_LEYENDA,
+    sPOLARIDAD_LEYENDA,
+    sILIMITADO,
+    sNUM_REPS,
+    sLED_CHC,
+    sLED_CHB,
+    sLED_CHA,
+    sLED_GAL,
+    sTEXTO_PULSADORES,
+    sALIMENTACION,
+    sCONECTADA,
+    sDESCONECTADA,
+    sCARGADO,
+    sENCARGA,
+    sDC12_OK,
+    sDC12_NOK,
+    sDC30_OK,
+    sDC30_NOK,
+    sRELE_GALV,
+    sRELE_ECHA,
+    sRELE_ECHB,
+    sRELE_ECHC,
+    sRELE_PROG,
+    sDEV_OK,
+    sDEV_NOK,
+    sINTENSIDAD,
+    sCARGA,
+    sTIEMPO,
+    sPULSOS,
+    sOHM,
+    sIMED,
+    sVMED,
+    sRMED,
+    sERROR_ELECTRODO,
+    sERROR_TRANSISTORES,
+    sERROR_SISTEMA_MEDIDA,
+    sERROR_COMS1,
+    sERROR_COMS2,
+    sTACTIVO,
+    sTREPOSO,
+    sA,
+    sB,
+    sC,
+    sP,
+    sCHA_EE,
+    sCHB_EE,
+    sCHC_EE,
+    sAUTOAPAG_1,
+    sAUTOAPAG_2,
+    sAUTOAPAG_3,
+    sAPAGADO_EQUIPO,
+    sCARGA_COMPLETA,
+    sCARGA_CURSO,
+    sORCO_SAURON,
+    sACC_NOK,
+    sAPAG_TRAT_ACT1,
+    sAPAG_TRAT_ACT2,
+    sACC_DETECT1,
+    sACC_DETECT2,
+    sERROR_ALIM1,
+    sERROR_ALIM2,
+    sMAX_A,
+    sMAX_B,
+    sMAX_C,
+    sMAX_AB,
+    sMAX_AC,
+    sMAX_BC,
+    sMAX_ABC,
+    sCC_A,
+    sCC_B,
+    sCC_C,
+    sCC_AB,
+    sCC_AC,
+    sCC_BC,
+    sCC_ABC,
+    sESPACIO,   
+    sTextoSimetriaCanalesNO,
+    sTextoSimetriaCanalesAB,
+    sTextoSimetriaCanalesABC,
+    sCODIGO_ERROR,   
+    sDESF_PULSOS_LEYENDA,
+    sPW_LEYENDA,         
+    sPWP_LEYENDA,        
+    sPWN_LEYENDA,       
+    sSIM_CAN_N_LEYENDA,  
+    sSIM_CAN_AB_LEYENDA, 
+    sSIM_CAN_ABC_LEYENDA,
+    sREPS_LEYENDA,       
+    sILUM_LEYENDA,       
+    sCONTR_LEYENDA,      
+    sACUSTICA_LEYENDA,   
+    sIDIOMA_LEYENDA,     
+    sSELECCION_CANAL,
+    sRANGO_2_100_FREC_LEYENDA,
+    sRANGO_0_100_PER_LECTURA,               
+    sRANGO_10_100_PER_LECTURA,
+    sPreset1,
+    sPreset2,
+    sPreset3,
+    sPreset4,
+    sPreset5,
+    sPreset6,
+    sPreset7,
+    sPreset8,
+    sPreset9,
+    sPreset10,
+    sPresetVacio,    
+    sPresetElectro,  
+    sPresetGalv,     
+    sPresetGalvMicro,
+    sPresetTranscr,  
+    sPresetSMP,      
+    sTRANS,
+    sSUPERFICIE_ELECTRODO,
+    sSUPERFICIE_ELECTRODO_LEYENDA,
+    sTODO,
+    sPRESETS,
+    sREGISTRO_ERRORES,
+    sASTERISCOS,
+    sGUIONES,
+    sLEYEMDA_REGISTRO_ERRORES,
+    sINFORME_INGENIERIA,
+    sLEYENDA_INFORME_INGENIERIA,
+    sINF_ING_CICLOS_BAT,
+    sINF_ING_VECES_ON,
+    sINF_ING_TRAT_A,
+    sINF_ING_TRAT_B,
+    sINF_ING_TRAT_C,
+    sINF_ING_POINTER,
+    sINF_ING_GALV,
+    sINF_ING_GALVMICRO,
+    sINF_ING_TRANS,
+    sINF_ING_SMP,
+    sINF_ING_TIEMPO_CANAL_A,
+    sINF_ING_TIEMPO_CANAL_B,
+    sINF_ING_TIEMPO_CANAL_C,
+    sPROTOCOLO_TEST_HABILITADO,
+    sPROTOCOLO_TEST_DESHABILITADO,
+    sPROTOCOLO_TEST_CANAL_A,
+    sPROTOCOLO_TEST_CANAL_B,
+    sPROTOCOLO_TEST_CANAL_C,
+    sPROTOCOLO_TEST_ERROR_DESHABILITADO,
+    sPROTOCOLO_TEST_ERROR_COMANDO,
+    sPROTOCOLO_TEST_TENSION_CARGA,
+    sPROTOCOLO_TEST_CORRIENTE_CARGA,
+    sTIEMPO_ACTIVO_ILIMITADO,
+    sGUARDAR_PRESET,
+    sIDIOMA_ESPANOL,
+    sIDIOMA_INGLES,
+    sISET,
+    sHIGH_VOLTAGE,
+    sHIGH_VOLTAGE_VACIO,
+    sBQ_VOLTAJE,
+    sBQ_CORRIENTE,
+    sBQ_CAPACIDAD,
+    sBQ_PORCENTAJE,
+    sBQ_TEMPERATURA,
+    sBQ_CICLOS,
+    sCORRIENTE_MEDIDA_EQUIPO,
+    sSELEC_TITULO,
+    sSELEC_CANAL_A,
+    sSELEC_CANAL_B,
+    sSELEC_CANAL_C,
+    sSELEC_CANAL_AB,
+    sSELEC_CANAL_BC,
+    sSELEC_CANAL_AC,
+    sSELEC_CANAL_ABC,
+    sRANGO_10_80_PER_LECTURA,
+    sRANGO_100_5,
+    sLINEA_SEPARACION,
+    sTEXTO_GRIS,
+    sTEXTO_NEGRO,
+};
+#endif

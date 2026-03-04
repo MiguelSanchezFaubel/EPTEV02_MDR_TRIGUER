@@ -1,0 +1,76 @@
+
+// Definiciones
+enum{
+    REG_ERROR_DUMMY=0,              // Contador de encendidos del equipo
+    REG_ERROR_COMMS_S_O,            // Error de comunicaciones Sauron -> Orco        
+    REG_ERROR_COMMS_O_S,            // Error de comunicaciones Orco -> Sauron        
+    REG_ERROR_ALIM_5V,              // Error alimentación 5V
+    REG_ERROR_ALIM_12V,             // Error alimentación 12V    
+    REG_ERROR_ALIM_48V,             // Error alimentación 48V    
+    REG_ERROR_BUS_I2C,              // Error bus I2C - Pueder ser BQ o expansor    
+    REG_ERROR_ACC_INIT,             // Error acelerómetro - Inicialización    
+    REG_ERROR_ACC_MOV,              // Error acelerómetro - Movimiento brusco    
+    REG_ERROR_CARGADOR,             // Error cargador - Alimentación incorrecta    
+    REG_ERROR_WDT_SW,               // Error watchdog software    
+    REG_ERROR_RESERVADO_0,          // Error watchdog hardware    
+    REG_ERROR_RESERVADO_1,          // Error reservado 1
+    REG_ERROR_RESERVADO_2,          // Error reservado 1
+    REG_ERROR_RESERVADO_3,          // Error reservado 1
+    REG_ERROR_CAL_A,                // Error calibrado A
+    REG_ERROR_CAL_B,                // Error calibrado B
+    REG_ERROR_CAL_C,                // Error calibrado C
+    REG_ERROR_TRAN_A,               // Error transistores A
+    REG_ERROR_TRAN_B,               // Error transistores B
+    REG_ERROR_TRAN_C,               // Error transistores C
+    REG_ERROR_VREF_ORCO,            // Error tensión referencia Orco    
+    REG_ERROR_MAX,                  // Define el final de errores
+};// REG_ERRORES;
+int8 i8OffsetErrorParcial=REG_ERROR_MAX+1;    // Offset donde empieza el bloque de parcial
+
+enum{
+    REG_VECES_ENCENDIDO=2*REG_ERROR_MAX+1,      // Registro número de veces que se ha encendido el equipo                            
+    REG_TRAT_CHA=REG_VECES_ENCENDIDO+2,         // Registro número de tratamientos electroestimulación canal A                                
+    REG_TRAT_CHB=REG_TRAT_CHA+2,                // Registro número de tratamientos electroestimulación canal B
+    REG_TRAT_CHC=REG_TRAT_CHB+2,                // Registro número de tratamientos electroestimulación canal C
+    REG_TRAT_POINTER=REG_TRAT_CHC+2,            // Registro número de tratamientos pointer
+    REG_TRAT_GALV=REG_TRAT_POINTER+2,           // Registro número de tratamientos galvánica
+    REG_TRAT_GALV_MICRO=REG_TRAT_GALV+2,        // Registro número de tratamientos galvánica+microcorrientes
+    REG_TRAT_TRANS=REG_TRAT_GALV_MICRO+2,       // Registro número de tratamientos transcraneal
+    REG_TRAT_SMP=REG_TRAT_TRANS+2,              // Registro número de tratamientos sistema multipulsos
+    REG_TIEMPO_CHA=REG_TRAT_SMP+2,              // Registro tiempo de tratamiento electrónica canal A 
+    REG_TIEMPO_CHB=REG_TIEMPO_CHA+4,            // Registro tiempo de tratamiento electrónica canal B
+    REG_TIEMPO_CHC=REG_TIEMPO_CHB+4,            // Registro tiempo de tratamiento electrónica canal C
+    REG_CONT_MAX=REG_TIEMPO_CHC+4,              // Define el final de contadores 
+};// REG_CONTADORES;                                
+int8 i8OffsetContParcial=REG_CONT_MAX+4;    // Offset donde empieza el bloque de parcial
+
+
+// Presets
+#define OFFSET_REGISTRO_PRESETS                     115
+#define OFFSET_EEPROM_PRESETS                       125                                                 // Escribe a partir de la posición 100
+#define OFFSET_ENTRE_PRESETS                        20                                                  // Indica que como máximo se van a grabar 20 bytes por preset    
+
+#define OFFSET_EEPROM_PRESET_1                      OFFSET_EEPROM_PRESETS                               // Indica la posición inicial del preset 1    
+#define OFFSET_EEPROM_PRESET_2                      OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_1       // Indica la posición inicial del preset 2
+#define OFFSET_EEPROM_PRESET_3                      OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_2       // Indica la posición inicial del preset 3
+#define OFFSET_EEPROM_PRESET_4                      OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_3       // Indica la posición inicial del preset 4
+#define OFFSET_EEPROM_PRESET_5                      OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_4       // Indica la posición inicial del preset 5
+#define OFFSET_EEPROM_PRESET_6                      OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_5       // Indica la posición inicial del preset 6
+#define OFFSET_EEPROM_PRESET_7                      OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_6       // Indica la posición inicial del preset 7
+#define OFFSET_EEPROM_PRESET_8                      OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_7       // Indica la posición inicial del preset 8
+#define OFFSET_EEPROM_PRESET_9                      OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_8       // Indica la posición inicial del preset 9
+#define OFFSET_EEPROM_PRESET_10                     OFFSET_ENTRE_PRESETS + OFFSET_EEPROM_PRESET_9       // Indica la posición inicial del preset 10
+
+// Interfaz
+#define EEPROM_LOC_ILUMINACION              0x145       // Iluminación es de 1 byte
+#define EEPROM_LOC_CONTRASTE                0x146       // Contraste es de 1 byte    
+#define EEPROM_LOC_SONIDO                   0x147       // Sonido es de 2 bytes              
+#define EEPROM_LOC_IDIOMA                   0x149       // Idioma es de 1 byte       
+#define MEMORIA_EEPROM_PROGRAMADA           0x14A       // Memoria EEPROM programmada
+#define PRIMER_INICIO                       0x14B       // Primer inicio del equipo
+#define POSICION_MEM_VREF                   0x1FBD0     // Valor de calibración tensión de referencia del microcontrolador principal
+
+
+// NO SON POSICIONES, SON VALORES
+#define MEMORIA_NO_PROGRAMADA   0xFF
+#define MEMORIA_PROGRAMADA      0x96

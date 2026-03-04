@@ -1,0 +1,141 @@
+
+#define  address_w      0x40
+#define  address_r      0x41
+
+// Comandos de PCA9554
+#define  cmd_r          0x00           // command to read 
+#define  cmd_w          0x01           // command to write 
+#define  cmd_inv        0x02           // Command to toggle ports
+#define  cmd_conf       0x03           // Conf input/output 
+
+// Comandos de PCA9555
+#define  cmd_r0         0x00           // command to read low byte
+#define  cmd_r1         0x01           // command to read high byte
+#define  cmd_w0         0x02           // command to write low byte
+#define  cmd_w1         0x03           // command to write high byte
+#define  cmd_inv0       0x04           // Command to toggle ports low byte
+#define  cmd_inv1       0x05           // Command to toggle ports high byte
+#define  cmd_conf0      0x06           // Conf input/output low byte
+#define  cmd_conf1      0x07           // Conf input/output high byte
+
+#ifndef ack
+    #define  ack            1
+#endif
+
+#ifndef nack
+    #define  nack           0
+#endif
+
+#define PCA9555         1
+#define PCA9554         0
+
+void write_PCA955X(int data0,int data1, int address,int1 model);
+long read_PCA955X(int address,int1 model);
+void inv_PCA955X(int data0,int data1,int address,int1 model);
+void conf_PCA955X(int data0,int data1,int address,int1 model);
+
+
+void write_PCA955X(int data0,int data1, int address,int1 model)
+{
+   i2c_start( );
+   if(i2c_write(address_w|address<<1)==0){                                           // Device address to write
+       if (model) 
+          i2c_write(cmd_w0);                                                      // byte of command
+       else
+          i2c_write(cmd_w);                                                       // byte of command
+          
+       i2c_write(data0);                                                          // byte of command
+       if (model)
+          i2c_write(data1); 
+       i2c_stop( );
+        bErrorI2C=0;
+   }else{
+    bErrorI2C=1;
+   }
+}   
+
+long read_PCA955X( int address,int1 model)
+{
+   int  data_l=0;
+   int  data_h=0;
+   long datap=0;
+   
+   i2c_start();
+   
+   if(i2c_write(address_w|(address<<1))==0){                                                      // Device address to write
+       if (model)
+          i2c_write(cmd_r0);                                                          // byte of command
+       else
+          i2c_write(cmd_r);   
+       
+       i2c_start( );
+       i2c_write(address_r|(address<<1));                                                      // byte of command
+       if (model)
+       {
+          data_l= i2c_read(ack);
+          data_h= i2c_read(nack);      
+          datap=make16(data_h,data_l);
+       }
+       else
+       {
+          datap= i2c_read(nack);
+       }
+       i2c_stop( );
+       bErrorI2C=0;
+   }else{
+    bErrorI2C=1;
+   }
+   return(datap);
+} 
+
+void inv_PCA955X(int data0,int data1,int address,int1 model)
+{
+   i2c_start( );
+   if(i2c_write(address_w|address<<1)==0){                     // Device address to write
+       if (model)
+          i2c_write(cmd_inv0);                       // byte of command
+       else
+          i2c_write(cmd_inv);                     // byte of command   
+       if (model)
+       {
+          i2c_write(data0);                     // byte of command
+          i2c_write(data1);                     // byte of command   
+       }
+       else
+          i2c_write(data0);                     // byte of command
+          
+       i2c_stop( );
+   bErrorI2C=0;
+   }else{
+        bErrorI2C=1;
+   }
+   return;
+}
+
+void conf_PCA955X(int data0,int data1,int address,int1 model)                 // 1-->IN 0-->OUT
+{
+   i2c_start( );
+
+   if(i2c_write(address_w|address<<1)==0){                     // Device address to write
+       if (model)
+          i2c_write(cmd_conf0);                       // byte of command
+       else
+          i2c_write(cmd_conf);                     // byte of command   
+       if (model)
+       {
+          i2c_write(data0);                     // byte of command
+          i2c_write(data1);                     // byte of command   
+       }
+       else
+          i2c_write(data0);                     // byte of command
+             i2c_stop( );
+        bErrorI2C=0;
+   }else{
+        bErrorI2C=1;
+   }
+
+}
+
+
+
+

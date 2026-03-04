@@ -1,0 +1,315 @@
+/*
+*   Header File: preset_registers.h
+*   
+*   Descripción: Definiciones de los registros EEPROM 
+*   
+*   Proyecto: EPTE 2
+*   Versión: 3.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+// ---------------------------- Definiciones ----------------------------
+#define OFFSET_EEPROM_DATA                          100                                                 // Escribe a partir de la posición 100
+#define OFFSET_INT8                                 1                                                   // Indica que ocupa un byte
+#define OFFSET_INT16                                2                                                   // Indica que ocupa dos bytes
+#define OFFSET_INT32                                4                                                   // Indica que ocupa cuatro bytes
+    
+#define OFFSET_ENTRE_PRESETS                        20                                                  // Indica que como máximo se ban a grabar 20 bytes por preset    
+
+#define PRESET_1                                    0                                                   // Selección del preset 1
+#define PRESET_2                                    1                                                   // Selección del preset 2
+#define PRESET_3                                    2                                                   // Selección del preset 3
+#define PRESET_4                                    3                                                   // Selección del preset 4
+#define PRESET_5                                    4                                                   // Selección del preset 5
+#define PRESET_6                                    5                                                   // Selección del preset 6
+#define PRESET_7                                    6                                                   // Selección del preset 7
+#define PRESET_8                                    7                                                   // Selección del preset 8
+#define PRESET_9                                    8                                                   // Selección del preset 9
+#define PRESET_10                                   9                                                   // Selección del preset 10
+
+#define OFFSET_EEPROM_PRESET_1                      OFFSET_EEPROM_DATA                                  // Indica la posición inicial del preset 1    
+#define OFFSET_EEPROM_PRESET_2                      OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_1         // Indica la posición inicial del preset 2
+#define OFFSET_EEPROM_PRESET_3                      OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_2         // Indica la posición inicial del preset 3
+#define OFFSET_EEPROM_PRESET_4                      OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_3         // Indica la posición inicial del preset 4
+#define OFFSET_EEPROM_PRESET_5                      OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_4         // Indica la posición inicial del preset 5
+#define OFFSET_EEPROM_PRESET_6                      OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_5         // Indica la posición inicial del preset 6
+#define OFFSET_EEPROM_PRESET_7                      OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_6         // Indica la posición inicial del preset 7
+#define OFFSET_EEPROM_PRESET_8                      OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_7         // Indica la posición inicial del preset 8
+#define OFFSET_EEPROM_PRESET_9                      OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_8         // Indica la posición inicial del preset 9
+#define OFFSET_EEPROM_PRESET_10                     OFFSET_EEPROM_DATA + OFFSET_EEPROM_PRESET_9         // Indica la posición inicial del preset 10
+
+// Registros Presets Galvanica - 6 bytes
+#define EEPROM_GALV_CORRIENTE                       0                                                   // Dirección Memoria Galvanica - Corriente - 16 bits
+#define EEPROM_GALV_TIEMPO_ACTIVO                   EEPROM_GALV_CORRIENTE + OFFSET_INT16                // Dirección Memoria Galvanica - Tiempo Activo - 16 bits
+#define EEPROM_GALV_TIEMPO_RAMPA                    EEPROM_GALV_TIEMPO_ACTIVO + OFFSET_INT16            // Dirección Memoria Galvanica - Tiempo Rampa - 16 bits
+                        
+// Registro Presets Galvanica+Micro - 14 bytes
+#define EEPROM_GALVMICRO_GALV_CORRIENTE             0                                                   // Dirección Memoria Galvánica + Microcorrientes - Corriente Galvánica - 16 bits
+#define EEPROM_GALVMICRO_GALV_TIEMPO_ACTIVO         EEPROM_GALVMICRO_GALV_CORRIENTE + OFFSET_INT16      // Dirección Memoria Galvánica + Microcorrientes - Tiempo Activo Galvánica - 16 bits
+#define EEPROM_GALVMICRO_GALV_TIEMPO_RAMPA          EEPROM_GALVMICRO_GALV_TIEMPO_ACTIVO + OFFSET_INT16  // Dirección Memoria Galvánica + Microcorrientes - Tiempo Rampa Galvánica - 8 bits
+#define EEPROM_GALVMICRO_MICRO_CORRIENTE            EEPROM_GALVMICRO_GALV_TIEMPO_RAMPA + OFFSET_INT8    // Dirección Memoria Galvánica + Microcorrientes - Corriente - 16 bits
+#define EEPROM_GALVMICRO_MICRO_TIEMPO_ACTIVO        EEPROM_GALVMICRO_MICRO_CORRIENTE + OFFSET_INT16     // Dirección Memoria Galvánica + Microcorrientes - Tiempo Activo - 16 bits
+#define EEPROM_GALVMICRO_MICRO_POLARIDAD            EEPROM_GALVMICRO_MICRO_TIEMPO_ACTIVO + OFFSET_INT16 // Dirección Memoria Galvánica + Microcorrientes - Polaridad - 8 bits
+#define EEPROM_GALVMICRO_MICRO_ANCHO_PULSO          EEPROM_GALVMICRO_MICRO_POLARIDAD + OFFSET_INT8      // Dirección Memoria Galvánica + Microcorrientes - Ancho Pulso - 16 bits
+#define EEPROM_GALVMICRO_MICRO_FRECUENCIA           EEPROM_GALVMICRO_MICRO_ANCHO_PULSO + OFFSET_INT16   // Dirección Memoria Galvánica + Microcorrientes - Frecuencia - 16 bits
+                        
+// Registros Presets Transcraneal - 6 bytes
+#define EEPROM_TRANSC_CORRIENTE                     0                                                   // Dirección Memoria Transcraneal - Corriente - 16 bits
+#define EEPROM_TRANSC_TIEMPO_ACTIVO                 EEPROM_TRANSC_CORRIENTE    + OFFSET_INT16           // Dirección Memoria Transcraneal - Tiempo Activo - 16 bits
+#define EEPROM_TRANSC_TIEMPO_RAMPA                  EEPROM_TRANSC_TIEMPO_ACTIVO + OFFSET_INT16          // Dirección Memoria Transcraneal - Tiempo Rampa - 16 bits
+                        
+// Registros Presets Electroestimulación - 16 bytes
+#define EEPROM_ELECTRO_TIEMPO_ACTIVO                0                                                   // Dirección Memoria Electroestimulación - Tiempo Activo - 16 bits
+#define EEPROM_ELECTRO_TIEMPO_DESCANSO              EEPROM_ELECTRO_TIEMPO_ACTIVO + OFFSET_INT16         // Dirección Memoria Electroestimulación - Tiempo Descanso - 16 bits
+#define EEPROM_ELECTRO_TIEMPO_RAMPA                 EEPROM_ELECTRO_TIEMPO_DESCANSO + OFFSET_INT16       // Dirección Memoria Electroestimulación - Tiempo Rampa - 8 bits
+#define EEPROM_ELECTRO_REPETICIONES                 EEPROM_ELECTRO_TIEMPO_RAMPA + OFFSET_INT8           // Dirección Memoria Electroestimulación - Repeticiones - 8 bits
+#define EEPROM_ELECTRO_CORRIENTE                    EEPROM_ELECTRO_REPETICIONES + OFFSET_INT8           // Dirección Memoria Electroestimulación - Corriente - 16 bits
+#define EEPROM_ELECTRO_FRECUENCIA                   EEPROM_ELECTRO_CORRIENTE + OFFSET_INT16             // Dirección Memoria Electroestimulación - Frecuencia - 16 bits
+#define EEPROM_ELECTRO_POLARIDAD                    EEPROM_ELECTRO_FRECUENCIA + OFFSET_INT16            // Dirección Memoria Electroestimulación - Polaridad - 8 bits
+#define EEPROM_ELECTRO_SIMETRIA                     EEPROM_ELECTRO_POLARIDAD + OFFSET_INT8              // Dirección Memoria Electroestimulación - Simetria - 8 bits
+#define EEPROM_ELECTRO_ANCHO_PULSO_POSITIVO         EEPROM_ELECTRO_SIMETRIA + OFFSET_INT8               // Dirección Memoria Electroestimulación - Ancho pulso positivo - 16 bits
+#define EEPROM_ELECTRO_ANCHO_PULSO_NEGATIVO         EEPROM_ELECTRO_ANCHO_PULSO_POSITIVO + OFFSET_INT16  // Dirección Memoria Electroestimulación - Ancho pulso negativo - 16 bits
+                                    
+// Registros Presets Sistema Multipulsos - 10 bytes
+#define EEPROM_SMP_TIEMPO_ACTIVO                    0                                                   // Dirección Memoria SMP - Tiempo Activo - 16 bits
+#define EEPROM_SMP_DESFASE_PULSOS                   EEPROM_SMP_TIEMPO_ACTIVO + OFFSET_INT16             // Dirección Memoria SMP - Desfase entre pulsos - 32 bits
+#define EEPROM_SMP_FRECUENCIA                       EEPROM_SMP_DESFASE_PULSOS + OFFSET_INT32            // Dirección Memoria SMP - Frecuencia - 16 bits
+#define EEPROM_SMP_ANCHO_PULSO                      EEPROM_SMP_FRECUENCIA + OFFSET_INT16                // Dirección Memoria SMP - Ancho de pulso - 16 bits
+
+#define DELAY_EEPROM_PRESETS                        5                                                   // Delay de 5 ms para la escritura en la EEPROM
+
+// ---------------------------- Prototipo de funciones para la carga de datos en EEPROM ----------------------------      
+int8 writeEEPROM_8bits(int16 i16Dir, int8 i8Data);                          // Escritura de 1 byte de la memoria EEPROM 
+int8 writeEEPROM_16bits(int16 i16Dir, int16 i16Data);                       // Escritura de 2 bytes de la memoria EEPROM 
+int8 writeEEPROM_32bits(int16 i16Dir, int32 i32Data);                       // Escritura de 3 bytes de la memoria EEPROM 
+int8 readEEPROM_8bits(int16 i16Dir);                                        // Lectura de 1 byte de la memoria EEPROM
+int16 readEEPROM_16bits(int16 i16Dir);                                      // Lectura de 2 bytes de la memoria EEPROM
+int32 readEEPROM_32bits(int16 i16Dir);                                      // Lectura de 3 bytes de la memoria EEPROM
+int8 guardarPresets(int8 i8RegistroPreset);                                 // Guarda los datos en el banco de presets seleccionado
+int8 cargarPresets(int8 i8RegistroPreset);                                  // Carga los datos del banco de presets seleccionado
+
+// ---------------------------- Funciones para la carga de datos en EEPROM ----------------------------
+int8 writeEEPROM_8bits(int16 i16Dir, int8 i8Data){                          // Escritura de 1 byte de la memoria EEPROM 
+
+    int8 i8Return=0;                                                        // Variable de retorno (NOT USED)
+
+    write_eeprom(i16Dir,i8Data);                                            // Escribe el byte en EEPROM
+    delay_ms(DELAY_EEPROM_PRESETS);                                         // Pequeño delay de escritura
+
+    return i8Return;                                                        // Devuelvo valor
+}
+
+int8 writeEEPROM_16bits(int16 i16Dir, int16 i16Data){                       // Escritura de 2 bytes de la memoria EEPROM 
+
+    int8 i8Return=0;                                                        // Variable de retorno (NOT USED)
+
+    write_eeprom(i16Dir,make8(i16Data,1));                                  // Escribe el byte en EEPROM - MSB
+    delay_ms(DELAY_EEPROM_PRESETS);                                         // Pequeño delay de escritura
+
+    write_eeprom(i16Dir+1,make8(i16Data,0));                                // Escribe el byte en EEPROM - LSB
+    delay_ms(DELAY_EEPROM_PRESETS);                                         // Pequeño delay de escritura
+
+    return i8Return;                                                        // Devuelvo valor
+}
+
+int8 writeEEPROM_32bits(int16 i16Dir, int32 i32Data){                       // Escritura de 3 bytes de la memoria EEPROM
+
+    int8 i8Return=0;                                                        // Variable de retorno (NOT USED)
+
+    write_eeprom(i16Dir,make8(i32Data,3));                                  // Escribe el byte en EEPROM - MSB
+    delay_ms(DELAY_EEPROM_PRESETS);                                         // Pequeño delay de escritura
+
+    write_eeprom(i16Dir+1,make8(i32Data,2));                                // Escribe el byte en EEPROM - mMSB
+    delay_ms(DELAY_EEPROM_PRESETS);                                         // Pequeño delay de escritura
+
+    write_eeprom(i16Dir+2,make8(i32Data,1));                                // Escribe el byte en EEPROM - mLSB
+    delay_ms(DELAY_EEPROM_PRESETS);                                         // Pequeño delay de escritura
+
+    write_eeprom(i16Dir+3,make8(i32Data,0));                                // Escribe el byte en EEPROM - LSB
+    delay_ms(DELAY_EEPROM_PRESETS);                                         // Pequeño delay de escritura
+
+    return i8Return;                                                        // Devuelvo valor
+}
+
+int8 readEEPROM_8bits(int16 i16Dir){                                        // Lectura de 1 byte de la memoria EEPROM
+    return read_eeprom(i16Dir);                                             // Devuelve el valor de la dirección de memoria
+}
+
+int16 readEEPROM_16bits(int16 i16Dir){                                      // Lectura de 2 byte de la memoria EEPROM
+    return make16(read_eeprom(i16Dir),read_eeprom(i16Dir+1));               // Devuelve los valores de la dirección de memoria y los junta en un int16
+}    
+
+int32 readEEPROM_32bits(int16 i16Dir){                                      // Lectura de 3 byte de la memoria EEPROM
+    return make32(read_eeprom(i16Dir),read_eeprom(i16Dir+1),read_eeprom(i16Dir+2),read_eeprom(i16Dir+3));       // Devuelve los valores de la dirección de memoria y los junta en un int32
+}
+
+int8 guardarPresets(int8 i8RegistroPreset){                                 // Guarda los datos en el banco de presets seleccionado
+
+    int8 i8Return=0;                                                        // Variable de retorno
+    int16 i16DirEEPROM=0;                                                   // Variable de dirección global de inicio de EEPROM
+
+    // Indica dirección de memoria de inicio para guardar
+    switch(i8RegistroPreset){                                               // Selección del registro de presets
+        case PRESET_1:                                                      // Selección del preset 1    
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_1;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_2:                                                      // Selección del preset 2
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_2;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_3:                                                      // Selección del preset 3
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_3;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_4:                                                      // Selección del preset 4
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_4;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_5:                                                      // Selección del preset 5
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_5;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_6:                                                      // Selección del preset 6
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_6;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_7:                                                      // Selección del preset 7
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_7;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_8:                                                      // Selección del preset 8
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_8;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_9:                                                      // Selección del preset 9
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_9;                            // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_10:                                                     // Selección del preset 10
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_10;                           // Asigna la posición de memoria correspondiente
+            break;    
+    }
+
+    // Bloque escribir en memoria
+    switch(i8VariablesPreset){                                                                          // Dependiendo del tratamiento a guardar
+        case PRESET_ELECTRO:                                                                            // Variables Electro a memoria
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_TIEMPO_ACTIVO,i16TacElec[i8ConfigCanal]);                // Guarda en Memoria Electroestimulación - Tiempo Activo - 16 bits    
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_TIEMPO_DESCANSO,i16TdElec[i8ConfigCanal]);               // Guarda en Memoria Electroestimulación - Tiempo Descanso - 16 bits        
+            writeEEPROM_8bits(i16DirEEPROM+EEPROM_ELECTRO_TIEMPO_RAMPA,i8TrElec[i8ConfigCanal]);                    // Guarda en Memoria Electroestimulación - Tiempo Rampa - 8 bits    
+            writeEEPROM_8bits(i16DirEEPROM+EEPROM_ELECTRO_REPETICIONES,i8Nrep[i8ConfigCanal]);                      // Guarda en Memoria Electroestimulación - Repeticiones - 8 bits    
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_CORRIENTE,i16IElec[i8ConfigCanal]);                      // Guarda en Memoria Electroestimulación - Corriente - 16 bits
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_FRECUENCIA,i16frecElec[i8ConfigCanal]);                  // Guarda en Memoria Electroestimulación - Frecuencia - 16 bits
+            writeEEPROM_8bits(i16DirEEPROM+EEPROM_ELECTRO_POLARIDAD,bPolaridadElec[i8ConfigCanal]);                 // Guarda en Memoria Electroestimulación - Polaridad - 8 bits
+            writeEEPROM_8bits(i16DirEEPROM+EEPROM_ELECTRO_SIMETRIA,bSimetriaElec[i8ConfigCanal]);                   // Guarda en Memoria Electroestimulación - Simetria - 8 bits
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_ANCHO_PULSO_POSITIVO,i16PW_plusElec[i8ConfigCanal]);     // Guarda en Memoria Electroestimulación - Ancho pulso positivo - 16 bits            
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_ANCHO_PULSO_NEGATIVO,i16PW_minusElec[i8ConfigCanal]);    // Guarda en Memoria Electroestimulación - Ancho pulso negativo - 16 bits     
+            break;                
+        case PRESET_GALV:                                                                               // Variables Galvanica a memoria
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALV_CORRIENTE,i16Igalv);                                        // Guarda en Memoria Galvanica - Corriente - 16 bits                
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALV_TIEMPO_ACTIVO,i16Tgalv);                                    // Guarda en Memoria Galvanica - Tiempo Activo - 16 bits    
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALV_TIEMPO_RAMPA,i8Trampagalv);                                 // Guarda en Memoria Galvanica - Tiempo Rampa - 16 bits
+            break;
+        case PRESET_GALVMICRO:                                                                          // Variables Galvánica a memoria
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_GALV_CORRIENTE,i16Igalv);                              // Guarda en Memoria Galvánica + Microcorrientes - Corriente Galvánica - 16 bits
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_GALV_TIEMPO_ACTIVO,i16Tgalv);                          // Guarda en Memoria Galvánica + Microcorrientes - Tiempo Activo Galvánica - 16 bits    
+            writeEEPROM_8bits(i16DirEEPROM+EEPROM_GALVMICRO_GALV_TIEMPO_RAMPA,i8Trampagalv);                        // Guarda en Memoria Galvánica + Microcorrientes - Tiempo Rampa Galvánica - 8 bits
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_CORRIENTE,i16Imicro);                            // Guarda en Memoria Galvánica + Microcorrientes - Corriente - 16 bits
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_TIEMPO_ACTIVO,i16Tmicro);                        // Guarda en Memoria Galvánica + Microcorrientes - Tiempo Activo - 16 bits    
+            writeEEPROM_8bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_POLARIDAD,bPolaridadMicro);                       // Guarda en Memoria Galvánica + Microcorrientes - Polaridad - 8 bits
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_ANCHO_PULSO,i16PWmicro);                         // Guarda en Memoria Galvánica + Microcorrientes - Ancho Pulso - 16 bits    
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_FRECUENCIA,i16frecmicro);                        // Guarda en Memoria Galvánica + Microcorrientes - Frecuencia - 16 bits
+            break;
+        case PRESET_TRANSCRANEAL:                                                                       // Variables Transcraneal a memoria
+            //writeEEPROM_16bits(i16DirEEPROM+EEPROM_TRANSC_CORRIENTE,CAMBIA_POR_VARIABLE);               // Guarda en Memoria Transcraneal - Corriente - 16 bits
+            //writeEEPROM_16bits(i16DirEEPROM+EEPROM_TRANSC_TIEMPO_ACTIVO,CAMBIA_POR_VARIABLE);           // Guarda en Memoria Transcraneal - Tiempo Activo - 16 bits    
+            //writeEEPROM_16bits(i16DirEEPROM+EEPROM_TRANSC_TIEMPO_RAMPA,CAMBIA_POR_VARIABLE);            // Guarda en Memoria Transcraneal - Tiempo Rampa - 16 bits    
+            break;
+        case PRESET_SMP:                                                                                // Variables SMP a memoria
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_SMP_TIEMPO_ACTIVO,i16TacSMP);                                    // Guarda en Memoria SMP - Tiempo Activo - 16 bits    
+            writeEEPROM_32bits(i16DirEEPROM+EEPROM_SMP_DESFASE_PULSOS,i32TDesfaseSMP);                              // Guarda en Memoria SMP - Desfase entre pulsos - 32 bits    
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_SMP_FRECUENCIA,i16FrecSMP);                                      // Guarda en Memoria SMP - Frecuencia - 16 bits
+            writeEEPROM_16bits(i16DirEEPROM+EEPROM_SMP_ANCHO_PULSO,i16PWSMP);                                       // Guarda en Memoria SMP - Ancho de pulso - 16 bits    
+            break;
+    }
+
+    i8RegistroPresets[i8RegistroPreset]=i8VariablesPreset;                                              // Indica que ha guardado en el PRESET_i8RegistroPreset el valor de i8VariablesPreset
+    
+    return i8Return;                                                                                    // Devuelve el valor
+}
+
+int8 cargarPresets(int8 i8RegistroPreset){                                      // Carga los datos del banco de presets seleccionado
+
+    int8 i8Return=0;
+    int16 i16DirEEPROM=0;                                                       // Variable de dirección global de inicio de EEPROM
+
+    // Indica dirección de memoria de inicio para guardar
+    switch(i8RegistroPreset){                                                   // Selección del registro de presets
+        case PRESET_1:                                                          // Selección del preset 1    
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_1;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_2:                                                          // Selección del preset 2
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_2;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_3:                                                          // Selección del preset 3
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_3;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_4:                                                          // Selección del preset 4
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_4;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_5:                                                          // Selección del preset 5
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_5;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_6:                                                          // Selección del preset 6
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_6;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_7:                                                          // Selección del preset 7
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_7;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_8:                                                          // Selección del preset 8
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_8;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_9:                                                          // Selección del preset 9
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_9;                                // Asigna la posición de memoria correspondiente
+            break;
+        case PRESET_10:                                                         // Selección del preset 10
+            i16DirEEPROM=OFFSET_EEPROM_PRESET_10;                               // Asigna la posición de memoria correspondiente
+            break;    
+    }
+
+    // Lectura y carga de datos
+    switch(i8VariablesPreset){                                                                          // Dependiendo del tratamiento a guardar
+        case PRESET_ELECTRO:                                                                            // Variables Electro a memoria
+            i16TacElec[i8ConfigCanal]=readEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_TIEMPO_ACTIVO);             // Carga en variable Electroestimulación - Tiempo Activo - 16 bits    
+            i16TdElec[i8ConfigCanal]=readEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_TIEMPO_DESCANSO);            // Carga en variable Electroestimulación - Tiempo Descanso - 16 bits        
+            i8TrElec[i8ConfigCanal]=readEEPROM_8bits(i16DirEEPROM+EEPROM_ELECTRO_TIEMPO_RAMPA);                 // Carga en variable Electroestimulación - Tiempo Rampa - 8 bits    
+            i8Nrep[i8ConfigCanal]=readEEPROM_8bits(i16DirEEPROM+EEPROM_ELECTRO_REPETICIONES);                   // Carga en variable Electroestimulación - Repeticiones - 8 bits    
+            i16IElec[i8ConfigCanal]=readEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_CORRIENTE);                   // Carga en variable Electroestimulación - Corriente - 16 bits
+            i16frecElec[i8ConfigCanal]=readEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_FRECUENCIA);               // Carga en variable Electroestimulación - Frecuencia - 16 bits
+            bPolaridadElec[i8ConfigCanal]=readEEPROM_8bits(i16DirEEPROM+EEPROM_ELECTRO_POLARIDAD);              // Carga en variable Electroestimulación - Polaridad - 8 bits
+            bSimetriaElec[i8ConfigCanal]=readEEPROM_8bits(i16DirEEPROM+EEPROM_ELECTRO_SIMETRIA);                // Carga en variable Electroestimulación - Simetria - 8 bits
+            i16PW_plusElec[i8ConfigCanal]=readEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_ANCHO_PULSO_POSITIVO);  // Carga en variable Electroestimulación - Ancho pulso positivo - 16 bits            
+            i16PW_minusElec[i8ConfigCanal]=readEEPROM_16bits(i16DirEEPROM+EEPROM_ELECTRO_ANCHO_PULSO_NEGATIVO); // Carga en variable Electroestimulación - Ancho pulso negativo - 16 bits            
+            break;                
+        case PRESET_GALV:                                                                               // Variables Galvanica a memoria
+            i16Igalv=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALV_CORRIENTE);                                     // Carga en variable Galvanica - Corriente - 16 bits                
+            i16Tgalv=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALV_TIEMPO_ACTIVO);                                 // Carga en variable Galvanica - Tiempo Activo - 16 bits    
+            i8Trampagalv=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALV_TIEMPO_RAMPA);                              // Carga en variable Galvanica - Tiempo Rampa - 16 bits
+            break;
+        case PRESET_GALVMICRO:                                                                          // Variables Galvánica a memoria
+            i16Igalv=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_GALV_CORRIENTE);                           // Carga en variable Galvánica + Microcorrientes - Corriente Galvánica - 16 bits
+            i16Tgalv=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_GALV_TIEMPO_ACTIVO);                       // Carga en variable Galvánica + Microcorrientes - Tiempo Activo Galvánica - 16 bits    
+            i8Trampagalv=readEEPROM_8bits(i16DirEEPROM+EEPROM_GALVMICRO_GALV_TIEMPO_RAMPA);                     // Carga en variable Galvánica + Microcorrientes - Tiempo Rampa Galvánica - 8 bits
+            i16Imicro=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_CORRIENTE);                         // Carga en variable Galvánica + Microcorrientes - Corriente - 16 bits
+            i16Tmicro=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_TIEMPO_ACTIVO);                     // Carga en variable Galvánica + Microcorrientes - Tiempo Activo - 16 bits    
+            bPolaridadMicro=readEEPROM_8bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_POLARIDAD);                    // Carga en variable Galvánica + Microcorrientes - Polaridad - 8 bits
+            i16PWmicro=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_ANCHO_PULSO);                      // Carga en variable Galvánica + Microcorrientes - Ancho Pulso - 16 bits    
+            i16frecmicro=readEEPROM_16bits(i16DirEEPROM+EEPROM_GALVMICRO_MICRO_FRECUENCIA);                     // Carga en variable Galvánica + Microcorrientes - Frecuencia - 16 bits
+            break;
+        case PRESET_TRANSCRANEAL:                                                                       // Variables Transcraneal a memoria
+            //CAMBIAR_POR_VARIABLE=readEEPROM_16bits(i16DirEEPROM+EEPROM_TRANSC_CORRIENTE);               // Carga en variable Transcraneal - Corriente - 16 bits
+            //CAMBIAR_POR_VARIABLE=readEEPROM_16bits(i16DirEEPROM+EEPROM_TRANSC_TIEMPO_ACTIVO);           // Carga en variable Transcraneal - Tiempo Activo - 16 bits    
+            //CAMBIAR_POR_VARIABLE=readEEPROM_16bits(i16DirEEPROM+EEPROM_TRANSC_TIEMPO_RAMPA);            // Carga en variable Transcraneal - Tiempo Rampa - 16 bits    
+            break;
+        case PRESET_SMP:                                                                                // Variables SMP a memoria
+            i16TacSMP=readEEPROM_16bits(i16DirEEPROM+EEPROM_SMP_TIEMPO_ACTIVO);                                 // Carga en variable SMP - Tiempo Activo - 16 bits    
+            i32TDesfaseSMP=readEEPROM_32bits(i16DirEEPROM+EEPROM_SMP_DESFASE_PULSOS);                           // Carga en variable SMP - Desfase entre pulsos - 32 bits    
+            i16FrecSMP=readEEPROM_16bits(i16DirEEPROM+EEPROM_SMP_FRECUENCIA);                                   // Carga en variable SMP - Frecuencia - 16 bits
+            i16PWSMP=readEEPROM_16bits(i16DirEEPROM+EEPROM_SMP_ANCHO_PULSO);                                    // Carga en variable SMP - Ancho de pulso - 16 bits    
+            break;
+    }
+
+    return i8Return;                                                                                    // Devuelve el valor
+}

@@ -1,0 +1,397 @@
+/*
+*   File: comunicacionSO.c
+*   
+*   Descripción: Program file que describe los parámetros 
+*      necesarios para la comunicación Sauron->Orco
+*   
+*   Proyecto:EPTE V2
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+// TODO: TODOS LOS RETURN DEBEN DE ESTAR DEFINIDOS PARA QUE EL RETORNO SEA DEBIDO AL ACK DEL PIC ORCO
+// TODO: CAMBIAR PUTC POR FPUTC UNA VEZ SE SEPA EL NOMBRE DEL STREAM A USAR
+// TODO:
+#include "comunicacionSO.h"
+
+/********************************* Funciones *****************************************/
+
+int8 enviaComando(int8 i8Mode){
+
+   int8 i8Return;
+
+   switch (i8Mode){
+      case CHECK_ALIVE:               // Comprueba si la comunicación entre PICs sigue viva
+         i8Return=enviaCheckAlive();      
+         break;
+      case START:                     // Comando START
+         i8Return=enviaStart();         // Envia el comando START para empezar el tratamiento
+         break;
+      case STOP:                     // Comando STOP
+         i8Return=enviaStop();         // Envia el comando STOP para parar el tratamiento
+         break;         
+      case CONFIG_TRAT:               // Configuración del tratamiento
+         putc(COMANDO_CONFIG_TRAT);      // Envia que se va a configurar un tratamiento
+         i8Return=getc();            // TODO: Secuencia de tratamiento 
+         break;
+      case CONFIG_TRAT_ACT:            // Configuración el tratamiento en activo
+         putc(COMANDO_CONFIG_TRAT_ACT);   // Envía que se va a configurar un tratamiento en activo
+         i8Return=getc();            // TODO: Secuencia de tratamiento en activo
+         break;
+      default:                     // En caso de que se introduzca un valor no permitido
+         i8Return=ERROR_DESCONOCIDO;      // Devuelvo el valor de ERROR_DESCONOCIDO
+   }
+
+   return i8Return;
+}
+
+int8 enviaConfiguracionCanal(   int8 i8Canal, int16 i16TiempoActivo, int8 i8TiempoReposo, int8 i8TiempoRampa, 
+                        int8 i8Repeticiones, int16 i16Corriente, int16 i16Frecuencia, int1 bSimetria, 
+                        int1 bPolaridad, int16 i16PWP, int16 i16PWN, int1 bSimetriaCanales){
+
+   int8 i8Return;
+   int16 i16Envio;            // Variable utilizada para juntar los bytes sin que de problemas de desbordamiento
+                        // No tendría que darlos, pero por si acaso
+   #ifdef CHECKSUM
+   gi8CheckSum=0;
+   #endif
+   // Envia primer paquete (8bits) (Simetría entre canales | Simetría | Polaridad | Canal)
+   i16Envio=(bSimetriaCanales<<MASK_SIMETRIA_CANALES) | (bSimetria<<MASK_SIMETRIA)   |
+            (bPolaridad<<MASK_POLARIDAD) | i8Canal;
+
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el segundo paquete (16 bits) (TiempoActivo)
+   // MSB
+   i16Envio=(i16TiempoActivo & MSB) >> 8;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // LSB
+   i16Envio=(i16TiempoActivo & LSB);
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el tercer paquete (8 bits) (TiempoReposo)
+   i16Envio=i8TiempoReposo;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el cuarto paquete (8 bits) (TiempoRampa)
+   i16Envio=i8TiempoRampa;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el quinto paquete (8 bits) (Repeticiones)
+   i16Envio=i8Repeticiones;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el sexto paquete (16 bits) (Corriente)
+   // MSB
+   i16Envio=(i16Corriente & MSB) >> 8;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // LSB
+   i16Envio=(i16Corriente & LSB);
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el séptimo paquete (16 bits) (Frecuencia)
+   // MSB
+   i16Envio=(i16Frecuencia & MSB) >> 8;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // LSB
+   i16Envio=(i16Frecuencia & LSB);
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el octavo paquete (16 bits) (PW+)
+   // MSB
+   i16Envio=(i16PWP & MSB) >> 8;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // LSB
+   i16Envio=(i16PWP & LSB);
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el noveno paquete (16 bits) (PW-)
+   // MSB
+   i16Envio=(i16PWN & MSB) >> 8;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // LSB
+   i16Envio=(i16PWN & LSB);
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);   // Hago la suma de los valores
+   gi8CheckSum=calculaChecksum();   // Calcula el checksum con los valores recibidos
+   putc(gi8CheckSum);            // ENvio el checksum
+   #endif
+
+   // TODO: Debe recibir ACK al final o cada vez que se envíe un dato???
+   // Espera recepción del ACK - TODO: Timeout?
+   i8Return=getc();
+
+   #ifdef CHECKSUM
+   if(COMANDO_CHECKSUM == i8Return){         // Si el cheksum es correcto
+      i8Return=NO_ERROR;                  // Devuelve NO_ERROR
+   }else{                              // Si no fuera correcto
+   #endif
+
+      if(COMANDO_ACK == i8Return){         // Si la respuesta coincide con el comando      
+         i8Return=NO_ERROR;               // Devuelve NO_ERROR
+      }else{                           // Si no existe respuesta o es erronea      
+         i8Return=ERROR_NOACK;            // Devuelve ERROR_NOACK   
+      }
+
+   #ifdef CHECKSUM
+   }
+   #endif
+
+   return i8Return;
+}
+
+int8 enviaConfiguracionCanalActivo(int8 i8Canal, int16 i16Corriente){
+
+   int8 i8Return;
+
+   int16 i16Envio;            // Variable utilizada para juntar los bytes sin que de problemas de desbordamiento
+
+   #ifdef CHECKSUM
+   gi8CheckSum=0;
+   #endif
+   // Envia primer paquete (8bits) (Canal)
+   i16Envio=i8Canal;
+
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // Envía el segundo paquete (16 bits) (Frecuencia)
+   // MSB
+   i16Envio=(i16Frecuencia & MSB) >> 8;
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);
+   #endif
+
+   // LSB
+   i16Envio=(i16Frecuencia & LSB);
+   putc(i16Envio);
+
+   #ifdef CHECKSUM
+   gi8CheckSum+=(i16Envio & LSB);   // Hago la suma de los valores
+   gi8CheckSum=calculaChecksum();   // Calcula el checksum con los valores que le paso
+   putc(gi8CheckSum);            // Envio el checksum
+   #endif
+
+   // TODO: Debe recibir ACK al final o cada vez que se envíe un dato???
+   // Espera recepción del ACK - TODO: Timeout?
+   i8Return=getc();
+
+   #ifdef CHECKSUM
+   if(COMANDO_CHECKSUM == i8Return){         // Si el cheksum es correcto
+      i8Return=NO_ERROR;                  // Devuelve NO_ERROR
+   }else{                              // Si no fuera correcto
+   #endif
+
+      if(COMANDO_ACK == i8Return){         // Si la respuesta coincide con el comando      
+         i8Return=NO_ERROR;               // Devuelve NO_ERROR
+      }else{                           // Si no existe respuesta o es erronea      
+         i8Return=ERROR_NOACK;            // Devuelve ERROR_NOACK   
+      }
+
+   #ifdef CHECKSUM
+   }
+   #endif
+
+   return i8Return;
+}
+
+int8 enviaAsignacionCanales(int8 i8Canal){
+
+   int8 i8Return;
+
+   // Envia el valor del enum eCANAL para que el otro PIC sepa que canales se van a configurar
+   putc(i8Canal);
+
+   // Espera recepción del ACK - TODO: Timeout?
+   i8Return=getc();
+
+   if(COMANDO_ACK == i8Return){         // Si la respuesta coincide con el comando      
+      i8Return=NO_ERROR;               // Devuelve NO_ERROR
+   }else{                           // Si no existe respuesta o es erronea      
+      i8Return=ERROR_NOACK;            // Devuelve ERROR_NOACK   
+   }
+
+   return i8Return;
+}
+
+int8 enviaStart(){
+
+   int8 i8Return;
+
+   // Envía comando de START
+   putc(COMANDO_START);
+
+   // Espera recepción del ACK - TODO: Timeout?
+   i8Return=getc();
+
+   if(COMANDO_ACK == i8Return){         // Si la respuesta coincide con el comando      
+      i8Return=NO_ERROR;               // Devuelve NO_ERROR
+   }else{                           // Si no existe respuesta o es erronea      
+      i8Return=ERROR_NOACK;            // Devuelve ERROR_NOACK   
+   }
+
+   return i8Return;
+}
+
+int8 enviaStop(){
+
+   int8 i8Return;
+
+   // Envía comando de START
+   putc(COMANDO_STOP);
+   
+   // Espera recepción del ACK - TODO: Timeout?
+   i8Return=getc();
+
+   if(COMANDO_ACK == i8Return){         // Si la respuesta coincide con el comando      
+      i8Return=NO_ERROR;               // Devuelve NO_ERROR
+   }else{                           // Si no existe respuesta o es erronea      
+      i8Return=ERROR_NOACK;            // Devuelve ERROR_NOACK   
+   }
+
+   return i8Return;
+}
+
+int8 enviaCheckAlive(){
+
+   int8 i8Return;            // Variable utilizada para guardar el valor   de lectura y para el ACK    
+
+   // Envia el comando CheckAlive
+   putc(COMANDO_CHECK_ALIVE);
+
+   // Espera recepcion del ACK - TODO: TimeOut?
+   i8Return=getc();
+
+   if(COMANDO_CHECK_ALIVE == i8Return){      // Si la respuesta coincide con el comando
+      i8Return=NO_ERROR;                  // Devuelve NO_ERROR
+   }else{                              // Si no existe respuesta o es erronea
+      i8Return=ERROR_NOACK;               // Devuelve ERROR_NOACK
+   }
+
+   return i8Return;
+}
+
+int8 enviaErrorOcurrido(int8 i8Error){
+
+   int8 i8Return;
+
+   putc(COMANDO_ERRORES);                  // Envía el comando indicativo de que se va a enviar un código de error
+
+   switch(i8Error){                     
+      case ERROR_ELECTRODO:               // En el caso de que se trata de un eror de electrodo
+         putc(ERROR_ELECTRODO);            // Envio el comando de error de electrodo
+         i8Return=getc();               // Devuelve ACK
+         break;   
+      case ERROR_SIMETRIA:               // En el caso de que se trate de un error de simetría
+         putc(ERROR_SIMETRIA);            // Envía el comando 
+         i8Return=getc();               // Devuelve el ACK
+         break;      
+      case ERROR_CALIBRADO:               // En el caso de que se trate de un error de calibrado
+         putc(ERROR_CALIBRADO);            // Envía el comando
+         i8Return=getc();               // Devuelve el ACK
+         break;      
+      case ERROR_ACELEROMETRO:            // En el caso de que se trate de un error de acelerómetro
+         putc(ERROR_ACELEROMETRO);         // Envía el comando
+         i8Return=getc();               // Devuelve el ACK
+         break;   
+      default:                        // En el caso de que se introduzca un valor inválido
+         i8Return=ERROR_DESCONOCIDO;
+   }
+
+   return i8Return;
+}
+
+#ifdef CHECKSUM
+int8 calculaChecksum(){
+   return (0xFF - gi8CheckSum + 1);         
+}
+#endif
+
+
+
+int8 procesaComando(int8 i8Received){ // Procesa comandos que envia Orco a Sauron
+
+   int8 i8Return;
+
+   switch(i8Received){
+      case COMANDO_CHECK_ALIVE:         // Recibo la contestación de check alive de orco
+         i8Return=NO_ERROR;      
+         break;      
+      case COMANDO_ACK:               // Recibo ACK de Orco
+         i8Return=NO_ERROR;      
+         break;      
+      case COMANDO_ERRORES:            // Recibo el comando de errores 
+         gi8NumeroBytesLeer=1;         // Número de bytes a leer
+                                 // TODO: Leer aqui el error? - INT_RDA
+         i8Return=getc();            // Devuelve un valor que se comprueba con los de enum eERRORES
+         break;
+      default:   
+         i8Return=ERROR_DESCONOCIDO;      
+   }
+   
+   return i8Return;
+}

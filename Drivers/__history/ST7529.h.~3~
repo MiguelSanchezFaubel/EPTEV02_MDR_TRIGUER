@@ -1,0 +1,699 @@
+/*     
+*   Code: GLCD Driver for ST7529 - Header file
+*
+*   Developed by: Ionclinics & Deionics SL
+*   Rev: 1.0
+*
+*/
+
+#include "fat.c"
+
+/* Configuration */
+// Incluir define necesarios para configurarlo
+#define S_   0         // Small
+#define M_   1         // Medium
+#define L_   2         // Large
+#define XL_   3         // XLarge
+
+
+#define DATA      1      // Definición de instrucción DATA
+#define COMMAND   0      // Definición de instrucción COMMAND
+
+#define MINLINE   0x10    // Primera limnea del display
+#define MAXLINE   0x9F    // Última línea del display
+#define MINCOL    0x05    // Primera columna del display
+#define MAXCOL    0x54    // Última columna del display
+
+#ifndef   HIGH
+   #define HIGH   1
+#endif
+
+#ifndef   LOW
+   #define LOW      0
+#endif
+
+#ifndef   INVERT
+   #define INVERT   1
+#endif
+
+#ifndef   NORMAL
+   #define NORMAL   0
+#endif
+
+/* Commands */
+#define EXTIN   0x30
+#define EXTOUT  0x31
+
+// Ext = 0
+#define DISON   0xaf
+#define DISOFF  0xae
+#define DISNOR  0xa6
+#define DISINV  0xa7
+#define COMSCN  0xbb
+#define DISCTRL 0xca
+#define SLPIN   0x95
+#define SLPOUT  0x94
+#define LASET   0x75
+#define CASET   0x15
+#define DATSDR  0xbc
+#define RAMWR   0x5c
+#define RAMRD   0x5d
+#define PTLIN   0xa8
+#define PTLOUT  0xa9
+#define RMWIN   0xe0
+#define RMWOUT  0xee
+#define ASCSET  0xaa
+#define SCSTART 0xab
+#define OSCON   0xd1
+#define OSCOFF  0xd2
+#define PWRCTRL 0x20
+#define VOLCTRL 0x81
+#define VOLUP   0xd6
+#define VOLDOWN 0xd7
+#define EPSRRD1 0x7c
+#define EPSRRD2 0x7d
+#define NOP     0x25
+#define EPINT   0x07
+
+// Ext = 1
+#define GRAY1SET    0x20
+#define GRAY2SET    0x21
+#define ANASET      0x32
+#define SWINT       0x34
+#define EPCTIN      0xcd
+#define EPCOUT      0xcc
+#define EPMWR       0xfc
+#define EPMRD       0xfd
+
+/* Escala de grises */
+#define WHITE   0x00
+#define GRAY1   0x20
+#define GRAY2   0x30
+#define GRAY3   0x40
+#define GRAY4   0x50
+#define GRAY5   0x60
+#define GRAY6   0x70
+#define GRAY7   0x80
+#define GRAY8   0x90
+#define GRAY9   0xA0
+#define GRAY10   0xB0
+#define GRAY11   0xC0
+#define GRAY12   0xD0
+#define GRAY13   0xE0
+#define GRAY14   0xF0
+#define BLACK   0xFF
+
+#define ICON_HEIGHT     16   
+#define ICON_WIDTH      16
+#define ICON_LENGTH     32
+
+#define ICON_BAT0       0
+#define ICON_BAT1       1
+#define ICON_BAT2       2
+#define ICON_BAT3       3
+#define ICON_BAT4       4
+#define ICON_BAT5       5
+#define ICON_ON         6
+#define ICON_ALERT      7
+#define ICON_UP         11
+#define ICON_DOWN       10
+#define ICON_RIGHT      9
+#define ICON_LEFT       8
+#define ICON_CANCEL     12
+#define ICON_ALTON      13
+#define ICON_ALTOFF     14
+#define ICON_ILUM       15
+#define ICON_CONTRAST   16
+#define ICON_FLECHA     17
+#define ICON_CONFIG     18
+#define ICON_ALMACEN    19
+#define ICON_NONE       20
+#define ICON_SON_FULL   21
+#define ICON_SON_MED    22
+#define ICON_SON_NONE   23
+#define ICON_TICK       24
+#define ICON_NO_BAT     25
+
+/********************************** Definiciones necesarias para el GLCD ****************************************/
+const char *sCo_ELECTRICA[] ="CORRIENTE ELECTRICA";
+const char *sFRECUENCIA[]="FRECUENCIA";
+const char *sPOLARIDAD[]="POLARIDAD";
+const char *sMONOPOLAR[]="MONOPOLAR ";
+const char *sBIPOLAR[]="BIPOLAR   ";
+const char *sMICRO_CORRIENTES[]="MICROCORRIENTES";
+const char *sSIMETRIA[]="SIMETRIA";
+const char *sTIEMPO_RAMPA[]="TIEMPO DE RAMPA";
+const char *sCa_ELECTRICA[]="CARGA ELECTRICA";
+const char *sASIMETRICA[]="ASIMETRICA";
+const char *sSIMETRICA[]= "SIMETRICA ";
+const char *sELECTRO_ESTIMULACION[]="ELECTRO-ESTIMULACION";
+const char *sSMP[]="SIST MULTIPULSOS";
+const char *sGALV[]="GALVANICA";
+const char *sGALVANICA_MICRO[]="GALVANICA + MICRO";
+const char *sCanal_A[]="Canal A         ";
+const char *sCanal_B[]="Canal B         ";
+const char *sCanal_C[]="Canal C         ";
+const char *sCanal_POINTER[]="Pointer         ";
+const char *sSimetriaCanalesNO[]="NO ";
+const char *sSimetriaCanalesAB[]="AB ";
+const char *sSimetriaCanalesABC[]="ABC";
+const char *sCONFIG_TRAT[]="CONFIG. TRATAMIENTO";
+
+const char sMENU_PRINCIPAL[]="MENU PRINCIPAL";
+const char sMENU_CONFIG[]="        Configuracion        ";
+const char sMENU_GALV[]="          Galvanica          ";
+const char sMENU_GALVMICRO[]=" Galvanica + microcorrientes ";
+const char sMENU_ELECTRO[]="     Electro-Estimulacion    ";
+const char sMENU_SMP[]="             SMP             ";
+const char sMENU_TEST[]="            Test             ";
+
+const char *sCONFIG[]="CONFIGURACION";
+const char *sCONFIG_ILUM[]=" Iluminacion ";
+const char *sCONFIG_PITO[]=" Aviso acustico ";
+const char *sCONFIG_VERS[]=" Version FW/HW ";
+const char *sCONFIG_CONT[]=" Contraste ";
+const char *sCONFIG_IDIO[]=" Idioma ";
+
+const char *sCONFIG_VERS_MAYUS[]="VERSION FW/HW";
+const char *sCONFIG_CONT_MAYUS[]="CONTRASTE";
+const char *sCONFIG_IDIO_MAYUS[]="IDIOMA";
+
+const char *sTEST[]="TEST DISPOSITIVO";
+const char *sTEST_LEDS[]="LED BICOLOR";
+const char *sTEST_PITO[]="AVISO ACUSTICO";
+const char *sTEST_PULS[]="PULSADORES";
+const char *sTEST_ILUM[]="ILUMINACION";
+const char *sTEST_ACCE[]="ACELEROMETRO";
+const char *sTEST_AEXT[]="ALIMENTACION EXT";
+const char *sTEST_SCAR[]="STATUS CARGADOR";
+const char *sTEST_DC12[]="DC/DC 12V";
+const char *sTEST_DC30[]="DC/DC 30V";
+const char *sTEST_RELE[]="RELES";
+const char *sTEST_BQ34[]="BQ34Z100G1";
+const char *sTEST_CPIC[]="COMUNICACION PIC";
+const char *sTEST_ECHA[]="ELEC CHA";
+const char *sTEST_ECHB[]="ELEC CHB";
+const char *sTEST_ECHC[]="ELEC CHC";
+
+const char *sRANGO_100_10[]="(Rango 100uA..10mA)";
+const char *sRANGO_100_1[]="(Rango 100uA..1mA)  ";
+
+const char *sPW_POS[]="ANCHO DE PULSO +";
+const char *sPW_NEG[]="ANCHO DE PULSO -";
+const char *sPW_GEN[]="ANCHO DE PULSO  ";
+
+const char *sSIM_CANALES[]="SIMETRIA ENTRE CANALES";
+const char *sPW_SIM[]="(Ancho de pulso +/- configurables) ";
+const char *sPW_ASIM[]="(Ancho de pulso +/- iguales) ";
+
+const char *sSEL_CANAL[]="SELECCION DEL CANAL";
+
+const char *sTIEMPO_ACT[]="TIEMPO ACTIVO";
+const char *sTIEMPO_REP[]="TIEMPO REPOSO";
+const char *sTIEMPO_DESF[]="TIEMPO DESFASE";
+
+const char *sTIEMPO_ACT_EESTIM[]="(Tiempo activo de estimulacion)";
+const char *sTIEMPO_REP_EESTIM[]="(Tiempo reposo de estimulacion)";
+const char *sTIEMPO_ACT_SMP[]="       (Tiempo activo SMP)";
+const char *sTIEMPO_DESF_SMP[]="(Desfase entre pulsos)";
+const char *sTIEMPO_ACT_GALV[]="  (Tiempo activo galvanica)";
+const char *sTIEMPO_ACT_MICRO[]="(Tiempo activo microcorrientes)";
+const char *sILIMITADO[]="Ilimitado ";
+
+const char *sNUM_REPS[]="NUMERO REPETICIONES";
+
+const char *sLED_CHC[]="LED CHC";
+const char *sLED_CHB[]="LED CHB";
+const char *sLED_CHA[]="LED CHA";
+const char *sLED_GAL[]="LED GALV";
+
+const char *sTEXTO_PULSADORES[]="(PULSAR P4 EL ULTIMO)";
+
+const char *sALIMENTACION[]="ALIMENTACION";
+const char *sCONECTADA[]="CONECTADA";
+const char *sDESCONECTADA[]="DESCONECTADA";
+
+const char *sCARGADO[]=" CARGADO ";
+const char *sENCARGA[]="EN CARGA ";
+
+const char *sDC12_OK[]="DC/DC 12V OK";
+const char *sDC12_NOK[]="DC/DC 12V NOK ";
+
+const char *sDC30_OK[]="DC/DC 30V OK";
+const char *sDC30_NOK[]="DC/DC 30V NOK ";
+
+const char *sRELE_GALV[]="RELE GALVANICA+MICRO";
+const char *sRELE_ECHA[]="RELE ESTIMULACION CHA";
+const char *sRELE_ECHB[]="RELE ESTIMULACION CHB";
+const char *sRELE_ECHC[]="RELE ESTIMULACION CHC";
+const char *sRELE_PROG[]="RELE PROGRAMACION";
+
+const char *sDEV_OK[]="Device Type OK";
+const char *sDEV_NOK[]="Device Type NOK";
+
+const char *sINTENSIDAD[]="Intensidad";
+const char *sCARGA[]="Carga";
+const char *sTIEMPO[]="Tiempo";
+const char *sPULSOS[]="Pulsos";
+const char *sOHM[]="ohm";
+
+const char *sIMED[]="Imed =";
+const char *sVMED[]="Vmed =";
+const char *sRMED[]="Rmed =";
+
+const char *sERROR_ELECTRODO[]="ERROR DE ELECTRODO";
+const char *sERROR_TRANSISTORES[]="ERROR DE TRANSISTORES";
+const char *sERROR_SISTEMA_MEDIDA[]="ERROR SISTEMA DE MEDIDA";
+const char *sERROR_COMS1[]="   ERROR DE";
+const char *sERROR_COMS2[]="COMUNICACIONES";
+
+const char *sTACTIVO[]="Tactivo";
+const char *sTREPOSO[]="Treposo";
+
+const char *sA[]="  A  ";
+const char *sB[]="  B  ";
+const char *sC[]="  C  ";
+const char *sP[]="  P  ";
+
+const char *sCHA_EE[]="      CANAL A     ";
+const char *sCHB_EE[]="      CANAL B     ";
+const char *sCHC_EE[]="      CANAL C     ";
+
+const char *sAUTOAPAG_1[]="para el autoapagado";    
+const char *sAUTOAPAG_2[]="Presione el boton START";
+const char *sAUTOAPAG_3[]="para continuar";
+
+const char *sAPAGADO_EQUIPO[]="Apagando equipo...";
+
+const char *sCARGA_COMPLETA[]="CARGA COMPLETA";
+const char *sCARGA_CURSO[]="CARGA EN CURSO";
+const char *sORCO_SAURON[]="ORCO A SAURON";
+
+const char *sACC_NOK[]="Acelerometro NOK";
+
+const char *sAPAG_TRAT_ACT1[]="APAGANDO TRATAMIENTOS";
+const char *sAPAG_TRAT_ACT2[]="     ACTIVOS...";
+
+const char *sACC_DETECT1[]="     MOVIMIENTO BRUSCO    ";
+const char *sACC_DETECT2[]="         DETECTADO";
+
+const char *sERROR_ALIM1[]="     ERROR ALIMENTACION    ";
+const char *sERROR_ALIM2[]="        TRATAMIENTO";
+
+const char *sMAX_A[]="MAX A ";
+const char *sMAX_B[]="MAX B ";
+const char *sMAX_C[]="MAX C ";
+
+const char *sMAX_AB[]="MAX AB";
+const char *sMAX_AC[]="MAX AC";
+const char *sMAX_BC[]="MAX BC";
+
+const char *sMAX_ABC[]="MAX   ";
+
+const char *sCC_A[]="CC A ";
+const char *sCC_B[]="CC B ";
+const char *sCC_C[]="CC C ";
+
+const char *sCC_AB[]="CC AB";
+const char *sCC_AC[]="CC AC";
+const char *sCC_BC[]="CC BC";
+
+const char *sCC_ABC[]="CC   ";
+const char *sESPACIO[]="     ";
+
+/* Variales globales */
+rom int8 *pCurrentFont;
+int8 iRowStep,iColumnStep,iNumBytes;
+
+/* Functions */
+/*
+*   Función: Chip Select
+*   Descripción: Habilita / Deshabilita la escritura.
+*   Está configurada para invertir la salida de lo que ponemos (esquema Perico)
+*   i.e: Si ponemos ST7529_cs(HIGH), en la placa el CS estará en HIGH 
+*   enviando un LOW por la salida del PIC
+*
+*   Input:
+*         - iValue - Nivel al que se pone el chip select. Este es activo a nivel bajo
+*               - Se han definido varios defines para solo tener que 
+*                  colocar HIGH o LOW como argumento de entrada
+*   Output:
+*         - 
+*/
+void ST7529_cs(int1);
+
+
+/*
+*   Función: Modo de comandos
+*   Descripción: Habilita capturar los datos que enviamos 
+*   por SPI como comando o como dato
+*
+*   Input:
+*         - iValue - Selección de modo.
+*               - Se han definido varios defines para solo tener que 
+*                  colocar COMMAND o DATA como argumento de entrada
+*   Output:
+*         - 
+*/
+void ST7529_a0(int1);
+
+
+/*
+*   Función: Sleep
+*   Descripción: Envia la pantalla a dormir
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_sleep();
+
+
+/*
+*   Función: Despertar
+*   Descripción: Despierta la pantalla del modo sleep
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_wakeUp();
+
+
+/*
+*   Función: Pantalla ON
+*   Descripción: Enciende la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_displayOn();
+
+
+/*
+*   Función: Pantalla OFF
+*   Descripción: Apaga la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_displayOff();
+
+
+/*
+*   Función: Reset
+*   Descripción: Resetea la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_reset();
+
+
+/*
+*   Función: Inicialización
+*   Descripción: Inicializa la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_init();
+
+
+/*
+*   Función: Enviar dato
+*   Descripción: Envio de datos a la pantalla
+*
+*   Input:
+*            - iSel - Seleccionar entre COMMAND o DATA, 
+*            dependiendo de lo que se va a enviar
+*         - iData - Dato o comando a enviar
+*   Output:
+*         - 
+*/
+void ST7529_send(int1, int8);
+
+
+/*
+*   Función: Incrementar contraste
+*   Descripción: Incrementa el contraste de la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_incContrast();
+
+
+/*
+*   Función: Decrementar contraste
+*   Descripción: Decrementa el contraste de la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_decContrast();
+
+
+/*
+*   Función: Clear
+*   Descripción: Borra toda la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_clear();
+
+
+/*
+*   Función: PutChar
+*   Descripción: Envia un caracter la pantalla
+*
+*   Input:
+*         - iChar      - Caracter a enviar  
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*         - iFont      - Fuente seleccionada, se selecciona con los defines definidos
+*               - S_  - Tamaño pequeño
+*               - M_  - Tamaño Mediano
+*               - L_  - Tamaño Grande
+*               - XL_ - Tamaño Muu grande
+*                  
+*         - iGrayScale - Color eleido para pintar el caracter, 
+*               existen los siguientes niveles definidos
+*               - WHITE
+*               - GRAY1
+*               - GRAY2
+*               - GRAY3
+*               - GRAY4
+*               - GRAY5
+*               - GRAY6
+*               - GRAY7
+*               - GRAY8
+*               - GRAY9
+*               - GRAY10
+*               - GRAY11
+*               - GRAY12
+*               - GRAY13
+*               - GRAY14
+*               - BLACK
+*
+*         - iInvert - Selecciona lainversion de texto.
+*               Existen los siguientes niveles definidos  
+*               - NORMAL
+*               - INVERT
+*
+*   Output:
+*         - 
+*/
+void ST7529_putChar(int8, int8, int8, int8, int8, int1);
+
+
+/*
+*   Función: Printf
+*   Descripción: Imprime una string por pantala
+*
+*   Input:
+*         - *sText     - Texto a enviar
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*         - iFont      - Fuente seleccionada, se selecciona con los defines definidos
+*               - S_  - Tamaño pequeño
+*               - M_  - Tamaño Mediano
+*               - L_  - Tamaño Grande
+*               - XL_ - Tamaño Muu grande
+*                  
+*         - iInvert - Selecciona lainversion de texto.
+*               Existen los siguientes niveles definidos  
+*               - NORMAL
+*               - INVERT
+*
+*   Output:
+*         - 
+*/
+void ST7529_printf(char *, int8, int8, int1, int1);
+
+
+
+/*
+*   Función: PrintfG
+*   Descripción: Envia una string la pantalla de la escala de grises que elijas
+*
+*   Input:
+*         - *sText     - Texto a enviar  
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*         - iFont      - Fuente seleccionada, se selecciona con los defines definidos
+*               - S_  - Tamaño pequeño
+*               - M_  - Tamaño Mediano
+*               - L_  - Tamaño Grande
+*               - XL_ - Tamaño Muu grande
+*                  
+*         - iGrayScale - Color eleido para pintar el caracter, 
+*               existen los siguientes niveles definidos
+*               - WHITE
+*               - GRAY1
+*               - GRAY2
+*               - GRAY3
+*               - GRAY4
+*               - GRAY5
+*               - GRAY6
+*               - GRAY7
+*               - GRAY8
+*               - GRAY9
+*               - GRAY10
+*               - GRAY11
+*               - GRAY12
+*               - GRAY13
+*               - GRAY14
+*               - BLACK
+*
+*         - iInvert - Selecciona lainversion de texto.
+*               Existen los siguientes niveles definidos  
+*               - NORMAL
+*               - INVERT
+*
+*   Output:
+*         - 
+*/
+void ST7529_printfg(char *, int8, int8, int, int8, int1);
+
+
+/*
+*   Función: Fuente
+*   Descripción: Configuración de la fuente a usar
+*
+*   Input:
+*         - iFont      - Fuente seleccionada, se selecciona con los defines definidos
+*               - S_  - Tamaño pequeño
+*               - M_  - Tamaño Mediano
+*               - L_  - Tamaño Grande
+*               - XL_ - Tamaño Muu grande
+*                 
+*   Output:
+*         - 
+*/
+void ST7529_selectFont(int8);
+//void ST7529_putImage(char *, int8, int8, int16, int16);
+//void ST7529_putImageGS(rom int8 *, int8, int8, int16, int16);
+
+
+/*
+*   Función: PutIcon
+*   Descripción: Pone un icono en pantalla
+*
+*   Input:
+*         - iIcon   - Icono a poner en pantalla. 
+*            Existen los siguientes iconos definidos
+*               - ICON_BAT     
+*               - ICON_ON       
+*               - ICON_ALERT    
+*               - ICON_LEFT   
+*               - ICON_RIGHT    
+*               - ICON_DOWN    
+*               - ICON_UP      
+*               - ICON_CANCEL    
+*               - ICON_ALTON   
+*               - ICON_ALTOFF    
+*               - ICON_ILUM   
+*               - ICON_CONTRAS 
+*               - ICON_FLECHA   
+*               - ICON_CONFIG    
+*               - ICON_ALMACEN
+*               - ICON_TEST   
+*               
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*
+*   Output:
+*         - 
+*/
+void ST7529_putIcon(int8, int8, int8);
+
+
+/*
+*   Función: PutIconG
+*   Descripción: Pone un icono en pantalla con la escala de grises que elijas
+*
+*   Input:
+*         - iIcon   - Icono a poner en pantalla. 
+*            Existen los siguientes iconos definidos
+*               - ICON_BAT     
+*               - ICON_ON       
+*               - ICON_ALERT    
+*               - ICON_LEFT   
+*               - ICON_RIGHT    
+*               - ICON_DOWN    
+*               - ICON_UP      
+*               - ICON_CANCEL    
+*               - ICON_ALTON   
+*               - ICON_ALTOFF    
+*               - ICON_ILUM   
+*               - ICON_CONTRAS 
+*               - ICON_FLECHA   
+*               - ICON_CONFIG    
+*               - ICON_ALMACEN
+*               - ICON_TEST   
+*               
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*         - iGray - Color eleido para pintar el caracter, 
+*               existen los siguientes niveles definidos
+*               - WHITE
+*               - GRAY1
+*               - GRAY2
+*               - GRAY3
+*               - GRAY4
+*               - GRAY5
+*               - GRAY6
+*               - GRAY7
+*               - GRAY8
+*               - GRAY9
+*               - GRAY10
+*               - GRAY11
+*               - GRAY12
+*               - GRAY13
+*               - GRAY14
+*               - BLACK
+*
+*   Output:
+*         - 
+*/
+void ST7529_putIcon2(int8, int8, int8, int8);
+
+void ST7529_putImageGS(rom int8 *, int8, int8, int16, int16);

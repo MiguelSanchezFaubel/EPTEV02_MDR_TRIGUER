@@ -1,0 +1,146 @@
+/*
+*	File: comunicacionOS.h
+*	
+*	Descripción: Header file que describe los parámetros 
+*		necesarios para la comunicación Orco->Sauron
+*	
+*	Proyecto:EPTE V2
+*	Versión: 1.0
+*
+*	Ionclinics & Deionics SL
+*/
+
+/******************************** Definicion de constantes/enum/struct *****************************************/
+// enum eModos: Identifica el tipo de dato que se va a enviar de Orco a Sauron
+enum eMODOS{
+	CHECK_ALIVE=0,		// 0: Comprueba que se encuentra correctamente la comunicación entre los dos microcontroladores
+	START,				// 1: Empieza el tratamiento
+	STOP,				// 2: Para el tratamiento activo
+	CONFIG_TRAT,		// 3: Configura el tratamiento
+	CONFIG_TRAT_ACT,	// 4: Configura el tratamiento activo TODO : ES NECESARIO? PUEDE QUE CON EL COMANDO ANTERIOR VALGA
+};	// 3 bits
+#define LENGTH_MODES 3	// Indica el tamaño en bits que ocupa
+
+// enum eCHANNEL: Identifica el canal/es elegidos
+enum eCANAL{
+	CH_A=0,				// 0: Canal A  				
+	CH_B,				// 1: Canal B  
+	CH_C,				// 2: Canal C 
+	CH_AB,				// 3: Canal A + Canal B  
+	CH_AC,				// 4: Canal A + Canal C 
+	CH_BC,				// 5: Canal B + Canal C
+	CH_ABC,				// 6: Canal A + Canal B + Canal C
+	GALVANICA,			// 7: Galvanica
+	MICROCORRIENTES,  	// 8: Microcorrientes
+	POINTER=8,			// 8: Pointer ++
+};	// 4 bits
+#define LENGTH_CHANNEL 4		// Indica el tamaño en bits que ocupa
+
+/* ++ El Pointer comparte el mismo valor que microcorrientes debido a que de esta manera 
+	podemos usarlo como indicador para saber cuando se ha elegido el pointer junto con los
+	canales elegidos realizando la operación OR.
+	Ej:
+		envioCanales(POINTER | CH_AB); 
+	En la función anterior se indica que se va a utilizar el canal A y B, siendo uno de ellos el pointer
+*/
+
+// enum: ---- DUDA: GASTEM ENUM PER A LA CORRENT?
+enum eCORRIENTE{
+
+};
+
+// enum: ----
+enum eFRECUENCIA{
+
+};
+
+// enum: ePOLARIDAD
+enum ePOLARIDAD{
+	MONOPOLAR=0,			// 0: Monopolar			
+	BIPOLAR,				// 1: Bipolar
+};	// 1 bit
+#define LENGTH_POLARIDAD 1	// Indica el tamaño en bits que ocupa 
+
+// enum eSIMETRIA:  
+enum eSIMETRIA{
+	ASIMETRICA=0,			// 0: Asimetrica
+	SIMETRICA,				// 1: Simétrica
+};	// 1 bit
+#define LENGTH_SIMETRIA 1	// Indica el tamaño en bits que ocupa 
+
+// enum eSIMETRIA_CANALES:  
+enum eSIMETRIA_CANALES{
+	CANAL_ASIMETRICO=0,			// 0: Asimetrica
+	CANAL_SIMETRICO,			// 1: Simétrica
+};	// 1 bit
+#define LENGTH_SIMETRIA_CANALES 1	// Indica el tamaño en bits que ocupa 
+
+// enum eERRORES: Indica el tipo de error que hay en ese momento
+enum eERRORES{				
+	NO_ERROR=0,				// 0: Sin error
+	ERROR_ELECTRODO,		// 1: Error de electrodo
+	ERROR_SIMETRIA,			// 2: Error de simetría
+	ERROR_CALIBRADO			// 3: Error de calibrado
+	ERROR_ACELEROMETRO,		// 4: Error de acelerómetro / caida libre
+	ERROR_NOACK				// 5: Error de no recepción del ACK
+	ERROR_DESCONOCIDO,		// 6: Error desconocido, usado en casos que no tienen que ocurrir, pero para eliminar futuros problemas
+};	// 3 bits
+#define LENGTH_ERRORES 3	// Indica el tamaño en bits que ocupa 
+
+// Definición de máscaras
+#define MASK_SIMETRIA_CANALES	0x40		// Máscara utilizada para seleccionar el bit de simetría de canales
+#define MASK_SIMETRIA 			0x20		// Máscara utilizada para seleccionar el bit de simetría
+#define MASK_POLARIDAD			0x10		// Máscara utilizada para seleccionar el bit de polaridad
+#define MSB						0xFF00		// Máscara utilizada para seleccionar el MSB de un int16
+#define LSB						0x00FF		// Máscara utilizada para seleccionar el LSB de un int16
+
+// Listado de comandos
+#define COMANDO_CONFIG_TRAT		0x55		// Comando de configuración de tratamiento
+#define COMANDO_CONFIG_TRAT_ACT 0x56		// Comando de configuración de tratamiento en activo
+#define COMANDO_START			0xAA		// Comando de START
+#define COMANDO_STOP			0xBB		// Comando de STOP
+#define COMANDO_CHECK_ALIVE		0xCA		// Comando Check Alive
+#define COMANDO_ACK				0xCC		// Comando identificador del ACK
+#define COMANDO_ERRORES			0xEE		// Comando identificador de que se va a recibir un error
+
+// Otras definiciones
+#define CHECKSUM							// Si está descomentado, se hace uso del checksum
+
+#ifdef CHECKSUM 							// Si se ha definido el uso de CHECKSUM
+	int8 gi8CheckSum;						// Crea la variable para el checksum
+#endif
+
+int8 gi8NumeroBytesLeer;					// Variable global que indica  el número de bytes a leer de la UART cuando se recibe una trama
+
+/********************************* Prototipo de funciones ***********************************************/
+
+/*
+*	Función: procesaComando
+*
+*	Descripción: Procesa el comando recibido desde Sauron 
+*
+*	Parámetros de entrada:
+*		- i8Received	- Le pasa el valor recibido por UART 
+*
+*	Parámetros de salida:
+*		- int8		- Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 procesaComando(int8 i8Received);
+
+/*
+*	Función: procesaConfiguracionCanal
+*
+*	Descripción: Procesa el comando recibido desde Sauron 
+*
+*	Parámetros de entrada:
+*		- 
+*
+*	Parámetros de salida:
+*		- int8		- Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 procesaConfiguracionCanal(){
+
+
+
+
+}

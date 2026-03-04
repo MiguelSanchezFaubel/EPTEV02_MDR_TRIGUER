@@ -1,0 +1,474 @@
+/*
+*   File: comunicacion_struct.h
+*   
+*   Descripción: Header file que describe los parámetros 
+*      necesarios para la comunicación Sauron->Orco con structs
+*   
+*   Proyecto:EPTE V2.1
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+/******************************** Definicion de constantes/variables *****************************************/
+// Identificación de paquetes
+// Envia un identificador y un paquete
+#define MODO_CHECK_ALIVE            1           // 1 - Identifica un paquete del tipo check alive
+#define MODO_FUNCION                2           // 2 - Identifica un paquete de tipo función (utilizado para comandos varios)
+#define MODO_CONEXION_POINTER       3           // 3 - Identifica un paquete de conexión del pointer
+#define MODO_START_STOP             4           // 4 - Identifica un paquete del tipo START/STOP
+#define MODO_ACK                    5           // 5 - Identifica un paquete del tipo ACK
+
+// Envia un identificador y varios paquetes
+#define MODO_TRAT_GALV              6           // 6 - Identifica un paquete del tipo de configuración del tratamiento en galvánica
+#define MODO_TRAT_GALV_ACTIVO       7           // 7 - Identifica un paquete del tipo de tratamiento galvánico en activo
+#define MODO_TRAT_ELECT             8           // 8 - Identifica un paquete del tipo de configuración del tratamiento en electroestimulación
+#define MODO_TRAT_ELECT_ACTIVO      9           // 9 - Identifica un paquete del tipo de tratamiento de electroestimulación en activo
+#define MODO_TRAT_TB               10          // 10 - Identifica un paquete del tipo de configuración del tratamiento en electroestimulación
+#define MODO_TRAT_TB_ACTIVO        11          // 11 - Identifica un paquete del tipo de tratamiento de electroestimulación en activo
+#define MODO_MEDIDAS_OBTENIDAS      12          // 12 - Identifica un paquete del tipo de medidas obtenidas para representación (ElectroEstimulación)
+#define MODO_MEDIDAS_MULTIPULSOS    13          // 13 - Identifica un paquete del tipo de medidas obtenidas para representación (Sistema Multipulsos)
+#define MODO_MEDIDAS_GALVANICA      14          // 14 - Identifica un paquete del tipo de medidas obtenidas para representación (Galvanica )
+#define MODO_ERRORES                15          // 15 - Identifica un paquete del tipo de errores                                                                                                                          
+#define MODO_CONTROL_TIEMPO         16          // 16 - Identifica un paquete del tipo control de tiempo                                                                                                 
+#define MODO_CHECK_INICIAL          17          // 17 - Envia el paquete inicial para comprobar que Orco está preparado
+#define MODO_PROTOCOLO_TEST         18          // 18 - Identifica el paquete de protocolo de test a realizar         
+#define MODO_INFORME                19          // 19 - Envia el paquete para habilitar o deshabilitar la masa para la UART - Muestra informe de ingenieria
+
+#define MAX_PAQUETES                20          // Copia el valor del últm paquete para saber que valor tiene
+#define MODO_DOS_PAQ                MODO_ACK    // Define el numero de paquetes que tiene dos datos de entrada para usar la otra función
+
+// Comandos de funcionamiento
+#define COMANDO_START               0xAA        // Comando de START
+#define COMANDO_STOP                0xBB        // Comando de STOP
+#define COMANDO_START_REPOSO        0xDD        // Comando de start reposo        
+#define COMANDO_STOP_REPOSO         0xEE        // Comando de stop reposo      
+#define COMANDO_START_PAUSA         0xAF        // Comando de start pausa
+#define COMANDO_STOP_PAUSA          0xBE        // Comando de stop pausa
+#define COMANDO_CHECK_ALIVE         0xCA        // Comando Check Alive
+#define COMANDO_ACK                 0xCC        // Comando identificador del ACK
+
+#define INFORME_ACTIVADO            0xAB        // Indica que se va a mostrar el informe de ingenieria
+#define INFORME_DESACTIVADO         0xCD        // Indica que se va a parar el informe de ingenieria
+
+// Tipos de errores
+#define NO_ERROR                0x0000          // Indica que no hay errores/se han solucionado todos los errores
+#define ERROR_ELECTRODO_CHA     0x0001          // Indica que hay un error de electrodo en el canal A               
+#define ERROR_ELECTRODO_CHB     0x0002          // Indica que hay un error de electrodo en el canal B           
+#define ERROR_ELECTRODO_CHC     0x0004          // Indica que hay un error de electrodo en el canal C           
+#define ERROR_RESERVADO         0x0008          // Error reservado (libre)
+#define ERROR_RESERVADO         0x0010          // Error reservado (libre)
+#define ERROR_RESERVADO         0x0020          // Error reservado (libre)
+#define ERROR_CALIBRADO_CHA     0x0040          // Indica que hay un error de calibrado en el canal A
+#define ERROR_CALIBRADO_CHB     0x0080          // Indica que hay un error de calibrado en el canal B
+#define ERROR_CALIBRADO_CHC     0x0100          // Indica que hay un error de calibrado en el canal C
+#define ERROR_ACK               0x0200          // Indica que hay un error de ACK 
+#define ERROR_CHECHSUM          0x0400          // Indica que hay un error de CHECKSUM    
+#define ERROR_ACELEROMETRO      0x0800          // Indica que hay un error del acelerómmetro (caida libre) 
+#define ERROR_TRANSISTORES_CHA  0x1000          // Indica que hay un error de transistores en el canal A             
+#define ERROR_TRANSISTORES_CHB  0x2000          // Indica que hay un error de transistores en el canal B       
+#define ERROR_TRANSISTORES_CHC  0x4000          // Indica que hay un error de transistores en el canal C
+#define ERROR_POR_DEFINIR       0x8000          // Error por definir (libre)
+
+// Tipos de funciones
+#define FUNCION_ENABLE_30V          0
+#define FUNCION_ENABLE_RELE_A       1
+#define FUNCION_ENABLE_RELE_B       2
+#define FUNCION_ENABLE_RELE_C       3
+#define FUNCION_LED_A_APAGADO       4     
+#define FUNCION_LED_A_VERDE         5
+#define FUNCION_LED_A_ROJO          6
+#define FUNCION_LED_B_APAGADO       7     
+#define FUNCION_LED_B_VERDE         8
+#define FUNCION_LED_B_ROJO          9
+#define FUNCION_LED_C_APAGADO       10    
+#define FUNCION_LED_C_VERDE         11
+#define FUNCION_LED_C_ROJO          12
+#define FUNCION_ENABLE_RELE_GALV    13
+#define FUNCION_ENABLE_RELE_SEL_B   14
+#define FUNCION_DISABLE_RELE_SEL_B  15
+#define FUNCION_DISABLE_RELE_A      16
+#define FUNCION_DISABLE_RELE_B      17
+#define FUNCION_DISABLE_RELE_C      18                                      
+#define FUNCION_DISABLE_RELE_GALV   19
+
+// Tratamientos
+#define TRATAMIENTO_ELECTRO         0
+#define TRATAMIENTO_TB             1
+#define TRATAMIENTO_GALVANICA       2
+#define TRATAMIENTO_MICROCORRIENTES 3
+#define TRATAMIENTO_TRANSCRANEAL   4
+
+// Otras definiciones
+#define RETURN_ERROR        0xFF                // Variables que nos indican que el valor de retorno es malo (error)
+#define RETURN_OK           0xDD                // Variables que nos indican que el valor de retorno es bueno
+
+#define CHECKSUM_DEF                            // Si está descomentado, se hace uso del checksum
+
+#define OFF 0
+#define ON  1
+
+#define ENVIO       0
+#define RECEPCION   1
+
+// Variable canales elec (Se utiliza la variable i8CanalesElec para idenntificar)
+#define CANALES_A           1       // Canal A
+#define CANALES_B           2       // Canal B
+#define CANALES_AB          3       // Canal A, Canal B
+#define CANALES_C           4       // Canal C
+#define CANALES_AC          5       // Canal A, Canal C
+#define CANALES_BC          6       // Canal B, Canal C
+#define CANALES_ABC         7       // Canal A, Canal B, Canal C
+#define CANALES_P           8       // Canal pointer
+#define CANALES_BP          10       // Canal B, Pointer
+#define CANALES_CP          12      // Canal C, Pointer
+#define CANALES_BCP         14      // Canal B, Canal C, Pointer
+
+#define RELE_SEL_EESTIM     1
+#define RELE_SEL_GALV       0
+
+#define BUFFER_SIZE_COM 250                     // Define el tamaño del buffer. Se ha elegido 250, tirando muuy arriba. Si hay problemas de memoria se puede reducir
+#define MAX_NUM_ERR         6
+#define MAX_TIMEOUT    550000                  // Define el valor maximo para el timeout (MAX_TIMEOUT~=segundos*700000) Set a 1.5 seg
+
+#define MANDA_ORCO      0               // Ventana envio Orco
+#define MANDA_SAURON    1               // Ventana envio Sauron
+
+#define ENCABEZADO_SAURON   0xAA        // Encabezado Sauron
+#define ENCABEZADO_ORCO     0xBB        // Encabezado Orco
+
+#define FIFO_SIZE       20              // Indica el tamaño máximo de la FIFO
+
+#define MONOPOLAR_POSITIVO  0
+#define MONOPOLAR_NEGATIVO  1
+
+// Variables globales
+int8 i8BufferEntrada[BUFFER_SIZE_COM];          // Define el buffer del tamaño definido anteriormente
+//int8 i8BufferEntradaRaw[BUFFER_SIZE_COM];          // Define el buffer del tamaño definido anteriormente
+int8 i8BufferIndex=0;                           // Índice para navegar por el buffer de datos de entrada
+int8 i8TipoPaquete=0;                           // Variable que identifica el tipo de paquete recibido
+int8 i8TipoPaqueteACK=0;                        // Variable que identifica el tipo de paquete recibido para la comparativa con el ACK
+int1 bDatoRecibido=0;                           // Booleano que nos indica si se ha recibido un paquete completo y está listo para ser leido
+int1 bActivoTratamientoElectro=0;                    // Indica si el treatamiento ha sido activado
+int1 bTratamientoSMPActivado=0;                 // Indica si el SMP ha sido activado
+int1 bTratamientoGalvanicaActivado=0;           // Indica si galvánica ha sido activado
+int1 bTratamientoTranscranealActivado=0;
+int1 bDatoProcesado=0;                          // Variable que indica que se ha capturado y procesado el dato correctamente
+int8 i8DatoRecibido=0;                          // Variable que guarda el dato capturado
+int1 bCasiRecibido=0;                           // Variable que indica que posiblemente se hayta enviado el inicio de fin de trama ('\r'). Usada para evitar problemas y no tener que reinicializar el buffer entero
+int1 bReposoActivado=0;                         // Indica si el modo de reposos ha sido activado o no
+int1 bAguantaEnvio=0;                           // Variable que indica que tiene que esperarse antes de realizar el envio
+int16 i16ErroresOcurridos=0;                    // Variable que indican los errores ocurridos
+int32 i32Timeout=0;                             // Define la variable contador para el timeout
+int8 i8TratamientoSeleccionado=0;
+int8 bValorAlcanzado[7]={0};
+int1 bPausaTratamiento=0;           // Indica que el usuario ha presionado el botón de pausa de tratamiento
+int1 bPointerConectado=0;
+int1 bEliminaRampa=0;
+int8 i8ErrorCom=0;
+int1 bEsperandoACK=0;
+int8 i8ArrayBufferSize[MAX_PAQUETES+1];
+int8 bRampaBajadaTranscraneal=0;                // indica que la rampa de bajada del tratamiento transcraneal está activada
+int1 bNoEsFinDeTrama=0;
+int8 bSeleccionTranscraneal=0;
+int8 bMonopolarPosNeg=0;
+int8 bCableBipolarConectado=0;
+
+struct{
+    int8 sti8FIFO[FIFO_SIZE];           // FIFO del ID del paquete
+    int8 sti8FIFO2[FIFO_SIZE];          // FIFO del segundo argumento de entrada en los paquetes que sea necesario
+    int8 sti8Inicio;                    // Índice del inicio de la FIFO
+    int8 sti8Final;                     // Índice del final de la FIFO
+    int8 sti8Size;                      // Tamaño utilizado en la FIFO
+}structFIFO;                            // Struct utilizado para la FIFO del sistema de comunicaciones
+
+int1 checkSize(int8 i8IDPaquete);                                       // Función que comprueba el tamaño del paquete para ver que ha llegado correctamente
+
+/********************************* Definición de structs ***********************************************/
+// NOTA IMPORTANTE: Se utiliza "__attribute__((packed))" para decir que se usan los tipos de datos que se indican 
+// Sin esa línea, se crearia un struct con todas las variables de tamaño máximo de las variables (i.e. int16)
+// Más información en: https://gcc.gnu.org/onlinedocs/gcc-4.0.2/gcc/Type-Attributes.html
+
+struct __attribute__((packed)){         
+    int8 si8CanalesConfigurados;        // Indica que canales se van a quedar configurados
+    int8 si8ConfigCanal;                // Indica que canal se está configurando
+    int8 sbSimetriaElec;                // Indica si hay simetria de señal 
+    int8 sbPolaridadElec;               // Indica la polaridad de la señal
+    int16 si16TacElec;                  // Indica el tiempo activo en electroestimulación
+    int16 si16TdElec;                   // Indica el tiempo de descanso en electroestimulación
+    int8 si8TrElec;                     // Indica el tiempo de rampa
+    int8 si8Nrep;                       // Indica el número de repeticiones a configurar
+    int16 si16IElec;                    // Indica la corriente configurada
+    int16 si16FrecElec;                 // Indica la frecuencia configurada
+    int16 si16PW_plusElec;              // Indica el ancho de pulso positivo configurado para cada uno de los canales
+    int16 si16PW_minusElec;             // Indica el ancho de pulso negativo configurado para cada uno de los canales
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structTratamientoElectro;              // Struct utilizada para la configuración del tratamiento en electroestimulación
+char acBufferTratamientoElectro[sizeof(structTratamientoElectro)];  // Buffer para el almacenamiento del struct del tratamiento de electroestimulación
+
+struct __attribute__((packed)){
+    int8 si8CanalesActivados;           // Indica que canales se van a quedar configurados
+    int8 si8ConfigCanal;                // Indica que canal o canales vamos a configurar (A,B,C,AB,BC,AC,ABC)
+    int16 si16IElec;                    // Indica la corriente configurada para cada uno de los canales
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structTratamientoElectroActivo;        // Struct utilizada para la configuración del tratamiento activo en electroestimulación
+char acBufferTratamientoElectroActivo[sizeof(structTratamientoElectroActivo)];  // Buffer para el almacenamiento del struct del tratamiento activo en electroestimulación
+
+struct __attribute__((packed)){
+    int16 si16IMedElec[4][2];           // Obtención de las medidas de corriente en cada uno de los canales de electroestimulación   [CANALES][+/-]
+    int16 si16VMedElec[4][2];           // Obtención de las medidas de tensión en cada uno de los canales de electroestimulación     [CANALES][+/-]
+    int8 sbMAX[4][2];                   // Si se ha llegado al duty máximo en alguno de los canales, se indica
+    int8 sbCC[4];                       // Si alguno de los canales está cortocircuitado, lo indica
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structMedidasElectro;                  // Struct utilizada para la obtención de las medidas de electroestimulación
+char acBufferMedidasElectro[sizeof(structMedidasElectro)];  // Buffer para el almacenamiento del struct de las medidas de electroestimulación
+
+struct __attribute__((packed)){
+    int16 si16FrecSMP;                  // Frecuencia del SMP
+    int16 si16PWSMP;                    // Ancho de pulso del sistema multipulsos
+    int32 si32TDesfaseSMP;              // Desfase entre pulsos
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structTratamientoThetaBurst;          // Struct utilizada para la configuración del sistema multipulsos
+char acBufferTratamientoThetaBurst[sizeof(structTratamientoThetaBurst)];  // Buffer para el almacenamiento del struct del tratamiento multipulsos
+
+struct __attribute__((packed)){
+    int16 si16ISMP;                     // Corriente del sistema multipulsos
+    int8 si8PulsosSMP;                  // Número de pulsos del sistema SMP
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structTratamientoThetaBurstsActivo;    // Struct utilizada para la configuración del sistema activo en multipulsos
+char acBufferTratamientoThetaBurstActivo[sizeof(structTratamientoThetaBurstActivo)];  // Buffer para el almacenamiento del struct del tratamiento activo en multipulsos
+
+struct __attribute__((packed)){
+    int16 si16VmedSMP;                  // Obtención de las medidas de tensión en el sistema multipulsos
+    int16 si16IMedSMP;                  // Obtención de las medidas de corriente en el sistema multipulsos
+    int16 si16ResSMP;                   // Obtención de las medidas de impedancia en el sistema multipulsos
+    int8 sbMAX[2];                   // Si se ha llegado al duty máximo en alguno de los canales, se indica
+    int8 sbCC;                       // Si alguno de los canales está cortocircuitado, lo indica
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structMedidasThetaBurst;              // Struct utilizada para la obtención de las medidas de SMP
+char acBufferMedidasThetaBurst[sizeof(structMedidasThetaBurst)];  // Buffer para el almacenamiento del struct de las medidas SMP
+
+struct __attribute__((packed)){        
+    int8 sbSeleccionGalvanica;          // Indica si se trata de un tartamiento solo de galvánica (0) o galvánica + microcorrientes (1)
+    // Variables Galvánica
+    int32 si32CGalv;                    // Variable que indica el nivel de carga eléctrica para el tratamiento - Hace falta enviarlo??? 
+    int16 si16IGalv;                    // Variable que indica el nivel de intensidad de inicio del tratamiento
+    int8 si8TrampaGalv;                 // Variable que indica el tiempo de rampa
+    // Variables Microcorrientes
+    int16 si16Imicro;                   // Nivel de corriente seleccionado en microcorrientes
+    int16 si16PWmicro;                  // Ancho de pulso en microcorrientes
+    int8 si8Trampamicro;                // Tiempo de rampa seleccionado en microcorrientes
+    int16 si16frecmicro;                // Frecuencia seleccionada en microcorrientes
+    int8 sbPolaridadMicro;              // Polaridad microcorrientes
+    int8 sbSeleccionTranscraneal;        // Indica si se trata de un tratamiento de transcraneal
+    int8 sbMonopolarPosNeg;             // Indica que tipo de pulso debe realizar en monopolar (+ o -)
+    int8 sbCableBipolarConectado;        // Indica si se encuentra el accesorio bipolar conectado
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structTratamientoGalvanica;            // Struct utilizada para la configuración del tratamiento en galvánica
+char acBufferTratamientoGalvanica[sizeof(structTratamientoGalvanica)];  // Buffer para el almacenamiento del struct del tratamiento de galvánica
+
+struct __attribute__((packed)){
+    int16 si16IGalv;                    // Variable que indica el nivel de intensidad de inicio del tratamiento
+    int16 si16Imicro;                   // Variable que indica el nivel de intensidad de inicio del tratamiento
+    int8 sbTerapia;                     // Indica si estamos realizando galvánica (0) o microcorrientes (1)
+    int8 sbRampaBajadaTranscraneal;     // Indica en tratamiento transcraneal que la rampa de bajada debe ser activada
+    int8 sbCableBipolarConectado;        // Indica si se encuentra el accesorio bipolar conectado
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structTratamientoGalvanicaActivo;      // Struct utilizada para la configuración del tratamiento activo en galvánica
+char acBufferTratamientoGalvanicaActivo[sizeof(structTratamientoGalvanicaActivo)];  // Buffer para el almacenamiento del struct del tratamiento activo en galvánica
+
+struct __attribute__((packed)){
+    int16 si16IMedGalv;                 // Variable que indica el nivel de corriente medida en galvánica       
+    int16 si16VMedGalv;                 // Variable que indica el nivel de tensión medida en galvánica  
+    int16 si16ResGalv;                  // Variable que indica la resistencia medida en galvánica  
+    int8 sbMAX[2];                      // Si se ha llegado al duty máximo en alguno de los canales, se indica
+    int8 sbCC;                          // Si alguno de los canales está cortocircuitado, lo indica
+    int8 sbTerapiaLeida;
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structMedidasGalvanica;                // Struct utilizada para la obtención de las medidas de galvánica
+char acBufferMedidasGalvanica[sizeof(structMedidasGalvanica)];  // Buffer para el almacenamiento del struct de las medidas de galvánica
+
+struct __attribute__((packed)){
+    int8 sbValorAlcanzado[7];           // Variable que indica si ha llegado al calor de correinte deseado     
+    int8 sbEmpiezaContadorTiempo;       // Variable que indica que puede empzar a contar el tiempo de tratamiento
+    int8 si8CanalTiempo;                // VAriable que indica a que canal está asignado este paquete
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structControlTiempo;                   // Struct utilizada para la obtención de control de tiempo
+char acBufferControlTiempo[sizeof(structControlTiempo)];  // Buffer para el almacenamiento del struct de control de tiempo
+
+struct __attribute__((packed)){
+    float sfMedidaVref;                 // Variable 1   
+    int8 sbMedidaOK;                    // Variable 2
+    int8 si8Checksum;                   // Variable Checksum - No utilizada de momento 
+}structCheckInicial;                    // Struct utilizada para la comprobación inicial
+char acBufferCheckInicial[sizeof(structCheckInicial)];  // Buffer para el almacenamiento del struct del check inicial
+/*
+struct __attribute__((packed)){
+    int8 si8InputData;                  // Variable de entrada de comando
+    int8 si8CanalesActivados;           // Variable que indica los canales activados dandod tratamiento
+    int8 si8ReposoActivados;            // Variable que indica los canales que se encuentran en reposo
+    int8 si8ConfigCanal;                // Variable que indica el canal que se está configurando
+    int8 si8Checksum;                   // Variable Checksum
+}structStartStop;                       // Struct utilizada para el inicio y parada de tratamientos
+char acBufferStartStop[sizeof(structStartStop)];    // Buffer para el almacenamiento del struct de start/stop
+
+struct __attribute__((packed)){
+    int8 si8InputData;                  // Variable de entrada de comando
+    int8 si8Checksum;                   // Variable checksum
+}structFuncion;                         // Strict que envia las funciones
+char acBufferFuncion[sizeof(structFuncion)];    // Buffer para el almacenamiento del struct de función
+
+struct __attribute__((packed)){
+    int8 si8InputData;                  // Variable que indica si el pointer está conectado a la carga o no
+    int8 si8Checksum;                   // Variable checksum
+}structConexionPointer;                 // Struct que envia la conexión de pointer
+char acBufferConexionPointer[sizeof(structConexionPointer)];    // Buffer para el almacenamiento del struct de conexión del pointer
+
+struct __attribute__((packed)){
+    int8 si8InputData;                  // Variable que indica que paquete se está refiriendo el ACK
+    int8 si8ComandoACK;                 // Envia el comando ACK (fijo)
+    int8 si8Checksum;                   // Variable checksum
+}structACK;                             // Struct que envia el ACK
+char acBufferACK[sizeof(structACK)];    // Buffer para el almacenamiento del struct del ACK
+
+struct __attribute__((packed)){
+    int8 siInputData;                   // Variale que indica que el micro está vivo
+    int8 si8Checksum;                   // Variable checksum
+}structCheckAlive;                      // Struct que envia el check alive
+char acBufferCheckAlive[sizeof(structCheckAlive)];  // Buffer para el almacenamiento del struct de check alive
+
+struct __attribute__((packed)){
+    int16 si16ErroresOcurridos;         // Variable que registra los errores ocurridos 
+    int8 si8Checksum;                   // Variable checksum
+}structErroresOcurridos;                // Struct que envia los errores ocurridos
+char acBufferErroresOcurridos;          // Buffer para el almacenamiento del struct de errores ocurridos
+*/
+struct __attribute__((packed)){
+    int8 si8ProtocoloSeleccionado;
+    int8 si8PasoSeleccionado;
+    int8 si8RamaSeleccionada;
+    int16 si16DutySeleccionado;
+    int8 si8Checksum;
+}structProtocoloTest;
+char acBufferProtocoloTest[sizeof(structProtocoloTest)];
+
+
+/********************************* Prototipo de funciones ***********************************************/
+
+/*
+*   Función: enviaPaquete
+*
+*   Descripción: Envia el paquete que ha sido configurado previamente. 
+*       La selección del paquete que va a ser enviado se hará mediante la variable 
+*       de entrada i8ModoStruct
+*
+*   Parámetros de entrada:
+*      - i8ModoStruct: Variable que indica el struct que se va a enviar. 
+*           Para esta función, pueden ser los siguients valores (definiciones):
+*               - MODO_CHECK_ALIVE                
+*               - MODO_TRAT_ELECT         
+*               - MODO_TRAT_ELECT_ACTIVO  
+*               - MODO_MEDIDAS_OBTENIDAS     
+*               - MODO_ERRORES 
+*               - MODO_ACK                
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve si la función se ha ejecutado corretamente (RETURN_OK)
+*                       o no (RETURN_ERROR)
+*/
+int8 enviaPaquete(int8 i8ModoStruct);
+
+/*
+*   Función: enviaPaquete
+*
+*   Descripción: Envia el paquete que ha sido configurado previamente. 
+*       La selección del paquete que va a ser enviado se hará mediante la variable 
+*       de entrada i8ModoStruct.
+*       Esta función debe de ir acompañada de otra entrada de datos (i8InputData) 
+*       que nos aporta la configuración complementaria del comando enviado.
+*
+*   Parámetros de entrada:
+*       - i8ModoStruct: Variable que indica el struct que se va a enviar. 
+*           Para esta función, pueden ser los siguients valores (definiciones):
+*               - MODO_START_STOP 
+*               - MODO_FUNCION
+*       - i8InputData: Variable que complementa el comando eniado:
+*               - COMANDO_START             (Solo válido si se selecciona MODO_START_STOP)
+*               - COMANDO_STOP              (Solo válido si se selecciona MODO_START_STOP)   
+*               - COMANDO_START_REPOSO      (Solo válido si se selecciona MODO_START_STOP)
+*               - COMANDO_STOP_REPOSO       (Solo válido si se selecciona MODO_START_STOP)
+*               - FUNCION_ENABLE_30V        (Solo válido si se selecciona MODO_FUNCION)
+*               - FUNCION_ENABLE_RELE_A     (Solo válido si se selecciona MODO_FUNCION)
+*               - FUNCION_ENABLE_RELE_B     (Solo válido si se selecciona MODO_FUNCION)
+*               - FUNCION_ENABLE_RELE_C     (Solo válido si se selecciona MODO_FUNCION)         
+*   Parámetros de salida:
+*      - int8      - Devuelve si la función se ha ejecutado corretamente (RETURN_OK)
+*                       o no (RETURN_ERROR)
+*/
+int8 enviaPaquete(int8 i8ModoStruct,int8 i8InputData);
+
+/*
+*   Función: lecturaPaquete
+*
+*   Descripción: Lee el paquete recibido y lo alamcena en la struct correspondiente
+*
+*   Parámetros de entrada:
+*      - 
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve si la función se ha ejecutado corretamente (RETURN_OK)
+*                       o no (RETURN_ERROR)
+*/
+int8 lecturaPaquete();
+
+/*
+*   Función: lecturaPaqueteACK
+*
+*   Descripción: Lee el paquete recibido para saber si es ACK
+*
+*   Parámetros de entrada:
+*      - 
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve si la función se ha ejecutado corretamente (RETURN_OK)
+*                       o no (RETURN_ERROR)
+*/
+int8 lecturaPaqueteACK();
+
+#ifdef CHECKSUM_DEF
+/*
+*   Función: obtencionChecksum
+*
+*   Descripción: Calcula el chekcsum del valor introducido
+*
+*   Parámetros de entrada:
+*      - i8CheckSum: Valor a calcular del checksum
+*
+*   Parámetros de salida:
+*      - int8      - Valor calculado del checksum
+*/
+int8 obtencionChecksum(int8 i8Checksum);
+
+int1 calculoChecksum(int1 bRecepcion, int8 i8TipoPaquete);    
+#endif
+
+int1 busquedaFIFO(int8 i8Valor);
+
+void configuraDatos(int8 i8Paquete1);
+void configuraDatos(int8 i8Paquete1, int8 i8Paquete2);
+
+void envioDatos(int8 i8Paquete1);
+void envioDatos(int8 i8Paquete1, int8 i8Paquete2);
+
+void initFIFO();
+void initArrayComms();
+void initMedidasCHA();
+void initMedidasCHB();
+void initMedidasCHC();
+void initMedidasPoi();
+void initMedidasGal();
+void initMedidasTrans();
+void initMedidasSMP();
+void initMedidasElectro();                                              
+
+

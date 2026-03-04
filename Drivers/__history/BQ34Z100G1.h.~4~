@@ -1,0 +1,902 @@
+
+
+#define BQ34Z100 0xAA
+
+/* DATOS DE LA BATERIA */
+
+// Charge Termination
+#define Taper_Current               64         // Subclass 36 Offset 0
+#define Min_Taper_Capacity          25          // Subclass 36 Offset 2
+#define Cell_Taper_Voltage          100         // Subclass 36 Offset 4
+#define Current_Taper_Window        40          // Subclass 36 Offset 6
+#define TCA_Set_P                   99          // Subclass 36 Offset 7
+#define TCA_Clear_P                 95          // Subclass 36 Offset 8
+#define FC_Set_P                    100         // Subclass 36 Offset 9
+#define FC_Clear_P                  98          // Subclass 36 Offset 10
+
+//Data
+#define CC_Threshold                5760         // Subclass 48 Offset 8
+#define Max_Error_Limit             100         // Subclass 48 Offset 10
+#define Design_Capacity             6400        // Subclass 48 Offset 11
+#define Design_Energy               20480        // Subclass 48 Offset 11
+#define SOH_Load_I                  -400        // Subclass 48 Offset 15
+#define Cell_Charge_Voltage_T1T2    3650        // Subclass 48 Offset 17
+#define Cell_Charge_Voltage_T2T3    3650        // Subclass 48 Offset 19
+#define Cell_Charge_Voltage_T3T4    3650        // Subclass 48 Offset 21
+#define Charge_Current_T1T2         10         // Subclass 48 Offset 23   
+#define Charge_Current_T2T3         50          // Subclass 48 Offset 24 
+#define Charge_Current_T3T4         30          // Subclass 48 Offset 25 
+#define JEITA_T1                    0         // Subclass 48 Offset 26 
+#define JEITA_T2                    10          // Subclass 48 Offset 27
+#define JEITA_T3                    45          // Subclass 48 Offset 28
+#define JEITA_T4                    55          // Subclass 48 Offset 29
+
+//Discharge
+#define SOC1_Set_Threshold          150         // Subclass 49 Offset 0
+#define SOC1_Clear_Threshold        175         // Subclass 49 Offset 2
+#define SOCF_Set_Threshold          75          // Subclass 49 Offset 4
+#define SOCF_Clear_Threshold        100         // Subclass 49 Offset 6
+#define Cell_BL_Set_Volt_Threshold  2900      // Subclass 49 Offset 8
+#define Cell_BL_Set_Volt_Time       2           // Subclass 49 Offset 10
+#define Cell_BL_Clear_Volt_Threshold   3000     // Subclass 49 Offset 11
+#define Cell_BH_Set_Volt_Threshold  3200        // Subclass 49 Offset 13
+#define Cell_BH_Volt_Time           2           // Subclass 49 Offset 15
+#define Cell_BH_Clear_Volt_Threshold  3100      // Subclass 49 Offset 16
+
+// Registers
+#define Pack_Configuration          0x41d9       // Subclass 64 Offset 0
+#define Pack_Configuration_B        0xaf        // Subclass 64 Offset 2 - fast Converge disabled
+#define Pack_Configuration_C        0x37        // Subclass 64 Offset 3
+#define LED_Comm_Configuration      0           // Subclass 64 Offset 4
+#define Alert_Configuration         0           // Subclass 64 Offset 5
+#define Number_of_series_cell       1           // Subclass 64 Offset 7
+
+
+// Lifetime Resolution
+#define LT_Temp_Res                 1          // Subclass 66 Offset 0
+#define LT_Cur_Res                  100         // Subclass 66 Offset 1
+#define LT_V_Res                    1           // Subclass 66 Offset 2
+#define LT_Update_Time              60          // Subclass 66 Offset 3
+
+// Power
+#define FLASH_UPDATE_V_OK      1000       // Subclass 68 Offset 0
+#define SLEEP_CURRENT         10         // Subclass 68 Offset 2
+#define FS_WAIT            0         // Subclass 68 Offset 11
+// IT Cfg
+#define Cell_Terminate_Voltage      2600        // Subclass 80 Offset 53
+
+// Gas Gauging - State
+#define QMAX_CELL_0                6696         // Subclass 82 Offset 0
+#define CYCLE_COUNT                1            // Subclass 82 Offset 2
+#define UPDATE_STATUS              6            // Subclass 82 Offset 4
+#define CELL_V_AT_CHG_TERM         3587         // Subclass 82 Offset 5
+#define AVG_I_LAST_RUN             -802         // Subclass 82 Offset 7
+#define AVG_P_LAST_RUN             -2445        // Subclass 82 Offset 9
+#define CELL_DELTA_V               1            // Subclass 82 Offset 11
+#define T_RISE                     20           // Subclass 82 Offset 13
+#define T_TIME_CONSTANT            1000         // Subclass 82 Offset 15
+
+
+int flashbytes[32] = {0x00};
+
+
+long  Read_bq(int add, int length);
+long  ReadControl(int add,int add2);
+long  getTemp();
+long  enableCal();
+long  enterCal();
+long  exitCal();
+long  enableIT();
+long  readInstantCurrent();
+long  getSOC();
+signed int16  getVoltage();
+long  getCapacity();
+long  getRemaining();
+signed int16  getCurrent();
+long  getFlags();
+long  getFlagsB();
+long  getDeviceType();
+long  getFW();
+long  getHW();
+long  getResetData();
+void  reset_bq();
+void  setup(int BatteryChemistry,int SeriesCells,long CellCapacity,long PackCurrentVoltage,long AppliedCurrent);
+void  chg36Table();
+void  chg48Table();
+void  chg49Table();
+void  chg64Table();
+void  chg66Table();
+void  chg68Table();
+void  chg80Table();
+void  chg82Table();
+short readFlash(int subclass, int offset);
+void  chgFlash(int index, int value);
+void  chgFlashPair(int index, long value);
+void  chgFlashQuad(int index, int32 value);
+void  checkSum(long subclass, int offset);
+long  CalibrateVoltageDivider(long currentVoltage);
+long  readVDivider();
+void  CalibrateCurrentShunt(long current);
+void  chg104Table(long Vdivider,float CCGain,float CCDelta);
+float XemicsTofloat(int32 X);
+int32 floatToXemics(float X);
+void setToUnsealed();
+int8 getUpdateStatus();
+int16 getChemID();
+long getMaxError();
+int1 checkCargaEquipo();
+int16 getCycleCount();
+int16 getATTF();
+int16 getATTE();
+int1 getFC();
+
+long Read_bq(int add, int length){
+    long returnVal = 0;
+
+    for (int i = 0; i < length; i++)
+    {
+        i2c_start();                                                 // Start condition
+        i2c_write(BQ34Z100);                                         // Device address
+        i2c_write(add+i); 
+        i2c_start();                                                 // Start condition
+        i2c_write(BQ34Z100+1);                                       // Device address
+        long temp=i2c_read(false);
+        i2c_stop();                                                  // Stop condition
+        temp=temp<<(8*i);
+        returnVal = returnVal + temp;
+    }
+    return returnVal;
+}
+
+
+//Read a regester set from the control register (used to read the instant current or enable IT)
+
+long ReadControl(int add,int add2){
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100);                                             // Device address
+    i2c_write(add2);
+    i2c_write(add);
+    i2c_write(0x00);       
+    i2c_stop();                                                      // Stop condition
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100);                                             // Device address
+    i2c_write(0x00);                                                 
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100+1);                                           // Device address
+    long temp =i2c_read(true);
+    long temp2=i2c_read(false);
+    i2c_stop();             // Stop condition
+    temp2=temp2 << 8; 
+    temp=temp|temp2;
+    //i2c_stop();                                                      // Stop condition
+
+    return temp;
+
+}
+
+
+//return temp in x10 format
+long getTemp(){
+   return Read_bq(0x0c, 2)- 2731;                                             // - 2731;                       
+}
+
+//reading this will enable the IT algorithum
+long enableCal(){
+    return readControl(0x2D,0x00);
+}
+
+long enterCal(){
+    return readControl(0x81,0x00);
+}
+
+long exitCal(){
+    return readControl(0x80,0x00);
+}
+
+long getFW(){
+    return readControl(0x02,0x00);
+}
+
+long getHW(){
+    return readControl(0x03,0x00);
+}
+
+long getResetData(){
+    return readControl(0x05,0x00);
+}
+
+long getDeviceType(){
+    return readControl(0x01,0x00);
+}
+
+
+long enableIT(){
+    return readControl(0x21,0x00);//reading this will enable the IT algorithum
+}
+
+//lets you read the instantainious current
+long readInstantCurrent(){
+    return readControl(0x18,0x00);              //REVISAAAAAARRRRRR
+}
+
+long getSOC(){
+    return Read_bq(0x02, 2) ;                   //return SOC
+}
+
+long getMaxError(){
+   return Read_bq(0x03, 2);
+}
+
+signed int16 getVoltage(){  
+   signed int16 siVolt=Read_bq(0x08, 2);
+   return  siVolt;//return voltage mV
+}
+
+long getCapacity(){
+    return Read_bq(0x06, 2) ; //return FullChargeCapacity()
+}
+
+long getRemaining(){
+    return Read_bq(0x04, 2) ;          //return RemainingCapacity()
+}
+
+
+signed int16 getCurrent(){
+   signed int16 siCurrent=Read_bq(0x0A, 2);
+   return siCurrent;          //return AverageCurrent()
+}
+
+long getStatus(){
+    return readControl(0x00,0x00);
+}
+
+
+long getFlags(){
+    return Read_bq(0x0E,2); 
+}
+
+long getFlagsB(){
+    return Read_bq(0x12,2); 
+}
+
+int1 checkCargaEquipo(){
+   return (getFlags() & 0x0001);
+}
+
+int16 getCycleCount(){
+   return Read_bq(0x2C,2);
+}
+
+int16 getATTF(){           // Average Time To Full (min)
+   return Read_bq(0x1A,2);
+}
+
+int16 getATTE(){          // Average Time To Empty (min)
+   return Read_bq(0x18,2);
+}
+
+void reset_bq(){
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100);                                             // Device address
+    i2c_write(0x00);
+    i2c_write(0x41);
+    i2c_write(0x00);
+    i2c_stop();                                                      // Stop condition
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100);                                             // Device address
+    i2c_write(0x00);
+    i2c_start(); 
+    i2c_write(BQ34Z100+1);                                           // Device address
+    long temp =i2c_read(false);
+    i2c_stop();                                                      // Stop condition
+    return;
+}
+//!
+//!/**    FLASH CONFIGURATION SETTINGS  **/
+//!void setup(int BatteryChemistry,int SeriesCells,long CellCapacity,long PackCurrentVoltage,long AppliedCurrent){
+//!   //so we set the following:
+//!   /*  Battery Chemistry
+//!   *   Number of Series Cells
+//!   *   Cell capacity (mAh)
+//!   *   Set to use internal Temp Sensor
+//!   *   Disable built in voltage divider
+//!   *   Calibrate voltage Divider
+//!   *   Calibrate Current Shunt
+//!   */
+//!//Charge Termination
+//!
+//!   chg36Table();
+//!
+//!//Data
+//!   
+//!   chg48Table();
+//!
+//!// Discharge
+//!
+//!   chg49Table();
+//!   
+//!// Register
+//!
+//!   chg64Table();
+//!   
+//!// Lifetime Resolution
+//!   
+//!   chg66Table();
+//!
+//!// Power
+//!   chg68Table();
+//!
+//!// IT Cfg
+//!  
+//!   chg80Table();  
+//!
+//!// State
+//!
+//!   chg82Table(); 
+//!
+//!
+//!/*   if(PackCurrentVoltage>5000)
+//!   {
+//!        //calibrate VDivider
+//!        CalibrateVoltageDivider(PackCurrentVoltage);
+//!        CalibrateVoltageDivider(PackCurrentVoltage);                             //calling 3 times due to rounding issues
+//!        CalibrateVoltageDivider(PackCurrentVoltage);                             //it gets closer each time
+//!   }
+//!*/
+//!   //we now need to calibrate thecurrent
+//!   //CalibrateCurrentShunt(AppliedCurrent);
+//!}
+//!
+//!void chg36Table(){
+//!    readFlash(36, 0);                                                      // Lee los datos subclase 36 con offset 24 y se almacenan en un array
+//!    chgFlashPair(0, Taper_Current);                                        // Almacena 2 bytes correspondientes Design Capacity
+//!    chgFlashPair(2, Min_Taper_Capacity);                                   // Almacena 2 bytes correspondientes Design Energy
+//!    chgFlashPair(4, Cell_Taper_Voltage);                                   // 0x0E10 = 3600
+//!    chgFlash(6, Current_Taper_Window);
+//!    chgFlash(7, TCA_Set_P);
+//!    chgFlash(8, TCA_Clear_P);
+//!    chgFlash(9, FC_Set_P);
+//!    chgFlash(10, FC_Clear_P);
+//!    checkSum(36, 0);                                                      // Calculo y alacenadp del checkSum
+//!    pausa_ms(300);
+//!}
+//!
+//!
+//!void chg48Table(){
+//!    readFlash(48, 0);                                                      // Lee los datos subclase 48 con offset 0 y se almacenan en un array
+//!    chgFlashPair(8, CC_Threshold);                                              
+//!    chgFlash(10, Max_Error_Limit);
+//!    chgFlashPair(11, Design_Capacity);
+//!    chgFlashPair(13, Design_Energy);                                           
+//!    chgFlashPair(15, SOH_Load_I);                                           
+//!    chgFlashPair(17, Cell_Charge_Voltage_T1T2);  
+//!    chgFlashPair(19, Cell_Charge_Voltage_T2T3);  
+//!    chgFlashPair(21, Cell_Charge_Voltage_T3T4);
+//!    chgFlash(23, Charge_Current_T1T2);
+//!    chgFlash(24, Charge_Current_T2T3);
+//!    chgFlash(25, Charge_Current_T3T4);
+//!    chgFlash(26, JEITA_T1);
+//!    chgFlash(27, JEITA_T2);
+//!    chgFlash(28, JEITA_T3);
+//!    chgFlash(29, JEITA_T4);
+//!    checkSum(48, 0);                                                      
+//!    pausa_ms(300);
+//!}
+//!
+//!
+//!void chg49Table(){
+//!    readFlash(49, 0);                                                      // Lee los datos subclase 48 con offset 0 y se almacenan en un array
+//!    chgFlashPair(0, SOC1_Set_Threshold );                                              
+//!    chgFlashPair(2, SOC1_Clear_Threshold ); 
+//!    chgFlashPair(4, SOCF_Set_Threshold );                                              
+//!    chgFlashPair(6, SOCF_Clear_Threshold );
+//!    chgFlashPair(8, Cell_BL_Set_Volt_Threshold );       
+//!    chgFlash(10, Cell_BL_Set_Volt_Time);
+//!    chgFlashPair(11, Cell_BL_Clear_Volt_Threshold);
+//!    chgFlashPair(13, Cell_BH_Set_Volt_Threshold);                                           
+//!    chgFlash(15, Cell_BH_Volt_Time);                                         
+//!    chgFlashPair(16, Cell_BH_Clear_Volt_Threshold);  
+//!    checkSum(49, 0);                                                      
+//!    pausa_ms(300);
+//!}
+//!
+//!// Regidters
+//!void chg64Table(){
+//!    readFlash(64,0);
+//!    chgFlashPair(0, Pack_Configuration);
+//!    chgFlash(2, Pack_Configuration_B);
+//!    chgFlash(3, Pack_Configuration_C);
+//!    chgFlash(4, LED_Comm_Configuration);
+//!    chgFlashPair(5, Alert_Configuration);
+//!    chgFlash(7, Number_of_series_cell); //cell count
+//!    checkSum(64,0);
+//!    pausa_ms(300);
+//!}
+//!
+//!
+//!void chg66Table(){
+//!    readFlash(66,0);
+//!    
+//!    chgFlash(0, LT_Temp_Res);
+//!    chgFlash(1, LT_Cur_Res);
+//!    chgFlash(2, LT_V_Res);
+//!    chgFlashPair(3, LT_Update_Time);
+//!    checkSum(66,0);
+//!    pausa_ms(300);
+//!}
+//!
+//!// Power
+//!void chg68Table(){
+//!    readFlash(68,0);
+//!    
+//!    chgFlash(0, FLASH_UPDATE_V_OK);
+//!    chgFlash(2, SLEEP_CURRENT);
+//!    chgFlash(11, FS_WAIT);
+//!    checkSum(68,0);
+//!    pausa_ms(300);
+//!}
+//!// IT Cfg
+//!void chg80Table(){
+//!    readFlash(80,53);
+//!    chgFlashPair(21, Cell_Terminate_Voltage);
+//!    checkSum(80,53);
+//!    pausa_ms(300);
+//!}
+//!
+//!// State
+//!void chg82Table(){
+//!    readFlash(82,0);
+//!    chgFlashPair(0,QMAX_CELL_0);
+//!    chgFlashPair(2,CYCLE_COUNT);        
+//!    chgFlash(4,UPDATE_STATUS);      
+//!    chgFlashPair(5,CELL_V_AT_CHG_TERM); 
+//!    chgFlashPair(7,AVG_I_LAST_RUN);     
+//!    chgFlashPair(9,AVG_P_LAST_RUN);     
+//!    chgFlashPair(11,CELL_DELTA_V);       
+//!    chgFlashPair(13,T_RISE);           
+//!    chgFlashPair(15,T_TIME_CONSTANT);    
+//!    checkSum(82,0);
+//!    pausa_ms(300);
+//!}
+//!
+//!
+//!//If vDiv is <500 dont change vdiv
+//!//if CCG && CCD ==0 then dont change them
+//!void chg104Table(long Vdivider,float CCGain,float CCDelta){
+//!    if(Vdivider>32768)
+//!        return;
+//!    
+//!        
+//!    readFlash(0x68, 15);
+//!    pausa_ms(30);
+//!    if(Vdivider>500)
+//!      chgFlashPair(14, Vdivider);
+//!    
+//!    if(!(CCGain==0 && CCDelta==0))
+//!    {
+//!        float GainDF = 4.768/CCGain;
+//!        float DeltaDF = 5677445/CCDelta;
+//!        chgFlashQuad(0,floatToXemics(GainDF));
+//!        chgFlashQuad(4,floatToXemics(DeltaDF));
+//!    }
+//!    checkSum(0x68, 15);
+//!    pausa_ms(300);
+//!
+//!}
+//!
+//!
+
+
+short readFlash(int subclass, int offset){
+   pausa_ms(10);
+   //to enable block data flash control
+   i2c_start();                                                     // Start condition
+   i2c_write(BQ34Z100);                                             // Device address
+   i2c_write(0x61);
+   i2c_write(0x00);
+   i2c_stop();                                                      // Stop condition
+/*
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x61);                                       //blocckdatacontrol
+   Wire.write(0x00);
+   Wire.endTransmission();
+    
+*/    
+   pausa_ms(300);//mimic bq2300
+   
+   //to access the Registers subclass.
+   i2c_start();                                                     // Start condition
+   i2c_write(BQ34Z100);                                             // Device address
+   i2c_write(0x3E);
+   i2c_write(subclass);
+   i2c_stop();  
+/*    
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x3e);//DataflashClass()
+   Wire.write(subclass);//sets the class to load
+   Wire.endTransmission();
+*/    
+    
+   pausa_ms(300);                                                   //mimic bq2300
+   //To access data located at offset
+   i2c_start();                                                     // Start condition
+   i2c_write(BQ34Z100);                                             // Device address
+   i2c_write(0x3F);
+   int temp=offset/32;                                         // modulo 32
+   i2c_write(temp);
+   i2c_stop();
+/*   
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x3f);//DataFlashBlock()
+   Wire.write((uint8_t)(offset / 32)); // change this to 0x01 if offset is >31
+   Wire.endTransmission();
+*/    
+    
+   pausa_ms(300);//mimic bq2300
+   
+   //To read the data of a specific offset
+    
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x40);
+   //i2c_stop();
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100+1);                                            // Device address
+   int i;
+   for (i = 0; i < 31; i++)                                      //loop through all bytes in the page
+   {
+      flashbytes[i] = i2c_read(true);                               //store it
+   }
+   flashbytes[i] = i2c_read(false);
+   i2c_stop();
+   pausa_ms(10);
+   return false;
+   
+   
+/*
+    bool changed = false;
+    Wire.beginTransmission(BQ34Z100);
+    Wire.write(0x40);
+    Wire.endTransmission();
+
+    Wire.requestFrom(BQ34Z100, 33);
+       
+    for (int i = 0; i < 32; i++) //loop through all bytes in the page
+    {
+    flashbytes[i] = Wire.read();//store it
+        
+    }
+     Wire.endTransmission();
+     delay(10);
+    return false;
+}*/
+
+} 
+
+void chgFlash(int index, int value){
+   if (index > 31)
+      index = index % 32;
+
+   //  change flashbyte first
+   flashbytes[index] = value;
+
+   // write flashbyte
+    
+   // write flashbyte
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x40+index);
+   i2c_write(flashbytes[index]);
+   i2c_stop();
+   /* 
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x40 + index);
+   Wire.write(flashbytes[index]);
+   Wire.endTransmission();
+   */
+}
+
+
+
+void chgFlashPair(int index, long value){
+   if (index > 31)
+      index = index % 32;
+
+   //  change flashbyte first
+   flashbytes[index] = value >> 8;                                   //high byte
+   flashbytes[index + 1] = value & 0xFF;                             //lower byte
+    
+   // write flashbyte
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x40+index);
+   i2c_write(flashbytes[index]);
+   i2c_stop();
+/*    
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x40 + index);
+   Wire.write(flashbytes[index]);
+   Wire.endTransmission();
+*/
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x40+index+1);
+   i2c_write(flashbytes[index+1]);
+   i2c_stop();
+/*
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x40 + index + 1);
+   Wire.write(flashbytes[index + 1]);
+   Wire.endTransmission();
+*/
+}
+
+
+void chgFlashQuad(int index, int32 value){
+   if (index > 31)
+      index = index % 32;
+
+   //  change flashbyte first
+   flashbytes[index] = value >> 24; //high byte
+   flashbytes[index + 1] = value >>16; //lower byte
+   flashbytes[index + 2] = value >>8; //lower byte
+   flashbytes[index + 3] = value & 0xFF; //lower byte
+
+   // write flashbyte
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x40+index);
+   i2c_write(flashbytes[index]);
+   i2c_stop();
+   
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x40+index+1);
+   i2c_write(flashbytes[index+1]);
+   i2c_stop();
+
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x40+index+2);
+   i2c_write(flashbytes[index+2]);
+   i2c_stop();
+
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x40+index+3);
+   i2c_write(flashbytes[index+3]);
+   i2c_stop();
+/*    
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x40 + index);
+   Wire.write(flashbytes[index]);
+   Wire.endTransmission();
+
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x40 + index + 1);
+   Wire.write(flashbytes[index + 1]);
+   Wire.endTransmission();
+
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x40 + index + 2);
+   Wire.write(flashbytes[index + 2]);
+   Wire.endTransmission();
+
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x40 + index + 3);
+   Wire.write(flashbytes[index + 3]);
+   Wire.endTransmission();
+*/
+}
+
+
+/*
+
+float XemicsTofloat(int32 X){
+   short bIsPositive = false;
+   float fExponent, fResult;
+   byte vMSByte = (byte)(X >> 24);
+   byte vMidHiByte = (byte)(X >> 16);
+   byte vMidLoByte = (byte)(X >> 8);
+   byte vLSByte = (byte)X;
+   // Get the sign, its in the 0x00 80 00 00 bit
+   if ((vMidHiByte & 128) == 0)
+      bIsPositive = true;
+
+   // Get the exponent, it's 2^(MSbyte - 0x80)
+   fExponent = pow(2, (vMSByte - 128));
+   // Or in 0x80 to the MidHiByte
+   vMidHiByte = (byte)(vMidHiByte | 128);
+   // get value out of midhi byte
+   fResult = (vMidHiByte) * 65536;
+   // add in midlow byte
+   fResult = fResult + (vMidLoByte * 256);
+   // add in LS byte
+   fResult = fResult + vLSByte;
+   // multiply by 2^-24 to get the actual fraction
+   fResult = fResult * pow(2, -24);
+   // multiply fraction by the 'exponent' part
+   fResult = fResult * fExponent;
+   // Make negative if necessary
+   if (bIsPositive)
+      return fResult;
+   else
+      return -fResult;
+}
+
+
+int32 floatToXemics(float X){
+   int iByte1, iByte2, iByte3, iByte4, iExp;
+   short bNegative = false;
+   float fMantissa;
+   // Don't blow up with logs of zero
+   if (X == 0) X = 0.00001F;
+   if (X < 0)
+   {
+      bNegative = true;
+      X = -X;
+   }
+   // find the correct exponent
+   iExp = (int)((log(X) / log(2)) + 1);// remember - log of any base is ln(x)/ln(base)
+
+   // MS byte is the exponent + 0x80
+   iByte1 = iExp + 128;
+           
+   // Divide input by this exponent to get mantissa
+   fMantissa = X / (pow(2, iExp));
+           
+   // Scale it up
+   fMantissa = fMantissa / (pow(2, -24));
+           
+   // Split the mantissa into 3 bytes
+   iByte2 = (int)(fMantissa / (pow(2, 16)));
+            
+   iByte3 = (int)((fMantissa - (iByte2 * (pow(2, 16)))) / (pow(2, 8)));
+           
+   iByte4 = (int)(fMantissa - (iByte2 * (pow(2, 16))) - (iByte3 * (pow(2, 8))));
+           
+   // subtract the sign bit if number is positive
+   if (bNegative == false)
+   {
+      iByte2 = iByte2 & 0x7F;
+   }
+   return (int32)((int32)iByte1 << 24 | (int32)iByte2 << 16 | (int32)iByte3 << 8 | (int32)iByte4);
+}
+
+
+*/
+
+//This calcs the checksum and then writes it to the device
+//This then causes the device to check it, and if correct
+//It will then store the new data in flash
+void checkSum(long subclass, int offset){
+   //calc checksum
+   int chkSum = 0;
+   for (int i = 0; i < 32; i++)
+   {
+      chkSum += flashbytes[i];
+   }
+   int chkSumTemp = chkSum / 256;
+   chkSum = chkSum - (chkSumTemp * 256);
+   chkSum = 255 - chkSum;
+   //We Write the whole table first
+   //writeTable(subclass,offset);
+      
+   pausa_ms(35);
+   //Now
+   //write checksum
+    
+   i2c_start();                                                      // Start condition
+   i2c_write(BQ34Z100);                                              // Device address
+   i2c_write(0x60);
+   i2c_write(chkSum);
+   i2c_stop();
+    
+    
+    /*
+   Wire.beginTransmission(BQ34Z100);
+   Wire.write(0x60);//send chksum command
+   Wire.write(chkSum);
+   Wire.endTransmission();
+   */
+   pausa_ms(150);//bq neeeds time here!!!
+   
+}
+
+/*
+long CalibrateVoltageDivider(long currentVoltage){
+   if(currentVoltage<5000)
+      return 0;
+   //So do this we set the voltage divider to 1.5 Times the current pack voltage (to start with)
+   float setVoltage =   ((float)readVDivider());
+   
+   //chg104Table((uint16_t)setVoltage);//set voltage divider
+   float readVoltage = (float)getVoltage();
+   float newSetting = (currentVoltage/readVoltage)*setVoltage;
+   chg104Table((long)newSetting,0,0);                                          //set new divider ratio
+   return (long)newSetting;
+}
+
+long readVDivider(){
+   readFlash(0x68, 15);
+   long val = (((long)flashbytes[14]) <<8) | flashbytes[15];
+   return val;
+}
+
+
+void CalibrateCurrentShunt(signed long current){
+   if(current>-200 && current<200)
+      return;//too small to use to calibrate
+   //current is in milliamps
+   if(current<0)
+      current=-current;
+   signed long currentReading = getCurrent();
+   if(currentReading<0)
+      currentReading = -currentReading;
+   if(currentReading==0)
+      currentReading=20;
+   //Serial.println(currentReading);
+   readFlash(0x68, 15);
+   delay_us(30);
+  
+   int32 curentGain = ((int32)flashbytes[0])<<24 | ((int32)flashbytes[1])<<16|((int32)flashbytes[2])<<8|(int32)flashbytes[3];
+   //Serial.println(curentGain,DEC);
+   float currentGainResistance = (4.768/XemicsTofloat(curentGain));
+   //Serial.println(currentGainResistance);
+   float newGain = (((float)currentReading)/((float)current)) * currentGainResistance;
+   //Serial.println(newGain);
+   //we now have the new resistance calculated
+   //Serial.println("--");
+   chg104Table(0,newGain,newGain);
+   //chg104Table(0,5,5);
+   delay_us(30);
+}
+
+void setToUnsealed(){
+
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100);                                             // Device address
+    i2c_write(0x00);
+    i2c_write(0x14);
+    i2c_write(0x04);
+    i2c_stop();                                                      // Stop condition
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100);                                             // Device address
+    i2c_write(0x00);
+    i2c_write(0x72);
+    i2c_write(0x36);                                                
+    i2c_stop();                                                      // Stop condition
+
+}
+
+void setToFullAccess(){
+
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100);                                             // Device address
+    i2c_write(0x00);
+    i2c_write(0xFF);
+    i2c_write(0xFF);
+    i2c_stop();                                                      // Stop condition
+    i2c_start();                                                     // Start condition
+    i2c_write(BQ34Z100);                                             // Device address
+    i2c_write(0x00);
+    i2c_write(0xFF);
+    i2c_write(0xFF);                                                
+    i2c_stop();                                                      // Stop condition
+
+}
+*/
+int8 getUpdateStatus(){
+       
+   readFlash(82,0);
+   return flashbytes[4]; // Devuelve estado
+}
+       
+int16 getChemID(){
+   return ReadControl(0x08, 0x00);
+
+}
+
+int1 getFC(){           // Check full charge
+   return (getFlags()&0x0200)==0x0200;
+}

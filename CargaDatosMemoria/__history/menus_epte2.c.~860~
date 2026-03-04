@@ -1,0 +1,3287 @@
+#include "menus_epte2.h"
+
+void pantalla_seleccion(){             // Pantallas generales
+
+    //ST7529_putIcon(ICON_UP,0,20);
+    //ST7529_putIcon(ICON_DOWN,0,90);
+    if(bBateriaBaja){
+        if(bParpadeoBateria){
+            ST7529_putIcon(ICON_NO_BAT,74,0);
+        }else{
+            ST7529_putIcon(i8punt_bat,74,0);
+        }
+    }else{
+        ST7529_putIcon(i8punt_bat,74,0);
+    }
+    
+    if(i16nivel_son==0){
+        ST7529_putIcon(ICON_SON_NONE,68,0);
+    }else if(i16nivel_son<50){
+        ST7529_putIcon(ICON_SON_MED,68,0);
+    }else{
+        ST7529_putIcon(ICON_SON_FULL,68,0);
+    }
+    
+    if(iMenuActual<100){
+        if(iMenuActual==0){
+            ST7529_putIcon2(ICON_LEFT,74,20,GRAY7);
+        }else{
+            ST7529_putIcon(ICON_LEFT,74,20);
+        }
+    
+        if(iMenuActual==42 && i8CanalesElec==CANALES_ABC){
+            poner_config();
+        }else{
+            ST7529_putIcon(ICON_RIGHT,74,90);      
+        }
+        iModoPantalla=SELECCION;
+    }else{
+        if(iMenuActual!=121 && iMenuActual!=123){
+            poner_flecha_izq();
+        }
+    
+        if(iMenuActual!=120 && iMenuActual!=121 && iMenuActual!=123 && iMenuActual!=140 && iMenuActual!=141 && iMenuActual!=142 && iMenuActual!=143){
+            poner_config();
+        }
+        if(iMenuActual==140 || iMenuActual==141 || iMenuActual==142 || iMenuActual==143){
+            ST7529_putIcon(ICON_RIGHT,74,90);
+        }
+    }   
+}
+
+void poner_flecha_izq(){
+    ST7529_putIcon(ICON_LEFT,74,20);
+}
+
+void quitar_flecha_izq(){
+    ST7529_putIcon(ICON_NONE,74,20);
+}
+
+void poner_cancelar(){
+    //ST7529_putIcon(ICON_CANCEL,74,20);
+}
+
+void quitar_cancelar(){
+    ST7529_putIcon(ICON_NONE,74,20);
+}
+
+void poner_config(){
+    ST7529_putIcon(ICON_CONFIG,74,90);
+}
+
+void quitar_config(){
+    ST7529_putIcon(ICON_NONE,74,90);
+}
+
+int8 menu_0()                          // Menu principal
+{        
+    if(iMenuAnterior!=0 || bAlMenuPrincipal){
+        bAlMenuPrincipal=0;
+        ST7529_clear();
+        ST7529_printf("MENU PRINCIPAL",0,0,L_,NORMAL);
+        i8CanalesConfigurados=0;
+        i8ConfigCanal=0;
+        bPointerSeleccionado=0;
+    }
+    
+    pantalla_seleccion();
+    
+    if(giPos<=0){
+        giPos=0;
+    }
+    
+    /*
+    if(giPos==2){
+        if(bascendente){
+            giPos=1;
+        }else{
+            giPos=3;
+        }
+    }*/
+    
+    if(giPos>5){
+        giPos=5;
+    }
+    /*
+    ST7529_printf(" Configuracion",6,NIVEL*2,S_,giPos==0);
+    ST7529_printf(" Galvanica",6,NIVEL*3,S_,giPos==1); 
+    ST7529_printf(" Galvanica + microcorrientes",6,NIVEL*4,S_,giPos==2);
+    ST7529_printf(" Electro-Estimulacion",6,NIVEL*5,S_,giPos==3);
+    ST7529_printf(" SMP",6,NIVEL*6,S_,giPos==4);
+    ST7529_printf(" Test",6,NIVEL*7,S_,giPos==5);
+*/
+    ST7529_printf("        Configuracion        ",6,NIVEL*3,S_,giPos==0);
+    ST7529_printf("          Galvanica          ",6,NIVEL*4,S_,giPos==1);
+    ST7529_printf(" Galvanica + microcorrientes ",6,NIVEL*5,S_,giPos==2);
+    ST7529_printf("     Electro-Estimulacion    ",6,NIVEL*6,S_,giPos==3);
+    ST7529_printf("             SMP             ",6,NIVEL*7,S_,giPos==4);
+    ST7529_printf("            Test             ",7,NIVEL*8,S_,giPos==5);
+    iMenuAnterior=iMenuActual;
+    
+    return 0;
+}
+
+int8 menu_10()   // ConfiuraciÃ³n dispositivo 
+{
+
+   if(iMenuAnterior!=10)
+   {
+      ST7529_clear();
+      ST7529_printf("CONFIGURACION",0,0,L_,NORMAL);
+   } 
+
+   pantalla_seleccion();
+       
+   if(giPos>=5)
+   {
+      giPos=4;
+   }
+       
+   ST7529_printf(" Iluminacion ",6,NIVEL*2,S_,giPos==0);
+   ST7529_printf(" Aviso acustico ",6,NIVEL*3,S_,giPos==1);
+   ST7529_printf(" Version FW/HW ",6,NIVEL*4,S_,giPos==2);   
+   ST7529_printf(" Contraste ",6,NIVEL*5,S_,giPos==3);  
+   ST7529_printf(" Idioma ",6,NIVEL*6,S_,giPos==4);  
+   
+   iMenuAnterior=iMenuActual;    
+}
+
+int8 menu_20()   // Galvanica + microcorrientes
+{
+
+   if(iMenuAnterior!=20){
+        gF=1;   // Pongo a uno para inicializar la parte de frecuencias con la rulancha
+      ST7529_clear();      
+      if(bSeleccionGalvanica){
+        ST7529_printf(sGALVANICA_MICRO,0,0,L_,NORMAL);
+      }else{
+        ST7529_printf(sGALV,0,0,L_,NORMAL);
+      }
+      i32CGalv=calc_CargaGalv(i16Igalv);
+   }
+    
+    if(iMenuAnterior==120){
+        bEmpiezaContadorTiempo=0;                            
+        bValorAlcanzado=0;
+        bDescuentaCargaRampa=0;
+        bTerapia=0;
+        bTratamientoGalvanicaActivado=0;
+        bMicrocorrientesEncendido=0;
+        i32CargaGalvanicaRestante=0;
+        i16TimeRaw[0]=i16Tgalv+i8TrampaGalv;
+        bPausaTratamiento=0;
+        giPosRulancha=i16Igalv;
+    }
+   
+   pantalla_seleccion();
+
+    if(!bSeleccionGalvanica){
+
+        if(giPos==4){         // Descendente
+            giPos=9;
+        }
+        
+        if(giPos==8){         // Ascendente
+            giPos=3;
+        }
+    }
+
+    i8streamGray=0xA0;
+    
+    if(giPos>=10){
+        giPos=9;
+    }
+    if(giPos<=1){
+        giPos=1;
+    }
+
+   ST7529_printf("GALVANICA",5+ (COLUMNA_1+COLUMNA_2)/2,FILA_INIT-SALTO_FILA,S_,0);
+   
+   sprintf(mystring,"C=%06lu[C",(int32)i32CGalv+i16CRampaGalv);
+   ST7529_printf(mystring,COLUMNA_1,FILA_INIT,M_,0);
+   
+   sprintf(mystring,"I=%05lu[A",i16Igalv*50);
+   ST7529_printf(mystring,COLUMNA_2,FILA_INIT,M_,giPos==1);
+   
+   if(bSeleccionGalvanica){
+    if(i16Tgalv==0){
+        i16Tgalv=1;
+    }
+   }
+   Calc_representacion_t(i16Tgalv,0);
+   if(i16Tgalv==0){
+    sprintf(mystring,"Ta=Ilimit ");
+   }else{
+    sprintf(mystring,"Ta=%02u:%02u s",i8Tmin,i8Tseg);
+   }
+   ST7529_printf(mystring,COLUMNA_1,FILA_1,M_,giPos==2);
+   
+   sprintf(mystring,"Tr=%02u s",i8Trampagalv);
+   ST7529_printf(mystring,COLUMNA_2,FILA_1,M_,giPos==3);
+   
+   if(bSeleccionGalvanica){
+    
+       ST7529_printf("MICROCORRIENTES",(COLUMNA_1+COLUMNA_2)/2,FILA_2,S_,0);
+       
+       //sprintf(mystring,"C=%05luuC",i16Cmicro);
+       //ST7529_printf(mystring,10,72,M_,0);
+    
+       sprintf(mystring,"I=%04lu[A",i16Imicro*50);
+       ST7529_printf(mystring,COLUMNA_1,FILA_3,M_,giPos==4);
+       
+       Calc_representacion_t(i16Tmicro,0);
+       sprintf(mystring,"Ta=%02u:%02u s",i8Tmin,i8Tseg);
+       ST7529_printf(mystring,COLUMNA_2,FILA_3,M_,giPos==5);
+       
+       /*if(!bascendente){
+        if(giPos==6){
+            giPos=7;
+        }
+       }else{
+        if(giPos==6){
+            giPos=5;
+        }
+       }*/
+       
+       if(bPolaridadMicro){
+        sprintf(mystring,sBIPOLAR);
+       }else{
+        sprintf(mystring,sMONOPOLAR);
+       }
+       
+       ST7529_printf(mystring,COLUMNA_1,FILA_4,M_,giPos==6);
+      
+       sprintf(mystring,"PW=%04lu [s",i16PWmicro);
+       ST7529_printf(mystring,COLUMNA_2,FILA_4,M_,giPos==7);
+    
+       sprintf(mystring,"F=%04luHz",i16frecmicro);
+       ST7529_printf(mystring,COLUMNA_1,FILA_5,M_,giPos==8);   
+   
+   }
+ 
+   ST7529_printf("CONFIG. TRATAMIENTO",COLUMNA_1,FILA_RELISTO,M_,giPos==9);
+   iMenuAnterior=iMenuActual;
+
+}
+
+int8 menu_40(){
+
+    int1 bCondicion=0;          // variable utilizada conmo condicional de escala de girses en texto
+    
+    if((iMenuAnterior!=40)||(bborrado==1)){                                     // Si vengo de otro menu debo borrar la basurilla
+        if(iMenuAnterior!=48){
+            gF=1;   // Pongo a uno para inicializar la parte de frecuencias con la rulancha
+        }
+        ST7529_clear();       
+        ST7529_printf(sELECTRO_ESTIMULACION,0,0,L_,NORMAL);
+        bborrado=0;
+        
+        Calc_representacion_t(i16TacElec[i8ConfigCanal],i16TdElec[i8ConfigCanal]); 
+        if(i8ConfigCanal==POINTER_C && (iMenuAnterior!=47 && iMenuAnterior!=48 && iMenuAnterior!=51)){
+            i16frecElec[POINTER_C]=10;
+        }
+    }
+    
+    //giPos%=13;
+    if(giPos>=13){
+        giPos=12;
+    }
+    
+    if(i16IElec[i8ConfigCanal]>=20){
+        i16IElec[i8ConfigCanal]=20;
+    }
+    
+    if(iMenuAnterior==140 && bPausaTratamiento){
+        bPausaTratamiento=0;
+        if(i16IElec[i8ConfigCanal]>=20){
+            i16IElec[i8ConfigCanal]=20;
+        }
+    }
+    
+    if(iMenuAnterior==43){
+        if(i8TrElec[i8ConfigCanal] > i16TacElec[i8ConfigCanal]/3){
+            i8TrElec[i8ConfigCanal]=i16TacElec[i8ConfigCanal]/3;
+        }
+        if(i8TrElec[i8ConfigCanal]>=10){
+            i8TrElec[i8ConfigCanal]=10;
+        }
+    }
+    
+    if(i8ConfigCanal==POINTER_C){       // Seleccion de los menus accesible en configuración del pointer
+        if(!bascendente){
+            if(giPos>0 && giPos<6){
+                giPos=6;
+            }else if(giPos>7 && giPos<10){
+                giPos=10;
+            }else if(giPos>10 && giPos<12){
+                giPos=12;
+            }
+        }else{
+            if(giPos>10 && giPos<12){
+                giPos=10;
+            }else if(giPos>8 && giPos<10){
+                giPos=7;
+            }else if(giPos>0 && giPos<6){
+                giPos=0;
+            }
+        }
+    }
+    
+    pantalla_seleccion();                                                         // Colocamos los emoticonos
+   
+    switch(i8ConfigCanal){
+        case CHA_C:
+            sprintf(mystring,sCANAL_A);             // Muestra el texto del canal A   
+            break;
+        case CHB_C:
+            sprintf(mystring,sCANAL_B);             // Muestra el texto del canal B
+            break;
+        case CHC_C:
+            sprintf(mystring,sCANAL_C);             // Muestra el texto del canal C
+            break;
+        case POINTER_C:
+            sprintf(mystring,sCANAL_POINTER);             // Muestra el texto del canal C
+            break;
+    }
+    ST7529_printf(mystring,23,18,M_,(giPos==0));                // Muestra por pantalla los títulos
+
+    Calc_representacion_t(i16TacElec[i8ConfigCanal],i16TdElec[i8ConfigCanal]);
+    comprobacionLimitesFrecuencia();
+    
+    // Texto menus
+    if(POINTER_C != i8ConfigCanal){
+        // Saltos menú
+        if(!bPolaridadElec[i8ConfigCanal]){                  // Si la señal es monopolar
+            if(!bascendente){                               // Si estamos descendiendo en el menú
+                if(giPos==11){                          // Si estamos en la configuración del PW-
+                    giPos=12;                           // Salto a relisto
+                }
+                if(giPos==9){
+                    giPos=10;
+                }
+            }else{                      // Si estamos ascendiendo en el menú
+                if(giPos==11){                          // Si estamos en el menú de configuracion del PW-
+                    giPos=10;                            // Salto a PW+
+                }
+                if(giPos==9){
+                    giPos=8;
+                }
+            }
+        
+        }else{                          // Si la señal es bipolar
+            if(!bascendente){           // Si estamos descendiendo en el menú
+                if(bSimetriaElec[i8ConfigCanal]){
+                    if(giPos==11){          // Si estamos en la configuración del PW-
+                        giPos=12;           // Salto a relisto
+                    }
+                }
+            }else{                      // Si estamos ascendiendo en el menú
+                if(bSimetriaElec[i8ConfigCanal]){
+                    if(giPos==11){          // Si estamos en el menú de configuracion del PW-
+                        giPos=10;            // Salto a PW+
+                    }
+                }
+            }
+        }
+        
+        // Saltos menú por simetria
+        if(!bascendente){
+            switch(i8SimetriaCanales){
+                case 1:         // Canales AB
+                    if(CHB_C==i8ConfigCanal){
+                        if(giPos>=7){
+                            giPos=12;
+                        }
+                    }
+                    break;
+                case 2:         // Canales ABC
+                    if(CHB_C==i8ConfigCanal || CHC_C==i8ConfigCanal){
+                        if(giPos>=7){
+                            giPos=12;
+                        }
+                    }
+                    break;
+            }
+        }else{
+            switch(i8SimetriaCanales){
+                case 1:         // Canales AB
+                    if(CHB_C==i8ConfigCanal){
+                        if(giPos>=6 && giPos<=11){
+                            giPos=6;
+                        }
+                    }
+                    break;
+                case 2:         // Canales ABC
+                    if(CHB_C==i8ConfigCanal || CHC_C==i8ConfigCanal){
+                        if(giPos>=6 && giPos<=11){
+                            giPos=6;
+                        }
+                    }
+                    break;
+            }
+        }
+    
+            
+        // Dibujar menú
+        switch(i8SimetriaCanales){
+            case 0:
+                sprintf(mystring,"Copia Canales: %s",sSimetriaCanalesNO);             
+                break;
+            case 1:
+                sprintf(mystring,"Copia Canales: %s",sSimetriaCanalesAB);            
+                break;
+            case 2:
+                sprintf(mystring,"Copia Canales: %s",sSimetriaCanalesABC);             
+                break;
+        }
+        ST7529_printf(mystring,COLUMNA_1,FILA_INIT,M_,(giPos==1));   
+        sprintf(mystring,"I=%05lu[A  ",i16IElec[i8ConfigCanal]*50);                         // Muestra la corriente configurada para cada canal
+        sprintf(mystring1,"F=%04luHz  ",i16frecElec[i8ConfigCanal]);                        // Muestra la frecuencia configurada para cada canal
+        ST7529_printf(mystring,COLUMNA_1,FILA_3,M_,giPos==6);             // Muetsra por pantalla la corriente
+        
+        bCondicion=(i8SimetriaCanales==1 && i8ConfigCanal==CHB_C);
+        bCondicion|=(i8SimetriaCanales==2 && (i8ConfigCanal==CHB_C||i8ConfigCanal==CHC_C));
+        
+        ST7529_printfg(mystring1,COLUMNA_2,FILA_3,M_,ai8EscalaGrises[bCondicion],giPos==7);         // Muestra por pantalla la frecuencia
+        
+        sprintf(mystring,"Ta=%02u:%02u s",i8Tmin,i8Tseg);             // Tiempo Activo
+        ST7529_printf(mystring,COLUMNA_1,FILA_1,M_,(giPos==2));             
+        sprintf(mystring,"Tr=%02uSg   ",i8TrElec[i8ConfigCanal]);              // Tiempo Rampa
+        ST7529_printf(mystring,COLUMNA_1,FILA_2,M_,(giPos==4));
+        
+        sprintf(mystring,"Td=%02u:%02u s",i8T1min,i8T1seg);                // Tiempo Descanso/Reposo
+        ST7529_printf(mystring,COLUMNA_2,FILA_1,M_,(giPos==3));
+        
+        bCondicion=(i16TdElec[i8ConfigCanal]==0);
+        if(bCondicion){                     // Si no hay tiempo de descanso
+            i8Nrep[i8ConfigCanal]=1;        // Fijamos el número de repeticiones a uno
+            if(!bascendente){               // Si estamos descendiendo en el menú
+                if(giPos==5){
+                    giPos=6;
+                }
+            }else{                          // Si estamos ascendiendo en el menú
+                if(giPos==5){
+                    giPos=4;
+                }
+            }
+        }
+        sprintf(mystring,"N=%02u      ",i8Nrep[i8ConfigCanal]);                // Número de repeticiones
+        ST7529_printfg(mystring,COLUMNA_2,FILA_2,M_,ai8EscalaGrises[bCondicion],(giPos==5)); 
+        
+        if(bPolaridadElec[i8ConfigCanal]){
+            sprintf(mystring,sBIPOLAR);         // Indico bipolar   
+            if(i16PW_minusElec[i8ConfigCanal]==0){
+                i16PW_minusElec[i8ConfigCanal]=100;
+            }
+        }else{
+            sprintf(mystring,sMONOPOLAR);       // Indico monopolar
+            bSimetriaElec[i8ConfigCanal]=0;
+            i16PW_minusElec[i8ConfigCanal]=0;
+        }
+        
+        bCondicion=(i8SimetriaCanales==1 && i8ConfigCanal==CHB_C);
+        bCondicion|=(i8SimetriaCanales==2 && (i8ConfigCanal==CHB_C||i8ConfigCanal==CHC_C));
+        
+        ST7529_printfg(mystring,COLUMNA_1,FILA_4,M_,ai8EscalaGrises[bCondicion],giPos==8);          // Muestra por pantalla la polaridad
+
+        if(bSimetriaElec[i8ConfigCanal]){                                       // Si la señal es simétrica
+            sprintf(mystring,sSIMETRICA);                                       // Indico simetría 
+            //bPolaridadElec[i8ConfigCanal]=1;                                    // Pongo señal bipolar (Es preciso?)
+            i16PW_minusElec[i8ConfigCanal]=i16PW_plusElec[i8ConfigCanal];       // Copio valores del PW+ en PW-
+        }else{                                                                  // Si la señal es asimétrica
+            sprintf(mystring,sASIMETRICA);                                      // Indico asimetría
+        }
+        bCondicion=(i8SimetriaCanales==1 && i8ConfigCanal==CHB_C);
+        bCondicion|=(i8SimetriaCanales==2 && (i8ConfigCanal==CHB_C||i8ConfigCanal==CHC_C));
+        bCondicion|=!(bPolaridadElec[i8ConfigCanal]);
+        ST7529_printfg(mystring,COLUMNA_2,FILA_4,M_,ai8EscalaGrises[bCondicion],giPos==9);         // Muestra por pantalla la simetría 
+
+        bCondicion=(i8SimetriaCanales==1 && i8ConfigCanal==CHB_C);
+        bCondicion|=(i8SimetriaCanales==2 && (i8ConfigCanal==CHB_C||i8ConfigCanal==CHC_C));
+        sprintf(mystring,"PW+=%04lu[s",i16PW_plusElec[i8ConfigCanal]);                                 // Muestra el texto del PW+
+        ST7529_printfg(mystring,COLUMNA_1,FILA_5,M_,ai8EscalaGrises[bCondicion],giPos==10); // Muestra el texto por pantalla
+        
+        bCondicion|=(bSimetriaElec[i8ConfigCanal] || !bPolaridadElec[i8ConfigCanal]);
+        sprintf(mystring,"PW-=%04lu[s",i16PW_minusElec[i8ConfigCanal]);     // PW- coge el valor del PW+                                                                                           // Si debe estar habilitado
+        ST7529_printfg(mystring,COLUMNA_2,FILA_5,M_,ai8EscalaGrises[bCondicion],giPos==11);                 // Muestra texto en negro
+    }else{
+        sprintf(mystring,"I=%05lu[A  ",i16IElec[i8ConfigCanal]*50);                         // Muestra la corriente configurada para cada canal
+        if(iMenuAnterior==140){
+            i16frecElec[i8ConfigCanal]=10;
+        }
+        sprintf(mystring1,"F=%04luHz  ",i16frecElec[i8ConfigCanal]);                        // Muestra la frecuencia configurada para cada canal
+        ST7529_printf(mystring,COLUMNA_1,FILA_3,M_,giPos==6);             // Muetsra por pantalla la corriente
+        ST7529_printf(mystring1,COLUMNA_2,FILA_3,M_,giPos==7);         // Muestra por pantalla la frecuencia
+        
+        sprintf(mystring,"PW=%04lu[s",i16PW_plusElec[i8ConfigCanal]);                                 // Muestra el texto del PW+
+        ST7529_printf(mystring,COLUMNA_1,FILA_4,M_,giPos==10); // Muestra el texto por pantalla
+        
+        i16PW_minusElec[i8ConfigCanal]=i16PW_plusElec[i8ConfigCanal];
+        bPolaridadElec[i8ConfigCanal]=1;
+        bSimetriaElec[i8ConfigCanal]=1;
+    }
+
+    // Si solo se ha seleccionado un canal a configurar
+    ST7529_printf("CONFIG. TRATAMIENTO",COLUMNA_1,FILA_RELISTO,M_,giPos==12);        // Activo botón relisto
+   
+   iMenuAnterior=iMenuActual;                                                                               // Copia el valor del menú actual a menú anterior
+    
+    
+    return 0;
+}
+
+int8 menu_60()    // Test 
+{          
+   if(iMenuAnterior!=60)
+   {
+      ST7529_clear();       
+      ST7529_printf("TEST DISPOSITIVO",0,0,L_,NORMAL);
+      write_PCA955X(0x00,0x00,0x02,PCA9554);                            // PCA9554 address=0x02 apagamos todos los leds
+   }  
+   pantalla_seleccion();
+
+   if (giPos>=15)
+      giPos=14;
+
+   ST7529_printf("LED BICOLOR",8,20,S_,giPos==0);
+   ST7529_printf("AVISO SONORO",42,20,S_,giPos==1);
+   ST7529_printf("PULSADORES",8,30,S_,giPos==2);
+   ST7529_printf("PANTALLA",42,30,S_,giPos==3);
+   ST7529_printf("ACELEROMETRO",8,40,S_,giPos==4);
+   ST7529_printf("ALIMENTACION EXT",42,40,S_,giPos==5);
+   ST7529_printf("STATUS CARGADOR",8,50,S_,giPos==6);
+   ST7529_printf("DC/DC 12V",42,50,S_,giPos==7);
+   ST7529_printf("DC/DC 48V",8,60,S_,giPos==8);
+   ST7529_printf("RELES",42,60,S_,giPos==9);
+   ST7529_printf("BQ34Z100G1",8,70,S_,giPos==10);
+   ST7529_printf("COMUNICACION PIC",42,70,S_,giPos==11);
+   ST7529_printf("ELEC CHA",8,80,S_,giPos==12);
+   ST7529_printf("ELEC CHB",42,80,S_,giPos==13);
+   ST7529_printf("ELEC CHC",8,90,S_,giPos==14);
+   
+   
+   iMenuAnterior=iMenuActual;    
+}
+
+int8 menu_80(){    // Sistema multipulsos
+
+    if(iMenuAnterior!=80){
+        if(iMenuAnterior!=83){
+            gF=1;   // Pongo a uno para inicializar la parte de frecuencias con la rulancha
+        }
+        ST7529_clear();
+        ST7529_printf(sSMP,0,0,L_,NORMAL);
+        if(iMenuAnterior==180){
+            giPosRulancha=i16TacSMP/5;
+            giPos=0;
+        }
+    }  
+    
+    Calc_representacion_t(i16TacSMP,0); 
+    
+    pantalla_seleccion();
+    
+    if (giPos>4){
+        giPos=4;
+    }
+    
+    if(giPos<=0){
+        giPos=0;
+    }
+    
+    sprintf(mystring,"Ta=%02u:%02u s",i8Tmin,i8Tseg);             // Tiempo Activo
+    ST7529_printf(mystring,COLUMNA_1,FILA_2,M_,(giPos==0));     
+    
+    sprintf(mystring,"Td=%05lu uS",i32TDesfaseSMP);          // Tiempo Desfase pulsos
+    ST7529_printf(mystring,COLUMNA_2,FILA_2,M_,(giPos==1));
+    
+    sprintf(mystring,"F=%03lu Hz",i16FrecSMP);             // Frecuencia
+    ST7529_printf(mystring,COLUMNA_1,FILA_3,M_,(giPos==2));
+    
+    sprintf(mystring,"PW=%04LU [s",i16PWSMP);              // Ancho de pulso
+    ST7529_printf(mystring,COLUMNA_2,FILA_3,M_,(giPos==3));
+
+    ST7529_printf("CONFIG. TRATAMIENTO",COLUMNA_1,FILA_RELISTO,M_,giPos==4);         // Activo botón relisto
+        
+
+    iMenuAnterior=iMenuActual;    
+}
+
+
+// Configuracion Ilumninacion pantalla
+int8 menu_11(){ 
+
+    if ((iMenuAnterior!=11)&&(iMenuAnterior!=64)){          // Si no viene de ninguno de los menús indicados
+        ST7529_clear();                                     // Limpio la pantalla   
+        ST7529_printf("ILUMINACION",0,0,L_,NORMAL);        // Muestro texto 
+        giPos=i8nivel_ilum;                                 // Asigno el valor de giPos al nivel de iluminación
+    }  
+    pantalla_seleccion();                                   // Muestro iconos
+    
+    if(giPos>100){                                          // Si el valor es mayor a 100
+        giPos=100;                                          // Fija a 100
+    }
+    
+    if (giPos<10){                                          // Si el valor es menor a 10
+        giPos=10;                                           // Fija a 10
+    }
+    
+    sprintf(mystring,"%03lu%c",giPos,37);                   // Muestro valor por pantalla
+    ST7529_printf(mystring,30,50,XL_,0);
+    
+    ST7529_putIcon(ICON_ILUM,20,52);                        // Muestro icono iluminación
+    
+    i8nivel_ilum=giPos;                                     // Obtiene valor de iluminación
+    set_pwm8_duty((int16)i8nivel_ilum*10);                  // Cargamos duty de trabajo [0..1000] 
+    
+    iMenuAnterior=iMenuActual;
+}
+
+// Configuracion señal acustico
+int8 menu_12(){
+
+    if((iMenuAnterior!=12)&&(iMenuAnterior!=62)){                   // Si no viene de ninguno de los menús indicados
+        ST7529_clear();                                             // Limpio la pantalla                               
+        ST7529_printf("AVISO ACUSTICO",0,0,L_,NORMAL);             // Muestro texto                                    
+        giPos=i16nivel_son;                                         // Asigno el valor de giPos al nivel de sonido 
+    }  
+    pantalla_seleccion();                                           // Muestro iconos
+    
+    if(giPos>100){                                                  // Si el valor es mayor a 100
+        giPos=100;                                                  // Fija a 100
+    }
+    
+    if (giPos<=0){                                                  // Si el valor es menor o igual a 0
+        giPos=0;                                                    // Fija a 0
+    }
+    
+    i16nivel_son=giPos;                                             // Asigno nivel de sonido
+    
+    sprintf(mystring,"%03lu%c",giPos,37);                           // Muestro valor por pantallla
+    ST7529_printf(mystring,30,50,XL_,0);
+    
+    if (giPos==0){                                                  // Si se apaga el pito...
+        ST7529_putIcon(ICON_ALTOFF,20,52);                          // Icono altavoz off
+        setup_ccp7(CCP_OFF);                                        // Apago modulador
+        output_high(PWM_PITO);                                      // Nivel alto pito
+    }else{                                                          // ...su no está apagado
+        ST7529_putIcon(ICON_ALTON,20,52);                           // Icono altavoz on
+        setup_ccp7(CCP_PWM|CCP_SHUTDOWN_AC_L|CCP_SHUTDOWN_BD_L);    // Modulador para señal acustica
+        set_pwm7_duty((int16)((i16nivel_son*4.5)));                   // Cargamos duty de trabajo [0..500]
+    }
+    
+    iMenuAnterior=iMenuActual;
+}
+
+// Version SW/HW
+int8 menu_13()             
+{        
+   if(iMenuAnterior!=13)
+   {
+      ST7529_clear();       
+      ST7529_printf("VERSION SW/HW",0,0,L_,NORMAL);
+   }  
+   pantalla_seleccion();
+   ST7529_printf(sFW_Ver,22,50,L_,0);
+   ST7529_printf(sHW_Ver,22,70,L_,0);
+   iMenuAnterior=iMenuActual;
+}
+
+// Cargar valores de memoria
+int8 menu_14()          
+{          
+    if (iMenuAnterior!=14){          // Si no viene de ninguno de los menús indicados
+        ST7529_clear();                                     // Limpio la pantalla   
+        ST7529_printf("CONTRASTE",0,0,L_,NORMAL);        // Muestro texto 
+        giPos=i8NivelContraste;                                 // Asigno el valor de giPos al nivel de iluminación
+    }  
+    pantalla_seleccion();                                   // Muestro iconos
+    
+    if(giPos>=63){                                          // Si el valor es mayor a 100
+        giPos=63;                                          // Fija a 100
+    }
+    
+    if (giPos<=0){                                          // Si el valor es menor a 10
+        giPos=0;                                           // Fija a 10
+    }
+    
+    sprintf(mystring,"%03lu%c",giPos,37);                   // Muestro valor por pantalla
+    ST7529_printf(mystring,30,50,XL_,0);
+    
+    ST7529_putIcon(ICON_CONTRAST,20,52);                        // Muestro icono iluminación
+    
+    i8NivelContraste=giPos;                                     // Obtiene valor de iluminación
+    ST7529_send(COMMAND,VOLCTRL);      // Electronic Control
+    ST7529_send(DATA,i8NivelContraste);    // Vop=18V - DS: 7.10.2 pg. 32   1C
+    ST7529_send(DATA,0x04);          // 04
+    
+    iMenuAnterior=iMenuActual;
+}
+
+// Idioma
+int8 menu_15(){
+
+    if (iMenuAnterior!=15){          // Si no viene de ninguno de los menús indicados
+        ST7529_clear();                                     // Limpio la pantalla   
+        ST7529_printf("IDIOMA",0,0,L_,NORMAL);        // Muestro texto 
+        giPos=i8SelIdioma;                                 // Asigno el valor de giPos al nivel de iluminación
+    }  
+    pantalla_seleccion();                                   // Muestro iconos
+    
+    giPos%=NUM_IDIOMAS;
+    
+    switch(giPos){
+        case SPANISH:
+            sprintf(mystring,"Spanish");                   // Muestro valor por pantalla
+            break;
+        case ENGLISH:
+            sprintf(mystring,"English");                   // Muestro valor por pantalla
+            break;
+    }
+    
+    ST7529_printf(mystring,30,50,L_,0);
+
+    i8SelIdioma=giPos;
+    
+    iMenuAnterior=iMenuActual;
+}
+
+// Nivel de carga electrica (Galvanica + microcorrientes)
+int8 menu_21()                                                                
+{ 
+   int8  min=0;
+   if(iMenuAnterior==20)
+   {
+      ST7529_clear();       
+      
+      if (iMenuActual==21)
+      {
+         giPos=i32CGalv;
+         max=1000;
+         min=1;
+         gC=100;
+         sprintf(mystring,sGALV);
+      }   
+      else
+      {
+         giPos=i16Cmicro;
+         max=300;
+         min=0;
+         gC=100;         
+         sprintf(mystring,sMICRO_CORRIENTES);
+      }
+      ST7529_printf(mystring,0,0,L_,NORMAL); 
+   }
+   
+   pantalla_seleccion();
+      
+   if(giPos>=max)
+   {
+      giPos=max;
+   }
+   if (giPos<=min)
+   {
+      giPos=min;
+   }
+    // TODO - Eliminar/modificar
+   ST7529_printf(sCa_ELECTRICA ,17,36,M_,NORMAL);
+   sprintf(mystring,"%06LU uC",(int32)giPos*100);
+   ST7529_printf(mystring,30,70,L_,0);
+   if (iMenuActual==21)
+   {
+      i32CGalv=giPos;
+      i16Tgalv=calc_Tgalv(i32CGalv,i16Igalv);
+   }
+   else
+   {
+      ST7529_printfg("(Si C=0 no habra t. microcorrientes)",5,115,s_,0xA0,0);
+      i16Tmicro=calc_Tmicro();
+      i16Cmicro=giPos;
+   }
+   iMenuAnterior=iMenuActual;
+}
+
+// Nivel de corriente (Galvanica + Microcorrientes + Pointer + Electroestimulacion)
+int8 menu_22()                
+{   
+   if((iMenuAnterior!=21)&&(iMenuAnterior!=24)&&(iMenuAnterior!=31)&&(iMenuAnterior!=47)&&(iMenuAnterior!=54)&&(iMenuAnterior!=90))
+   {
+      ST7529_clear();
+      if(iMenuAnterior==41 || iMenuAnterior==45 || iMenuANterior==46){
+        iMenuAnterior=40;
+      }
+      
+      
+      switch (iMenuAnterior)
+      {
+         case 20:
+         case 23:
+         {
+            if (giPos==1 || iMenuActual==21)
+            {
+               sprintf(mystring,sGALV);
+               min=2;
+               max=200;
+               
+               sprintf(mystring1,"(Rango 100uA..10mA)");
+               giPos=i16Igalv;
+            }
+            else if (giPos==4 || iMenuActual==24)
+            {
+               sprintf(mystring,sMICRO_CORRIENTES);
+               min=2;   // 2*50=100uA 
+               max=20;  // 20*50=1000uA
+               
+               sprintf(mystring1,"(Rango 100uA..1mA)  ");
+               giPos=i16Imicro; 
+            }
+                        
+            break;
+         }
+         case 40:
+         {
+            sprintf(mystring,sELECTRO_ESTIMULACION);
+            sprintf(mystring1,"(Rango 100uA..1mA)");
+            max=20;        // 1 mA
+            min=2;
+            gI=50;
+            giPos=i16IElec[i8ConfigCanal];
+            break;
+         }
+      }
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+   } 
+    
+   pantalla_seleccion();
+      
+   if(giPos>max)
+   {
+      giPos=max;
+   }
+   if (giPos<=min)
+   {
+      giPos=min;
+   }
+   
+
+   ST7529_printf(sCo_ELECTRICA,12,36,M_,NORMAL);
+   sprintf(mystring,"%05lu [A",giPos*gI);
+   ST7529_printf(mystring,30,70,L_,0);
+
+   switch (iMenuActual)
+   {
+      case 21:
+      {
+        
+         i16Igalv=giPos;  
+         i32CGalv=calc_CargaGalv(i16Igalv);
+         break;
+      }
+      case 24:
+      {
+         i16Imicro=giPos;        
+         break;
+      }
+      case 47:
+      {
+         i16IElec[i8ConfigCanal]=giPos;
+         break;
+      }
+   }
+   ST7529_printfg(mystring1,5,115,s_,0xA0,0);
+   
+   giPosRulancha=giPos;
+   
+   iMenuAnterior=iMenuActual;
+}
+
+
+// Rampa + tiempo de rampa (Galvanica + Microcorrientes + Electroestimulacion)
+int8 menu_23()  
+{
+   if((iMenuAnterior!=23)&&(iMenuAnterior!=26)&&(iMenuAnterior!=45))
+   {
+      ST7529_clear();
+      if(iMenuAnterior==44){
+        iMenuAnterior=40;
+      }
+      
+
+      switch (iMenuAnterior)
+      {
+         case 20:
+         case 22:
+         {
+            
+            if (giPos==3 || iMenuAnterior==22)
+            {
+               sprintf(mystring,sGALV);
+               giPos=i8Trampagalv;
+            }
+            else if (giPos==6)
+            {
+               sprintf(mystring,sMICRO_CORRIENTES);
+               giPos=i8Trampamicro;
+            }
+            break;
+         }
+         case 40:
+         {
+            sprintf(mystring,sELECTRO_ESTIMULACION);
+            giPos=i8TrElec[i8ConfigCanal];
+            break;
+         }
+      }
+      
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+   }
+       
+   pantalla_seleccion();
+   
+   if(giPos>10)
+   {
+      giPos=10;
+   }
+   if (giPos<=0)
+   {
+      giPos=0;
+   }
+   
+   
+    if(iMenuActual==23){
+        if(i16Tgalv!=0){
+            if((float)giPos>=(i16Tgalv/3.0)){
+                giPos=(i16Tgalv/3);
+            }
+        }
+    }
+   
+   if(iMenuActual==45){
+    if((float)giPos>=(i16TacElec[i8ConfigCanal]/3.0)){
+        giPos=(i16TacElec[i8ConfigCanal]/3);
+    }
+   }
+   
+   ST7529_printf(sTIEMPO_RAMPA,17,36,M_,NORMAL);
+   sprintf(mystring,"%02lu Sg",giPos);
+   ST7529_printf(mystring,30,70,L_,0);
+
+   switch (iMenuActual)
+   {
+      case 23:
+      {
+         i8Trampagalv=giPos;
+         break;
+      }
+      case 26:
+      {
+         i8Trampamicro=giPos;
+         break;
+      }
+      case 45:
+      {
+         i8TrElec[i8ConfigCanal]=giPos;
+         break;
+      }
+   }
+   
+   giPosRulancha=giPos;
+   
+   iMenuAnterior=iMenuActual;
+}
+
+// PW pulsada (Microcorrientes + Pointer + Electroestimulacion + SMP)
+int8 menu_27()  
+{
+   if(((iMenuAnterior!=27)&&(iMenuAnterior!=35)&&(iMenuAnterior!=36)&&(iMenuAnterior!=51)&&(iMenuAnterior!=52)&&(iMenuAnterior!=58)&&(iMenuAnterior!=59)&&(iMenuAnterior!=84)&&(iMenuAnterior!=94)&&(iMenuAnterior!=95)) || (iMenuAnterior==51 && iMenuActual==52))
+   {
+      ST7529_clear();
+      if(iMenuAnterior==48 || iMenuAnterior==49 || iMenuAnterior==50 || iMenuAnterior==51){
+        iMenuAnterior=40;
+      }
+      if(iMenuAnterior==83){
+        iMenuAnterior=80;
+      }
+
+      switch (iMenuAnterior)
+      {
+         case 20:
+         case 26:
+         {
+            sprintf(mystring,sMICRO_CORRIENTES);
+            giPos=i16PWmicro/25;      
+            maxBW=20;
+            break;
+         }
+         case 40:
+         {
+            sprintf(mystring,sELECTRO_ESTIMULACION);
+            if(iMenuActual==51){
+               giPos=i16PW_plusElec[i8ConfigCanal]/25;
+            }else if (iMenuActual==52){
+               giPos=i16PW_minusElec[i8ConfigCanal]/25;
+            }
+            if(i8ConfigCanal==POINTER_C){
+                maxBW=20;
+            }else{
+                maxBW=40;
+            }
+            //maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+            break;
+         }
+         case 80:
+            sprintf(mystring,sSMP);
+            
+            giPos=i16PWSMP/25;
+               
+            maxBW=20;    // 500us
+            break;
+      }
+     
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+   }
+   if(iMenuActual==51){
+    ST7529_printf("ANCHO DE PULSO +",17,36,M_,NORMAL);
+   }else if(iMenuActual==52){
+    ST7529_printf("ANCHO DE PULSO -",17,36,M_,NORMAL);
+   }else{
+    ST7529_printf("ANCHO DE PULSO  ",17,36,M_,NORMAL);
+   }
+   pantalla_seleccion();
+  
+   if(giPos>=maxBW)              
+   {
+      giPos=maxBW;
+   }
+   if (giPos<4)
+   {
+      giPos=4;
+   }
+   sprintf(mystring,"%04lu us",giPos*25);
+   ST7529_printf(mystring,26,70,L_,0);
+  
+   switch (iMenuActual)
+   {
+      case 27:
+      {
+         i16PWmicro=giPos*25;
+   
+         break;
+      }
+      
+      case 51:
+      {
+         i16PW_plusElec[i8ConfigCanal]=giPos*25;
+         maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+         if(i8SimetriaCanales!=0){
+            copiarDatosSimetria(0);
+         }
+         if(i8ConfigCanal==POINTER_C){
+            i16PW_minusElec[i8ConfigCanal]=i16PW_plusElec[i8ConfigCanal];
+         }
+         break;
+      }        
+      case 52:
+      {
+         i16PW_minusElec[i8ConfigCanal]=giPos*25;
+         maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+         if(i8SimetriaCanales!=0){
+            copiarDatosSimetria(0);
+         }
+         break;
+      }  
+      case 84:
+      
+        i16PWSMP=giPos*25;
+        if((i16PWSMP*2+BANDA_GUARDA*2) >= i32TDesfaseSMP){
+            giPos=(i32TDesfaseSMP-BANDA_GUARDA*2)/2;
+            giPos/=25;
+            i16PWSMP=giPos*25;
+        }
+        maxBW=20;   //500us
+        break;
+   } 
+   
+   giPosRulancha=giPos;
+   
+   iMenuAnterior=iMenuActual;
+}
+
+
+ 
+// Frecuencia (Microcorrientes + Pointer + Electroestimulacion)
+int8 menu_28()  
+{
+   int16 aux;
+   if((iMenuAnterior!=28)&&(iMenuAnterior!=32)&&(iMenuAnterior!=48)&&(iMenuAnterior!=55)&&(iMenuAnterior!=83)&&(iMenuAnterior!=91))
+   {
+    if(iMenuAnterior==47){
+        iMenuAnterior=40;
+    }
+    if(iMenuAnterior==82){
+        iMenuAnterior=80;
+    }
+    if(iMenuAnterior==27){
+        iMenuAnterior=20;
+    }
+      ST7529_clear();
+      switch (iMenuAnterior)
+      {
+         case 20:
+         {
+            sprintf(mystring,sMICRO_CORRIENTES);
+            max=100;
+            min=2;                                    
+            aux=i16frecmicro;
+            gF=1;
+            giPos=aux/gF;
+            break;       
+         }
+
+         case 40:
+         {
+            sprintf(mystring,sELECTRO_ESTIMULACION);
+
+            aux=i16frecElec[i8ConfigCanal];
+
+            max=i16FrecLimSup[i8ConfigCanal];
+            min=i16FrecLimInf[i8ConfigCanal];
+            
+            break;
+         }
+         case 80:
+         {
+            sprintf(mystring,sSMP);
+            max=100;
+            min=2;
+            aux=i16FrecSMP;
+            break;
+         }  
+      }
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+   }
+   else
+   {
+      aux=giPos*gF;
+   }
+   /*
+   if ((iMenuActual==55)&&(vector_f[giPos]==0))
+   {
+      giPos--;
+   }*/
+   
+   if(iMenuActual!=28)
+   {
+      if (aux>=10000)
+      {
+         gF=1000;
+         giPos=aux/gF;
+      }
+      else if (aux>=200)
+      {
+         gF=50;
+         giPos=aux/gF;
+      }
+      else if (aux>=100)
+      {
+         gF=10;
+         giPos=aux/gF;
+      }
+      else if (aux>=20)
+      {
+         gF=2;
+         giPos=aux/gF;
+      }
+      else
+      {
+         gF=1;
+         giPos=aux;
+      }
+   }
+      if ((giPos*gF)>=max)
+      {
+         giPos=max/gF;
+      }
+      
+      if ((giPos*gF)<min)
+      {
+         giPos=min/gF;
+      }
+
+   //}
+   pantalla_seleccion();
+    
+   ST7529_printf(sFRECUENCIA,24,36,M_,NORMAL);
+  
+   sprintf(mystring,"%05lu Hz",giPos*gF);
+     
+   ST7529_printf(mystring,29,70,L_,0);
+  
+   switch (iMenuActual)
+   {
+      case 28:
+      {
+         aux=giPos*gF;
+         i16frecmicro=giPos*gF;
+         maxBW=Calc_BWmax(i16frecmicro,bpolaridadmicro);
+         break;
+      }
+      case 83:
+         aux=giPos*gF;
+         i16FrecSMP=giPos*gF;
+         maxBW=Calc_BWmax(i16FrecSMP,1);
+         i16PWSMP=Calc_BW(maxBW,i16PWSMP);
+        break;
+      case 48: 
+      {
+         aux=giPos*gF;
+         i16frecElec[i8ConfigCanal]=giPos*gF;
+         maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+         i16PW_plusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_plusElec[i8ConfigCanal]);
+         i16PW_minusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_minusElec[i8ConfigCanal]);
+         
+         if(i8SimetriaCanales!=0){
+            copiarDatosSimetria(0);
+         }
+         break;
+      }
+   }
+   
+   giPosRulancha=giPos;
+   
+   iMenuAnterior=iMenuActual;
+} 
+ 
+
+
+// POLARIDAD (Microcorrientes + Pointer + Electroestimulacion)
+
+int8 menu_29()   
+{
+   if((iMenuAnterior!=26)&&(iMenuAnterior!=34)&&(iMenuAnterior!=49)&&(iMenuAnterior!=57)&&(iMenuAnterior!=93))
+   {
+      ST7529_clear();
+      if(iMenuAnterior==48){
+        iMenuAnterior=40;
+      }
+      switch (iMenuAnterior) 
+      {
+         case 20:
+         case 25:
+         {
+            sprintf(mystring,sMICRO_CORRIENTES);
+            giPos=bPolaridadMicro;
+            break;                       
+         }
+         case 40:
+         {
+            sprintf(mystring,sELECTRO_ESTIMULACION);
+            giPos=bpolaridadElec[i8ConfigCanal];
+            break;
+         }
+      }
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+   }
+    
+   pantalla_seleccion();
+   
+   if(giPos>1){
+      giPos=1;
+   }
+   
+   if (giPos<=0){
+      giPos=0;
+   }
+
+   ST7529_printf(sPOLARIDAD,25,36,M_,NORMAL);
+   
+   if(giPos==0)
+      sprintf(mystring,sMONOPOLAR);
+   else
+      sprintf(mystring,sBIPOLAR);
+
+   ST7529_printf(mystring,25,70,L_,0);
+   
+   switch(iMenuActual){
+      case 26:
+         bPolaridadMicro=giPos;
+         maxBW=Calc_BWmax(i16frecmicro,bpolaridadmicro);
+         i16PWmicro=Calc_BW(maxBW,i16PWmicro);
+         //i16Tmicro=calc_Tmicro(); 
+         break;
+      case 49:
+         bpolaridadElec[i8ConfigCanal]=giPos;
+         maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+         i16PW_plusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_plusElec[i8ConfigCanal]);
+         i16PW_minusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_minusElec[i8ConfigCanal]);
+         if(i8SimetriaCanales!=0){
+            copiarDatosSimetria(0);
+         }
+         break;      
+   }
+   
+   giPosRulancha=giPos;
+   
+   iMenuAnterior=iMenuActual;
+}
+
+
+
+// Simetria de la señal (Pointer + Elecroestimulacion)
+
+int8 menu_33()   
+{ 
+   if((iMenuAnterior!=33)&&(iMenuAnterior!=42)&&(iMenuAnterior!=50)&&(iMenuAnterior!=56)&&(iMenuAnterior!=92))
+   {
+      ST7529_clear();
+      if(iMenuAnterior==41 || iMenuAnterior==49){
+        if(iMenuAnterior==41){
+            switch(i8ConfigCanal){
+                case CHA_C:
+                    if(i8CanalesActivados&CHA_ACT){
+                        if(i8ReposoActivados&CHA_ACT){
+                            iMenuActual=142;
+                        }else{
+                            iMenuActual=141;
+                        }
+                    }else if(i8CanalesConfigurados&CHA_ACT){
+                        iMenuActual=140;
+                    }
+                    break;
+                case CHB_C:
+                    if(i8CanalesActivados&CHB_ACT){
+                        if(i8ReposoActivados&CHB_ACT){
+                            iMenuActual=142;
+                        }else{
+                            iMenuActual=141;
+                        }
+                    }else if(i8CanalesConfigurados&CHB_ACT){
+                        iMenuActual=140;
+                    }
+                    break;
+                case CHC_C:
+                    if(i8CanalesActivados&CHC_ACT){
+                        if(i8ReposoActivados&CHC_ACT){
+                            iMenuActual=142;
+                        }else{
+                            iMenuActual=141;
+                        }
+                    }else if(i8CanalesConfigurados&CHC_ACT){
+                        iMenuActual=140;
+                    }
+                    break;
+                case POINTER_C:
+                    if(i8CanalesActivados&POINTER_ACT){
+                        iMenuActual=141;
+                    }else if(i8CanalesConfigurados&POINTER_ACT){
+                        iMenuActual=140;
+                    }else{
+                        iMenuActual=40;
+                    }
+                    break;
+            }
+        }else{
+            iMenuAnterior=40;
+        }
+      }
+      switch (iMenuAnterior) 
+      {
+         case 40:
+         case 41:
+         {
+            sprintf(mystring,sELECTRO_ESTIMULACION);
+            
+            if(iMenuActual==50){
+                giPos=bsimetriaElec[i8ConfigCanal];
+            }else{
+                giPos=i8SimetriaCanales;
+            }
+            
+            break;
+         }
+      }
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+   }
+
+   pantalla_seleccion();
+   
+   if(iMenuActual==42){
+       if(giPos>=2) // Maximo numero de configuraciones de simetria de canales
+       {
+          giPos=2;
+       }
+   }else{
+       if(giPos>1)
+       {
+          giPos=1;
+       }
+   }
+   if (giPos<=0)
+   {
+      giPos=0;
+   }
+   
+   if(iMenuActual==42){
+    i8SimetriaCanales=giPos;
+    
+    switch(i8SimetriaCanales){
+        case 0:
+            sprintf(mystring,"%s",sSimetriaCanalesNO);             
+            break;
+        case 1:
+            sprintf(mystring,"%s",sSimetriaCanalesAB);            
+            break;
+        case 2:
+            sprintf(mystring,"%s",sSimetriaCanalesABC);             
+            break;
+    }
+    ST7529_printf(mystring,35,70,L_,0);
+    
+    ST7529_printf("SIMETRIA ENTRE CANALES",8,39,M_,NORMAL);
+    
+    copiarDatosSimetria(1);
+   
+   }else if(iMenuActual<140){
+   
+       ST7529_printf(sSIMETRIA,28,36,M_,NORMAL);
+       
+       if(giPos==0)
+       {
+          sprintf(mystring,sASIMETRICA);
+          ST7529_printfg("(Ancho de pulso +/- configurables) ",5,115,s_,0xA0,0);
+       }   
+       else
+       {
+            if ((iMenuActual==49)||(iMenuActual==56))  
+                bpolaridadElec[i8ConfigCanal]=1;
+             
+          sprintf(mystring,sSIMETRICA);
+          ST7529_printfg("(Ancho de pulso +/- iguales Galv=0)",5,115,s_,0xA0,0);
+       }
+       ST7529_printf(mystring,26,70,L_,0);
+    
+       switch (iMenuActual)
+       {
+          case 50:
+          {
+             bsimetriaElec[i8ConfigCanal]=giPos;
+             maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+             i16PW_plusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_plusElec[i8ConfigCanal]);
+             i16PW_minusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_minusElec[i8ConfigCanal]);
+             if(i8SimetriaCanales!=0){
+                copiarDatosSimetria(0);
+             }
+             break;
+          }
+       }
+   }
+   
+   giPosRulancha=giPos;
+   
+   iMenuAnterior=iMenuActual;
+}
+
+// Selección canal electroestimulacion
+int8 menu_41(){
+
+    if (iMenuAnterior!=41){                         // Si vengo de un menú distinto
+        ST7529_clear();
+        sprintf(mystring,sELECTRO_ESTIMULACION); 
+        giPos=i8ConfigCanal;
+        ST7529_printf(mystring,0,0,L_,NORMAL);
+    } 
+    pantalla_seleccion();
+    
+    
+    if(giPos>=3){
+        giPos=3;
+    }
+    
+    if(giPos<=0){
+        giPos=0;
+    }
+    
+    if((i8CanalesActivados&CHA_ACT) && giPos==POINTER_C){
+        giPos=CHC_C;
+    }
+    
+    if((i8CanalesActivados&POINTER_ACT) && giPos==CHA_C){
+        //if(bascendente){
+            giPos=CHB_C;
+        /*}else{
+            giPos=1;
+        }*/
+    }
+    
+    ST7529_printf("SELECCION DEL CANAL",12,36,M_,NORMAL);
+    
+    switch(giPos){
+        case 0:
+            sprintf(mystring,sCANAL_A);
+            bPointerSeleccionado=0;
+            break;
+        case 1: 
+            sprintf(mystring,sCANAL_B);
+            break;
+        case 2:
+            sprintf(mystring,sCANAL_C);
+            break;
+        case 3:
+            sprintf(mystring,sCANAL_POINTER);
+            bPointerSeleccionado=1;
+            break;
+    }
+    
+    ST7529_printf(mystring,25,70,L_,0);
+    
+    i8ConfigCanal=giPos;
+    //i8SimetriaCanales=0;
+    bborrado=1;
+    iMenuAnterior=iMenuActual;
+
+}
+
+// Control del tiempo (Electroestimulacion)
+int8 menu_42(){
+
+    if (((iMenuAnterior!=22)&&(iMenuAnterior!=25)&&(iMenuAnterior!=43)&&(iMenuAnterior!=44)&&(iMenuAnterior!=81)&&(iMenuAnterior!=82)) || (iMenuAnterior==43 && iMenuActual==44) || (iMenuAnterior==81 && iMenuActual==82)){
+        ST7529_clear();
+        if (iMenuAnterior==40 || iMenuAnterior==42 || iMenuAnterior==43){
+            sprintf(mystring,sELECTRO_ESTIMULACION);
+            ST7529_printf(mystring,0,0,L_,NORMAL);
+            switch (iMenuActual){
+                case 43:
+                    giPos=i16TacElec[i8ConfigCanal]/5;
+                    break;
+                case 44:
+                    giPos=i16TdElec[i8ConfigCanal]/5;
+                    break;
+            }
+        }else if(iMenuAnterior==80 || iMenuAnterior==81){
+            sprintf(mystring,sSMP);
+            ST7529_printf(mystring,0,0,L_,NORMAL);
+            
+            if(iMenuActual==81){
+                giPos=i16TacSMP/5;
+            }else{
+                giPos=i32TDesfaseSMP/100;
+            }
+        }else if(iMenuAnterior==20 || iMenuAnterior==21 || imenuAnterior==24){
+            if(giPos==2 || iMenuAnterior==21){
+                sprintf(mystring,sGALV);
+                ST7529_printf(mystring,0,0,L_,NORMAL);
+                      
+                giPos=i16Tgalv;
+            }else if (giPos==5 || iMenuAnterior==24){
+                sprintf(mystring,sMICRO_CORRIENTES);
+                ST7529_printf(mystring,00,0,L_,NORMAL);
+                      
+                giPos=i16Tmicro/5;
+            }
+        }
+    }
+
+    pantalla_seleccion();
+
+    if(iMenuActual==81){
+        if(giPos>719){ //719*5=3595 segundos - 59 min 55 s
+            giPos=719;
+        }
+        if (giPos<=1){
+            giPos=1;
+        }
+    }else if(iMenuActual==82){
+        if(giPos>1000){ 
+            giPos=1000;
+        }
+        if (giPos<=5){
+            giPos=5;
+        }
+    }else if(iMenuActual==43){      // Tiempo activo
+        if(giPos>719){ //719*5=3595 segundos - 59 min 55 s
+            giPos=719;
+        }
+        if (giPos<=1){
+            giPos=1;
+        }
+    }else if(iMenuActual==44){      // Tiempo descanso
+        if(giPos>719){ //719*5=3595 segundos - 59 min 55 s
+            giPos=719;
+        }
+        if (giPos<=0){
+            giPos=0;
+        }
+    }else if(iMenuActual==22){
+        if(giPos>1800){         // Max 30 min 
+            giPos=1800;
+        }
+        if(bSeleccionGalvanica){
+            if (giPos<=1){          
+                giPos=1;
+            }
+        }else{
+            if (giPos<=0){          // Si es 0, tiempo ilimitado
+                giPos=0;
+            }
+        }
+    }if(iMenuActual==25){
+        if(giPos>720){ //720*5=3600 segundos - 60 min 00 s
+            giPos=720;
+        }
+        if (giPos<=1){
+            giPos=1;
+        }
+    }else{
+        if(giPos>1000){
+            giPos=1000;
+        }
+        if (giPos<=0){
+            giPos=0;
+        }
+    }
+
+    switch (iMenuActual){
+        case 43:
+            i16TacElec[i8ConfigCanal]=giPos*5;          
+            Calc_representacion_t(i16TacElec[i8ConfigCanal],0);     
+                
+            sprintf(mystring,"TIEMPO ACTIVO");
+            sprintf(mystring1,"Ta=%02u:%02u s",i8Tmin,i8Tseg);
+            sprintf(mystring2,"(Tiempo activo de estimulacion)");  
+            break;
+        case 44:
+            i16TdElec[i8ConfigCanal]=giPos*5;
+            //i16TdElec=giPos*5;
+            Calc_representacion_t(i16TdElec[i8ConfigCanal],0);
+            sprintf(mystring,"TIEMPO REPOSO");
+            sprintf(mystring1,"Td=%02u:%02u s",i8Tmin,i8Tseg);
+            //sprintf(mystring1,"Td=%04lu s",i16TdElec);
+            sprintf(mystring2,"(Tiempo reposo de estimulacion)");
+            break;
+        case 81:        // Tiempo SMP
+            i16TacSMP=giPos*5;
+            Calc_representacion_t(i16TacSMP,0);
+            sprintf(mystring,"TIEMPO ACTIVO");
+            sprintf(mystring1,"Ta=%02u:%02u s",i8Tmin,i8Tseg);
+            sprintf(mystring2,"       (Tiempo activo SMP)");
+            break;
+        case 82:        // Desfase SMP
+            i32TDesfaseSMP=giPos*100;
+            sprintf(mystring,"TIEMPO DESFASE");
+            sprintf(mystring1,"Td=%06luus",i32TDesfaseSMP);
+            sprintf(mystring2,"(Desfase entre pulsos)");
+            
+            
+            break;
+        case 22:        // Tac galv
+            i16Tgalv=giPos;
+            Calc_representacion_t(i16Tgalv,0);
+            sprintf(mystring,"TIEMPO ACTIVO");
+            if(i16Tgalv!=0){
+                sprintf(mystring1,"Ta=%02u:%02u s",i8Tmin,i8Tseg);
+            }else{
+                sprintf(mystring1,"Ilimitado ");
+            }
+            sprintf(mystring2,"  (Tiempo activo galvanica)");
+            break;
+        case 25:        // Tac galv
+            i16Tmicro=giPos*5;
+            Calc_representacion_t(i16Tmicro,0);
+            sprintf(mystring,"TIEMPO ACTIVO");
+            sprintf(mystring1,"Ta=%02u:%02u s",i8Tmin,i8Tseg);
+            sprintf(mystring2,"(Tiempo activo microcorrientes)");
+            break;
+    }
+    
+    ST7529_printf(mystring,12,36,M_,NORMAL);
+    
+    ST7529_printf(mystring1,25,70,L_,0);
+
+    //ST7529_printfg(mystring2,5,115,s_,0xA0,0);
+    
+    giPosRulancha=giPos;
+   
+    iMenuAnterior=iMenuActual;
+}
+
+
+// Numero de repeticiones electroestimulacion
+int8 menu_43(){
+
+    if (iMenuAnterior!=46){
+        ST7529_clear();
+        sprintf(mystring,sELECTRO_ESTIMULACION); 
+        ST7529_printf(mystring,0,0,L_,NORMAL);
+        giPos=i8Nrep[i8ConfigCanal];
+    } 
+    pantalla_seleccion();
+    
+    if(giPos>100){
+        giPos=100;  
+    }
+    if (giPos<1){
+        giPos=1;
+    }
+    
+    sprintf(mystring,"NUMERO REPETICIONES");
+    sprintf(mystring1,"N=%03lu",giPos);
+    
+    i8Nrep[i8ConfigCanal]=giPos;
+    
+    ST7529_printf(mystring1,30,70,L_,0);
+    ST7529_printf(mystring,12,36,M_,NORMAL);
+    
+    giPosRulancha=giPos;
+    
+    iMenuAnterior=iMenuActual;
+}
+
+// Test del bicolor
+int8 menu_61(){
+
+    if (iMenuAnterior!=61){                         // Si es la primera vez que entramos en este menú
+        ST7529_clear();                             // Limpio la pantalla
+        sprintf(mystring,"TEST LEDS BICOLOR");      // Titulo
+        ST7529_printf(mystring,0,0,L_,NORMAL);     // Imprimo por pantalla
+        giPos=0;                                    // Inicializo giPos
+    } 
+
+    write_PCA955X(0x00,0x00,0x00,PCA9555);          // Envia el dato completo al expansor (apagar leds sin molestar a los relés)
+    pantalla_seleccion();                           // Muestra los iconos de selección           
+    
+    if (giPos>=4){                                  // Si es mayor o igual a 4
+        giPos=0;                                    // Reiniciamos giPos
+    }
+    
+    ST7529_printf("LED CHC",20,35,M_,giPos==0);     // Texto por pantalla
+    ST7529_printf("LED CHB",20,50,M_,giPos==1);     
+    ST7529_printf("LED CHA",20,65,M_,giPos==2);
+    ST7529_printf("LED GALV",20,80,M_,giPos==3);
+    
+    control_led(1,switch_led,giPos);                // Cambio el estado del LED seleccionado                         
+    
+    delay_ms(250);                                  // Delay de muestra
+    
+    if (switch_led){                                // Cambio de color (1 o 0)
+        switch_led=0;
+    }else{
+        switch_led=1;  
+    }
+    control_led(0,switch_led,giPos);
+    
+    iMenuAnterior=iMenuActual;                      // Asigno menú actual a menú anterior
+}
+
+// Test del pulsadores consola
+int8 menu_63()                      
+{ 
+   if (iMenuAnterior!=63)
+   {
+      ST7529_clear();
+      sprintf(mystring,"TEST PULSADORES"); 
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+      pantalla_seleccion();   
+      ST7529_printfg("(PULSAR P4 EL ULTIMO)",20,115,s_,0xA0,0);
+      var_puls=0;
+      giPos=0;
+   }
+   
+   switch (var_puls)                                    // Esta variable indica la tecla que se ha presionado
+   {                                                    // Es asignada en el main, while principal
+      case 1:
+      {
+         ST7529_putIcon2(ICON_UP,0,20,GRAY5);
+         break;
+      }
+      case 2:
+      {
+         ST7529_putIcon2(ICON_DOWN,0,90,GRAY5);
+         break;
+      }
+      case 3:
+      {
+         ST7529_putIcon2(ICON_RIGHT,74,90,GRAY5); 
+         break;
+      }
+      case 4:
+      {
+         ST7529_putIcon2(ICON_LEFT,74,20,GRAY5);
+         break;
+      }
+   }
+   
+   giPosRulancha=giPos;
+   
+   iMenuAnterior=iMenuActual;
+}
+
+
+// Test del acelerometro 
+int8 menu_65()                      
+{
+
+   if (iMenuAnterior!=65)
+   {
+      ST7529_clear();
+      sprintf(mystring,"TEST ACELEROMETRO"); 
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+      pantalla_seleccion();
+   }
+   read_MMA8451();
+      
+   sprintf(mystring,"X=%06lu X_g=%4.3f",x,x_g);
+   ST7529_printfg(mystring,8,40,M_,0xff,0);
+   sprintf(mystring,"Y=%06lu Y_g=%4.3f",y,y_g);
+   ST7529_printfg(mystring,8,50,M_,0xff,0);
+   sprintf(mystring,"Z=%06lu Z_g=%4.3f",z,z_g);
+   ST7529_printfg(mystring,8,60,M_,0xff,0);
+   delay_ms(250);
+   
+   iMenuAnterior=iMenuActual;   
+}
+
+// Test del alimentacion ext
+int8 menu_66()                                                                
+{ 
+   if (iMenuAnterior!=66)
+   {
+      ST7529_clear();
+      sprintf(mystring,"TEST ALIMENTACION EXT"); 
+      ST7529_printf(mystring,0,0,L_,NORMAL);                                                                          // 1100011101111000
+      pantalla_seleccion();   
+   }
+   
+   if(input_state(V_CHG)){ 
+      sprintf(mystring,"ALIMENTACION");
+      sprintf(mystring1,"DESCONECTADA");
+   }
+   else{
+      sprintf(mystring,"ALIMENTACION");
+      sprintf(mystring1,"CONECTADA   ");
+   }
+   
+   ST7529_printf(mystring,20,70,M_,0);
+   ST7529_printf(mystring1,25,85,M_,0);
+   
+   iMenuAnterior=iMenuActual;
+}
+
+// Test del status cargador
+int8 menu_67()                                                                
+{   
+    if (iMenuAnterior!=67)
+    {
+        ST7529_clear();
+        sprintf(mystring,"ESTADO DEL CARGADOR "); 
+        ST7529_printf(mystring,0,0,L_,NORMAL);
+        pantalla_seleccion();   
+    }
+    
+    if (input_state(CHG_STAT)){                // 1--> CARGADO 0--> EN CARGA
+        sprintf(mystring," CARGADO ");
+        output_high(LED_CHG_R); 
+        output_low(LED_CHG_V);  
+    }else{
+        sprintf(mystring,"EN CARGA ");
+        output_high(LED_CHG_V);
+        output_low(LED_CHG_R);  
+    }
+    ST7529_printf(mystring,28,70,M_,0);
+    delay_ms(250);
+    
+    output_low(LED_CHG_R);
+    output_low(LED_CHG_V); 
+    
+    iMenuAnterior=iMenuActual;
+}
+
+// Test del DC/DC 12V
+int8 menu_68()                                                                
+{   
+    
+    if (iMenuAnterior!=68)
+    {
+        ST7529_clear();
+        sprintf(mystring,"TEST DC/DC 12V"); 
+        ST7529_printf(mystring,0,0,L_,NORMAL);
+        pantalla_seleccion(); 
+    }
+
+    control_DC(1,EN_12);                                // Enciende el DC de 12V  
+    delay_ms(500);
+    
+    if (input_state(POK_12V)){                          // 1--> ALIMENTACION DESCONECTADA 0--> ALIMENTACION CONECTADA
+        sprintf(mystring,"DC/DC 12V NOK ");
+    }else{
+        sprintf(mystring,"DC/DC 12V OK"); 
+    }
+    
+    ST7529_printf(mystring,15,70,M_,0);
+    
+    //control_DC(0,EN_12);
+    //delay_ms(500);
+    
+    iMenuAnterior=iMenuActual;
+}
+
+
+// Test del DC/DC 48V
+int8 menu_69()                                                                
+{   
+    if (iMenuAnterior!=69){
+        ST7529_clear();
+        sprintf(mystring,"TEST DC/DC 30V"); 
+        ST7529_printf(mystring,0,0,L_,NORMAL);
+        pantalla_seleccion(); 
+    }
+    
+    control_DC(1,EN_30);   
+    delay_ms(6000);
+    
+    if (input_state(POK_30V)){              // 1--> ALIMENTACION DESCONECTADA 0--> ALIMENTACION CONECTADA
+        sprintf(mystring,"DC/DC 30V NOK ");
+    }else{
+        sprintf(mystring,"DC/DC 30V OK"); 
+    }
+    
+    ST7529_printf(mystring,15,70,M_,0);
+    
+    control_DC(0,EN_30);
+    delay_ms(1000);   
+    
+    iMenuAnterior=iMenuActual;
+}
+
+// Test reles
+int8 menu_70()                                                                
+{   
+    if (iMenuAnterior!=70){
+        ST7529_clear();
+        sprintf(mystring,"TEST RELEs"); 
+        ST7529_printf(mystring,0,0,L_,NORMAL);
+        pantalla_seleccion();
+        giPos=0;
+    }
+    
+    giPos%=5;
+    
+    ST7529_printf("RELE GALVANICA+MICRO",10,10,S_,giPos==0);
+    ST7529_printf("RELE ESTIMULACION CHA",10,20,S_,giPos==1);
+    ST7529_printf("RELE ESTIMULACION CHB",10,30,S_,giPos==2);
+    ST7529_printf("RELE ESTIMULACION CHC",10,40,S_,giPos==3);
+    ST7529_printf("RELE PROGRAMACION",10,50,S_,giPos==4);
+    
+    control_rele(switch_led,giPos);                      
+    delay_ms(500);
+    
+    switch_led=~switch_led;
+
+    iMenuAnterior=iMenuActual;
+}
+ 
+/*
+* Test BQ34Z1000G1
+* Comprueba el tipo de dispositivo y la tensión medida
+*/
+int8 menu_71()                       
+    {
+    if (iMenuAnterior!=71)
+    {
+      ST7529_clear();
+      sprintf(mystring,"Test BQ34Z100-G1"); 
+      ST7529_printf(mystring,0,0,L_,NORMAL);
+      pantalla_seleccion();
+    
+    }
+    
+    if(getDeviceType()==0x0100){                                               // Detecta que el dispositivo colocado es el correcto y funciona
+        sprintf(mystring,"Device Type OK");
+    }else{
+        sprintf(mystring,"Device Type NOK");
+    }
+    
+    ST7529_printf(mystring,10,15,S_,0);
+    sprintf(mystring,"Voltage: %04Ld mV",getVoltage());                        // Obtención de la tensión de la batería 
+    ST7529_printf(mystring,10,25,S_,0);
+    sprintf(mystring,"Current: %04Ld mA",getCurrent());                        // Obtennción de la corriente que pasa por el shunt
+    ST7529_printf(mystring,10,35,S_,0);
+    sprintf(mystring,"Capacity: %Ld/%Ld mAh",getRemaining(),getCapacity());    // Obtención de la capacidad restante / total de la bateria
+    ST7529_printf(mystring,10,45,S_,0);
+    sprintf(mystring,"Percentage: %u %%",nivelBateria());                      // Porcentaje del nivel de batería restante
+    ST7529_printf(mystring,10,55,S_,0);
+    
+    if(estadoCarga()){                                                         // indica si el equipo está conectado a la red eléctrica
+      sprintf(mystring,"NO CONECTADA A LA RED");
+    }else{
+      sprintf(mystring,"CONECTADA A LA RED");
+    }
+    
+    ST7529_printf(mystring,10,65,S_,0);
+    sprintf(mystring,"Temperature: %3.1w C",getTemp());                        // Obtención de la temperatura del sensor de temperatura interno (o externo?)
+    ST7529_printf(mystring,10,75,S_,0);
+    sprintf(mystring,"Flags:   0x%LX",getFlags());                             // Obtención de los flags de control
+    ST7529_printf(mystring,10,85,S_,0);
+    sprintf(mystring,"FlagsB:  0x%LX",getFlagsB());                            // Obtención de los flags de control
+    ST7529_printf(mystring,10,95,S_,0);
+    sprintf(mystring,"Cycle Count:  %Lu",getCycleCount());                     // Número de ciclos de craga de la batería
+    ST7529_printf(mystring,10,105,S_,0);
+    sprintf(mystring,"ATTF: %Lu / ATTE: %Lu",getATTF(),getATTE());             // Average Time To Full / Average Time To Empty 
+    ST7529_printf(mystring,10,115,S_,0);
+    iMenuAnterior=iMenuActual;
+}   
+
+int8 menu_72()                      // Test COMUNICACION ENTRE PIC´S 
+{ 
+
+    ST7529_clear();                                 // Se ha eliminado la condición IF porque quiero que siempre limipe la pantalla
+    sprintf(mystring,"Test comunicacion PIC"); 
+    ST7529_printf(mystring,0,0,L_,NORMAL);
+    pantalla_seleccion();
+    giPos=0;
+    
+    sprintf(mystring,"TODO"); 
+    ST7529_printf(mystring,10,25,M_,NORMAL);
+    /*
+    
+    
+    
+    //TODO    
+    
+    
+    
+    
+    sprintf(mystring,"ACK Recibido"); 
+    ST7529_printf(mystring,10,55,M_,NORMAL);
+    
+    delay_ms(3000);                                     // Realiza lla comunicación cada 3 segundos*/
+} 
+
+int8 menu_73()                      // Test CHA
+{ 
+} 
+
+int8 menu_74()                      // Test CHB 
+{ 
+} 
+
+int8 menu_75()                      // Test CHC 
+{ 
+} 
+
+
+// Pantalla de inicio tratamiento Galvanica + microcorrientes
+int8 menu_120(){
+
+    int8 i8Time_min, i8Time_seg;      // Variables utilizadas para la asignación de tiempo
+    
+    gI=50;
+    
+    // Revisar este trozo en error de electrodo!
+    if(!bTerapia){
+        if(iMenuAnterior==123){
+            ST7529_clear();       
+            
+            // Solo en el caso de galvánica quiero que vuelva a recargar los valores de tiempo configurados
+            if(!bTerapia){
+                i16TimeRaw[0]=i16Tgalv+i8TrampaGalv;
+            
+                Calc_representacion_t(i16Tgalv+i8TrampaGalv,0);
+                //sprintf(mystring2,"%06lu",(i32CGalv+i16CRampaGalv));
+                sprintf(mystring2,"%07lu",0); // Ahora se  quiere que la carga sea acumulativa
+                
+                giPos=i16Igalv;
+            }else{
+                giPos=i16Imicro;
+            }
+
+            i16IMedGalv=0;
+            i16VMedGalv=0;
+            i16ResGalv=0; 
+            
+            structMedidasGalvanica.si16IMedGalv=i16IMedGalv;
+            structMedidasGalvanica.si16ResGalv=i16ResGalv; 
+            structMedidasGalvanica.si16VMedGalv=i16VMedGalv;
+        }
+    }
+    
+    pantalla_seleccion();
+    
+    if(iMenuActual!=123){        // Si no hay error de electrodo
+        controlSonido(0);
+        if(iMenuActual==120){
+            i16IMedGalv=0;
+            i16VMedGalv=0;
+            i16ResGalv=0; 
+            
+            structMedidasGalvanica.si16IMedGalv=i16IMedGalv;
+            structMedidasGalvanica.si16ResGalv=i16ResGalv; 
+            structMedidasGalvanica.si16VMedGalv=i16VMedGalv;
+            
+            if(!bPausaTratamiento){
+                i32CargaGalvanicaRestante=i32CGalv+i16CRampaGalv;
+            }
+            i16DecrementoCargaGalvanica=i16Igalv*50;
+        }
+        
+        if(iMenuAnterior==120 && iMenuActual==121){
+            controlSonido(1);
+            delay_ms(200);
+        }
+        
+        if(iMenuAnterior!=120 && iMenuAnterior!=121){           // Si es la primera vez que entramos en el menú o volvemos de un error de electrodo
+            ST7529_clear();                                     // Limpia la pantalla
+            
+            // Solo en el caso de galvánica quiero que vuelva a recargar los valores de tiempo configurados
+            if(!bTerapia){                                          // Si estamos en terapia galvanica
+                i16TimeRaw[0]=i16Tgalv+i8TrampaGalv;                // Reiniciamos los valores de tiempo 
+
+                Calc_representacion_t(i16Tgalv+i8TrampaGalv,0);         // Representación de tiempo
+                //sprintf(mystring2,"%06lu",(i32CGalv+i16CRampaGalv));
+                sprintf(mystring2,"%07lu",0); // Muestra el valor de carga, lo pone a cero (ahora es acumulativa)
+                
+                giPos=i16Igalv;             // Asigna el valor de correinte galvanica a giPos
+            }else{
+                giPos=i16Imicro;            // Asigna el valor de microcorrintes a giPos
+            }
+       
+            pantalla_seleccion();
+            
+            // Si habia ocurrido un error de electrodo en galvanica, el tratamiento se para 
+            // pero debe de dibujar todo de nuevo y cargar los valores por defecto
+            //if((iMenuAnterior==123 && (TRATAMIENTO_GALVANICA == i8TratamientoSeleccionado)) || (iMenuAnterior!=120 && iMenuAnterior!=121 && iMenuAnterior!=123)){
+            if((iMenuAnterior!=120 && iMenuAnterior!=121 && iMenuAnterior!=123)){  // Si viene del menú de configuracion (menu_20)
+                // Envia los datos de configuración a Orco
+                // Set configuración del tratamiento - Galvánica
+                structTratamientoGalvanica.si32CGalv=i32CGalv+i16CRampaGalv;
+                structTratamientoGalvanica.si16IGalv=i16IGalv;
+                structTratamientoGalvanica.si8TrampaGalv=i8TrampaGalv;
+                
+                // Set configuración del tratamiento - Microcorrientes
+                structTratamientoGalvanica.si16Imicro=i16Imicro;
+                structTratamientoGalvanica.si16PWmicro=i16PWmicro;
+                structTratamientoGalvanica.si8Trampamicro=i8Trampamicro;
+                structTratamientoGalvanica.si16frecmicro=i16frecmicro;
+                structTratamientoGalvanica.sbPolaridadMicro=bPolaridadMicro;
+                
+                // Carga de datos para el autocalculado del tiempo de tratamiento
+                i32CargaGalvanicaRestante=i32CGalv+i16CRampaGalv;
+                i16DecrementoCargaGalvanica=i16Igalv*50;
+
+                i8ErrorCom=0;                                                                       // Inicializa el valor del contador de errores
+                
+                envioConfiguracion(MODO_TRAT_GALV);                                                  // Envia comando
+
+                i8TratamientoSeleccionado=TRATAMIENTO_GALVANICA;
+                
+                structTratamientoGalvanicaActivo.si16IGalv=0;
+                
+                // Inicializamos algunos valores
+                i16IMedGalv=0;
+                i16VMedGalv=0;
+                i16ResGalv=0; 
+                
+                structMedidasGalvanica.si16IMedGalv=i16IMedGalv;
+                structMedidasGalvanica.si16ResGalv=i16ResGalv; 
+                structMedidasGalvanica.si16VMedGalv=i16VMedGalv;
+            }
+        }
+        
+        if(iMenuAnterior==22){
+            if(i16Tgalv!=0){
+                if((float)i8Trampagalv>=(i16Tgalv/3.0)){
+                    i8Trampagalv=(i16Tgalv/3);
+                }
+            }
+            if(i8Trampagalv>=10){
+                i8Trampagalv=10;
+            }
+        }
+        
+        if(iMenuAnterior==121 && iMenuActual==120){
+            if(bPausaTratamiento){
+                if(bTerapia){
+                    giPos=i16Imicro;
+                }else{
+                    giPos=i16Igalv;
+                }
+            }else{
+                giPos=i16Igalv;
+            }
+        }
+        /*
+        // Si el menú anterior es la pantalla de tratamiento y el tratamiento de galvanica no está activado 
+        if(!bPausaTratamiento && iMenuAnterior==120 && !bTratamientoGalvanicaActivado){
+            // Asigno el valor de corriente galvánica a giPos
+            //giPos=i16Igalv;
+        }*/
+        
+        // Si inicio el tratamiento o me recupero de un error de electrodo en microcorrinetes
+        if((iMenuAnterior==120 && iMenuActual==121) || (iMenuAnterior==123 && iMenuActual==121)){
+            // Quito botones innecesarios
+            quitar_cancelar();
+            quitar_config();
+        }
+        
+        // Si para el tratamiento
+        if(iMenuAnterior==121 && iMenuActual==120){
+            // Pongo botones necesarios
+            poner_cancelar();
+        }
+        
+        // Limites de valores de terapia
+        if ((giPos>=200)&&(bTerapia==0)){ // Si estamos en terapia de galvanica
+            giPos=200;                      //200*50 = 10000uA
+        }
+
+        if ((giPos>=200)&&(bTerapia==1)){   // Si estamos en terapia de microcorrientes
+            giPos=200;                       //200*50 = 10000uA 
+        }
+        
+        if(giPos<=2){
+            giPos=2;
+        }
+        
+        // Si estamos en tratamiento de galvanica
+        if(iMenuActual==121 && !bTerapia){
+            // Asigno corriente a galvanica
+            i16Igalv=giPos;
+        }else if(iMenuActual==121 && bTerapia){     // Si estamos en tratamiento de micrococrriemtes
+            // asigno correinte a microcorrientes
+            i16Imicro=giPos;
+        }
+    
+        // Dependiendo del tratamiento activo, muestra un nombre u otro
+        if(!bTerapia){
+            sprintf(mystring,sGALV);
+            ST7529_printf(mystring,0,0,L_,NORMAL); 
+        }else{
+            sprintf(mystring,sMICRO_CORRIENTES);
+            ST7529_printf(mystring,0,0,L_,NORMAL); 
+        }
+        
+        sprintf(mystring1,"%05lu",giPos*gI);    
+        ST7529_printf(mystring1,0,40,XL_,0);
+        ST7529_printf("Intensidad",2,26,S_,0);
+        ST7529_printf("[A",36,55,S_,0);
+        
+        // Mostrar carga al iniciar uC??
+        if(!bTerapia){
+            sprintf(mystring2,"           ");
+            ST7529_printf(mystring2,41,26,M_,0);
+            sprintf(mystring2,"           ");
+            ST7529_printf(mystring2,41,44,M_,0);
+            ST7529_printf("Carga",41,26,S_,0);
+            sprintf(mystring2,"%07lu",(i16CRampaGalv+i32Cgalv)-i32CargaGalvanicaRestante);
+            ST7529_printf("[C",68,55,S_,0);
+            ST7529_printf(mystring2,45,44,L_,0);
+        }else{
+            ST7529_printf("     ",41,26,S_,0);
+            sprintf(mystring2,"       ");
+            ST7529_printf(mystring2,45,44,L_,0);
+            ST7529_printf("  ",68,55,S_,0);
+            sprintf(mystring2,"PW: %04lu [S",i16PWmicro);
+            ST7529_printf(mystring2,41,26,M_,0);
+            sprintf(mystring2,"F: %05lu Hz",i16frecmicro);
+            ST7529_printf(mystring2,41,44,M_,0);
+        }
+        
+        Calc_representacion_t(i16TimeRaw[0],0);
+        
+        ST7529_printf("Tiempo",2,80,S_,0);
+        sprintf(mystring,"%02u:%02u",i8Tmin,i8Tseg);
+        ST7529_printf(mystring,0,94,XL_,0);
+        
+        i16IMedGalv=structMedidasGalvanica.si16IMedGalv;
+        i16VMedGalv=structMedidasGalvanica.si16VMedGalv;
+        i16ResGalv=structMedidasGalvanica.si16ResGalv;
+        
+        if(bTerapia){
+            if(bPolaridadMicro){
+                sprintf(mystring,sBIPOLAR);
+            }else{
+                sprintf(mystring,sMONOPOLAR);
+            }
+            ST7529_printf(mystring,44,75,S_,0);
+        }
+        
+        ST7529_printf("Imed =",44,85,S_,0);
+        sprintf(mystring,"%05LU [A",redondeoI_50(i16IMedGalv));
+        ST7529_printf(mystring,57,85,S_,0);
+        ST7529_printf("Vmed =",44,95,S_,0);
+        sprintf(mystring,"%05LU mV",i16VMedGalv);
+        ST7529_printf(mystring,57,95,S_,0);
+        ST7529_printf("Rmed =",44,105,S_,0);
+        sprintf(mystring,"%05LU ohm",i16ResGalv);
+        ST7529_printf(mystring,57,105,S_,0);
+        
+        iMenuAnterior=iMenuActual;
+        controlSonido(0);
+    }else{       // Si hay error de electrodo, debe de para el tratamiento
+    
+        if (iMenuAnterior!=123){
+            ST7529_clear();
+        }
+        
+        Calc_representacion_t(i16TimeRaw[0],0);                           // Cálcula de nuevo la representación del tiempo
+        
+        i8Time_min=i8Tmin;                                                         // Recarga de nuevo las variables para usarlas de nuevo en el caso de error de electrodo
+        i8Time_seg=i8Tseg;            
+        ControlSonido(1);    
+        
+        if(!bTerapia){
+            ST7529_printf(sGALV,0,0,L_,NORMAL);
+        }else{
+            ST7529_printf(sMICRO_CORRIENTES,0,0,L_,NORMAL);
+        }
+        
+        ST7529_printf("ERROR DE ELECTRODO",10,50,L_,NORMAL);
+        //sprintf(mystring,"%02u:%02u",i8Time_min,i8Time_seg);
+        //ST7529_printf(mystring,32,112,L_,0);
+        if(!bTerapia){
+            delay_ms(3000);
+            ControlSonido(0);
+            iMenuActual=120;
+            apagadoGalvanica();
+            ST7529_clear();
+        }else{
+            ST7529_printf("Tactivo",29,85,S_,0);
+
+            sprintf(mystring,"%02u:%02u",i8Time_min,i8Time_seg);
+            ST7529_printf(mystring,30,95,L_,0);
+        }
+        
+        iMenuAnterior=iMenuActual;
+        
+    }   // Cierre if error de electrodo
+    
+   
+}
+
+// Pantalla de inicio electroestimulacion
+int8 menu_140(){
+    
+    int8 i8Time_min, i8Time_seg, i8Time1_min, i8Time1_seg;      // Variables utilizadas para la asignación de tiempo
+
+    
+    //if ((!bErrorElectrodoA)&&(!bErrorElectrodoB))
+    if(iMenuActual!=143){               // Si no hay error de electrodo
+        //if(iMenuAnterior==140 && imenuActual==141){
+        //   controlSonido(1);
+        //}else{
+            controlSonido(0);
+        //}
+        gI=50;                          // Variable de escalado de la corriente
+
+        if(iMenuAnterior!=140 && iMenuAnterior!=141 && iMenuAnterior!=142){                // Si es la primera vez que entra al menu de terapia
+            ST7529_clear();                                                                 // Limpio la pantalla
+            ST7529_printf(sELECTRO_ESTIMULACION,0,0,L_,NORMAL);                            // Pongo el título del menú
+            if (iMenuAnterior!=143){                                                        // Si vengo de error electrodo no reinicio variables de tiempo
+                i16TimeRaw[i8ConfigCanal]=i16TacElec[i8ConfigCanal];                                                      // Asignacion tiempo activo a variable que se puede modificar sin machacar
+                i16TimeRepRaw[i8ConfigCanal]=i16TdElec[i8ConfigCanal];                                                    // Asignacion tiempo reposo a variable que se puede modificar sin machacar
+                i8NrepRaw[i8ConfigCanal]=i8Nrep[i8ConfigCanal];                                                           // Asignacion repeticiones a variable que se puede modificar sin machacar
+            }
+            pantalla_seleccion();                                                           // Añado botones control
+            
+            
+            // Envio de los datos
+            // Una vez ha pintado todo el menú, procedemos a enviar el paquete con los datos configurados en el menú 40
+            // Preparo paquete de datos
+            structTratamientoElectro.si8CanalesConfigurados=i8CanalesConfigurados;
+            structTratamientoElectro.si8ConfigCanal=i8ConfigCanal;
+            structTratamientoElectro.si8SimetriaCanales=i8SimetriaCanales;
+            structTratamientoElectro.sbSimetriaElec=bSimetriaElec[i8ConfigCanal];
+            structTratamientoElectro.sbPolaridadElec=bPolaridadElec[i8ConfigCanal];
+            structTratamientoElectro.si16TacElec=i16TacElec[i8ConfigCanal];
+            structTratamientoElectro.si16TdElec=i16TdElec[i8ConfigCanal];
+            structTratamientoElectro.si16TfElec12=i16TfElec12;
+            structTratamientoElectro.si16TfElec23=i16TfElec23;
+            structTratamientoElectro.si8TrElec=i8TrElec[i8ConfigCanal];
+            structTratamientoElectro.si8Nrep=i8Nrep[i8ConfigCanal];
+            structTratamientoElectro.si16IElec=i16IElec[i8ConfigCanal];
+            structTratamientoElectro.si16FrecElec=i16FrecElec[i8ConfigCanal];
+            structTratamientoElectro.si16PW_plusElec=i16PW_plusElec[i8ConfigCanal];
+            structTratamientoElectro.si16PW_minusElec=i16PW_minusElec[i8ConfigCanal];
+            structTratamientoElectro.si8Checksum=0;  
+            
+            i8ErrorCom=0;                                                                       // Inicializa el valor del contador de errores
+            
+            envioConfiguracion(MODO_TRAT_ELECT);                                                  // Envia comando
+
+            i8TratamientoSeleccionado=TRATAMIENTO_ELECTRO;
+            
+            // inicializacion de los valores de tratamiento activo
+            // Estos valore sno hayque enviarlos, simplemente es para inicializar esas variables
+            structTratamientoElectroActivo.si16IElec=i16IElec[i8ConfigCanal];
+            
+            structMedidasElectro.sbMAX[i8ConfigCanal]=0;
+            structMedidasElectro.sbCC[i8ConfigCanal]=0;
+            
+            giPos=i16IElec[i8ConfigCanal];
+
+        }       // Cierre if primera vez en el menú
+       
+        Calc_representacion_t(i16TimeRaw[i8ConfigCanal],i16TimeRepRaw[i8ConfigCanal]); 
+        
+        /*switch(iMenuActual){
+            case 140:
+                poner_flecha_izq();
+                break;
+            case 141:
+                quitar_flecha_izq();
+                break;
+        }*/
+       if(!bPointerSeleccionado){
+        ST7529_printf("  A  ",3,FILA_INIT-8,L_,i8ConfigCanal==0);
+       }else{
+        ST7529_printf("  P  ",3,FILA_INIT-8,L_,i8ConfigCanal==3);
+       }
+       ST7529_printf("  B  ",29,FILA_INIT-8,L_,i8ConfigCanal==1);
+       ST7529_printf("  C  ",53,FILA_INIT-8,L_,i8ConfigCanal==2);  
+       
+       sprintf(mystring,"F= %04LU Hz",i16frecElec[i8ConfigCanal]);
+       ST7529_printf(mystring,24,40,L_,0);
+       
+       //sprintf(mystring,"Isel= %05lu [A",i16IElec[i8ConfigCanal]*50);
+
+       
+       if(redondeoI_50(structMedidasElectro.si16IMedElec[i8ConfigCanal][PULSO_POS])!=(i16IElec[i8ConfigCanal]*50)){
+        sprintf(mystring,"Imed= %05lu [A",redondeoI_50(structMedidasElectro.si16IMedElec[i8ConfigCanal][PULSO_POS]));
+        ST7529_printfg(mystring,20,54,L_,GRAY11,0);
+        sprintf(mystring,"Iset= %05lu [A",i16IElec[i8ConfigCanal]*50);
+        ST7529_printfg(mystring,20,72,M_,ai8EscalaGrises[0],0);
+       }else{
+        sprintf(mystring,"Imed= %05lu [A",redondeoI_50(structMedidasElectro.si16IMedElec[i8ConfigCanal][PULSO_POS]));
+        ST7529_printfg(mystring,20,54,L_,ai8EscalaGrises[0],0);
+        sprintf(mystring,"              ");
+        ST7529_printfg(mystring,20,72,M_,ai8EscalaGrises[0],0);
+       }
+       
+        i16ResElec[CHA_C]=((int32)structMedidasElectro.si16VMedElec[CHA_C][PULSO_POS]*1000)/structMedidasElectro.si16IMedElec[CHA_C][PULSO_POS];
+        i16ResElec[CHB_C]=((int32)structMedidasElectro.si16VMedElec[CHB_C][PULSO_POS]*1000)/structMedidasElectro.si16IMedElec[CHB_C][PULSO_POS];
+        i16ResElec[CHC_C]=((int32)structMedidasElectro.si16VMedElec[CHC_C][PULSO_POS]*1000)/structMedidasElectro.si16IMedElec[CHC_C][PULSO_POS];
+        i16ResElec[POINTER_C]=((int32)structMedidasElectro.si16VMedElec[POINTER_C][PULSO_POS]*1000)/structMedidasElectro.si16IMedElec[POINTER_C][PULSO_POS];
+        
+        sprintf(mystring,"Rmed= %05LU ohm",i16ResElec[i8ConfigCanal]);
+        ST7529_printf(mystring,4,85,S_,0);  
+        
+        sprintf(mystring,"Vmed= %05LU mV",structMedidasElectro.si16VMedElec[i8ConfigCanal][PULSO_POS]);
+        ST7529_printf(mystring,45,85,S_,0);
+        
+       if(i8ConfigCanal!=POINTER_C){
+           sprintf(mystring,"  Ta %02u:%02u",i8Tmin,i8Tseg);
+           ST7529_printf(mystring,4,96,S_,0);
+           
+           sprintf(mystring,"  Td %02u:%02u",i8T1min,i8T1seg);
+           ST7529_printf(mystring,30,96,S_,0);
+           
+           sprintf(mystring,"  N %02u",i8NrepRaw[i8ConfigCanal]);
+           ST7529_printf(mystring,56,96,S_,0);
+       }else{
+           sprintf(mystring,"              ");
+           ST7529_printf(mystring,4,96,S_,0);
+           
+           sprintf(mystring,"              ");
+           ST7529_printf(mystring,30,96,S_,0);
+           
+           sprintf(mystring,"        ");
+           ST7529_printf(mystring,56,96,S_,0);
+       } 
+       
+    }else{  // Si hay error de elctrodo
+    
+        if (iMenuAnterior!=143){
+            ST7529_clear();
+            controlSonido(1);
+        }
+        
+        Calc_representacion_t(i16TimeRaw[i8ConfigCanal],i16TimeRepRaw[i8ConfigCanal]);                           // Cálcula de nuevo la representación del tiempo
+        i8Time_min=i8Tmin;                                                         // Recarga de nuevo las variables para usarlas de nuevo en el caso de error de electrodo
+        i8Time_seg=i8Tseg;            
+        i8Time1_min=i8T1min;
+        i8Time1_seg=i8T1seg;
+    
+        ST7529_printf("Tactivo",10,85,S_,0);
+        ST7529_printf("Treposo",35,85,S_,0);      
+        //ST7529_printf("N",60,85,S_,0);             
+        ST7529_printf(sELECTRO_ESTIMULACION,0,0,L_,NORMAL);
+        ST7529_printf("ERROR DE ELECTRODO",10,50,L_,NORMAL);
+        
+        if(bErrorElectrodo[CHA_C]){
+            ST7529_printf("      CANAL A     ",10,64,L_,NORMAL);
+        }
+        if(bErrorElectrodo[CHB_C]){
+            ST7529_printf("      CANAL B     ",10,64,L_,NORMAL);
+        }
+        if(bErrorElectrodo[CHC_C]){
+            ST7529_printf("      CANAL C     ",10,64,L_,NORMAL);
+        }
+
+        sprintf(mystring,"%02u:%02u",i8Time_min,i8Time_seg);
+        ST7529_printf(mystring,12,95,L_,0);
+        sprintf(mystring,"%02u:%02u",i8Time1_min,i8Time1_seg);
+        ST7529_printf(mystring,37,95,L_,0);
+    }   // Cierre if error de electrodo
+
+    // Representación corrientes en tratamiento - Recuadro inferior de la pantalla
+    ST7529_printf(" ________________________________________________",0,107,S_,0);
+    
+    if(!bPointerSeleccionado){
+        if(i8CanalesActivados&CHA_ACT){
+            sprintf(mystring,"Ia=%05lu [A",redondeoI_50(structMedidasElectro.si16IMedElec[CHA_C][PULSO_POS]));
+        }else{
+            sprintf(mystring,"           ");
+            structMedidasElectro.si16VMedElec[CHA_C][PULSO_POS]=0;
+            structMedidasElectro.si16IMedElec[CHA_C][PULSO_POS]=0;
+            i16ResElec[CHA_C]=0;
+        }
+        ST7529_printf(mystring,COLUMNA_IA,FILA_CORRIENTE,S_,i8CanalesActivados&CHA_ACT && i8ConfigCanal==CHA_C);
+    }else{
+        if(i8CanalesActivados&POINTER_ACT){
+            sprintf(mystring,"Ip=%05lu [A",redondeoI_50(structMedidasElectro.si16IMedElec[POINTER_C][PULSO_POS]));
+        }else{
+            sprintf(mystring,"           ");
+            structMedidasElectro.si16VMedElec[POINTER_C][PULSO_POS]=0;
+            structMedidasElectro.si16IMedElec[POINTER_C][PULSO_POS]=0;
+            i16ResElec[POINTER_C]=0;
+        }
+        ST7529_printf(mystring,COLUMNA_IA,FILA_CORRIENTE,S_,i8CanalesActivados&POINTER_ACT && i8ConfigCanal==POINTER_C);
+    }
+    
+    if(i8CanalesActivados&CHB_ACT){
+        sprintf(mystring,"Ib=%05lu [A",redondeoI_50(structMedidasElectro.si16IMedElec[CHB_C][PULSO_POS]));
+    }else{
+        sprintf(mystring,"           ");
+        structMedidasElectro.si16VMedElec[CHB_C][PULSO_POS]=0;
+        structMedidasElectro.si16IMedElec[CHB_C][PULSO_POS]=0;
+        i16ResElec[CHB_C]=0;
+    }
+    ST7529_printf(mystring,COLUMNA_IB,FILA_CORRIENTE,S_,i8CanalesActivados&CHB_ACT && i8ConfigCanal==CHB_C);
+    
+    if(i8CanalesActivados&CHC_ACT){
+        sprintf(mystring,"Ic=%05lu [A",redondeoI_50(structMedidasElectro.si16IMedElec[CHC_C][PULSO_POS]));
+    }else{
+        sprintf(mystring,"           ");
+        structMedidasElectro.si16VMedElec[CHC_C][PULSO_POS]=0;
+        structMedidasElectro.si16IMedElec[CHC_C][PULSO_POS]=0;
+        i16ResElec[CHC_C]=0;
+    }
+    ST7529_printf(mystring,COLUMNA_IC,FILA_CORRIENTE,S_,i8CanalesActivados&CHC_ACT && i8ConfigCanal==CHC_C);
+    
+    iMenuAnterior=iMenuActual;
+
+    delay_us(1);
+}
+
+
+int8 menu_180(){
+
+    int8 i8Time_min, i8Time_seg, i8Time1_min, i8Time1_seg;      // Variables utilizadas para la asignación de tiempo
+    
+    if(iMenuActual!=183){ // Si no hay erro de electrodo
+        controlSonido(0);
+        if(iMenuAnterior!=180 && iMenuAnterior!=181){
+            ST7529_clear();                                                                 // Limpio la pantalla
+            ST7529_printf(sSMP,0,0,L_,NORMAL);                            // Pongo el título del menú
+            
+            if(iMenuAnterior!=183){
+                giPos=1;
+                i8PulsosSMP=1;
+                bCorrientePulsos=0;
+                i16TimeRaw[0]=i16TacSMP;
+                structMedidasMultipulsos.si16IMedSMP=0;         // Init values para no poner basura
+                structMedidasMultipulsos.si16ResSMP=0; 
+            }
+           
+            pantalla_seleccion();
+
+        }    
+        
+        if(iMenuActual==180){
+            structMedidasMultipulsos.si16IMedSMP=0;       
+            structMedidasMultipulsos.si16ResSMP=0;
+        }
+        
+        if(iMenuActual==180){
+            quitar_config();
+            poner_flecha_izq();
+        }else if(iMenuActual==181){
+            poner_config();
+            quitar_flecha_izq();
+        }
+        
+        Calc_representacion_t(i16TimeRaw[0],0);
+        
+        if(giPos<=4 && !bCorrientePulsos){
+            giPos=4;
+        }else if(bCorrientePulsos && giPos<=1){
+            giPos=1;
+        }
+        
+        ST7529_printf("Intensidad",3,26,S_,!bCorrientePulsos);
+        ST7529_printf("[A",39,53,S_,0);
+            
+        ST7529_printf("Tiempo",3,80,S_,0);
+            
+        ST7529_printf("Pulsos",51,26,S_,bCorrientePulsos);
+        
+        ST7529_printf("Imed =",41,95,S_,0);
+        ST7529_printf("[A",65,95,S_,0);
+            
+        ST7529_printf("Rmed =",41,108,S_,0);   
+        ST7529_printf("ohm",65,108,S_,0);
+        
+        i16IMedSMP=structMedidasMultipulsos.si16IMedSMP;        // Cargo valores smedidas    
+        i16ResSMP=structMedidasMultipulsos.si16ResSMP;
+    
+       
+        if((iMenuAnterior==80 && iMenuActual==180)){        // Envio el paquete de datos si es la primera vez que entra al menú
+            // Una vez ha pintado todo el menú, procedemos a enviar el paquete con los datos configurados en el menú 80
+            // Preparo paquete de datos
+            
+            structTratamientoMultipulsos.si16FrecSMP=i16FrecSMP;                                // Frecuencia del SMP
+            structTratamientoMultipulsos.si16PWSMP=i16PWSMP;                                    // Ancho de pulso del sistema multipulsos
+            structTratamientoMultipulsos.si32TDesfaseSMP=i32TDesfaseSMP;                        // Desfase entre pulsos
+            
+            i8ErrorCom=0;                                                                       // Inicializa el valor del contador de errores
+
+            envioConfiguracion(MODO_TRAT_SMP);                                                    // Envia comando
+
+            i8TratamientoSeleccionado=TRATAMIENTO_SMP;
+            
+            // Inicializacion de los valores de tratamiento activo
+            // Estos valore sno hayque enviarlos, simplemente es para inicializar esas variables
+            if(!bPausaTratamiento){
+                i16ISMP=4;  // 200uA
+                i8PulsosSMP=1;
+            }
+            maxPulsosSMP();
+            
+            structTratamientoMultipulsosActivo.si16ISMP=i16ISMP;              // Configuración corriente en el sistema multipulsos (activo)
+            structTratamientoMultipulsosActivo.si8PulsosSMP=i8PulsosSMP;      // Configuraciión pulsos en el sistema multipulsos (activo)
+            
+        }   // Cierre if primera vez
+        
+        if((iMenuAnterior==180 && iMenuActual==181)|| (iMenuAnterior==183 && iMenuActual==181)){
+            quitar_cancelar();
+        }
+        
+        if(iMenuAnterior==181 && iMenuActual==180){
+            poner_cancelar();
+        }
+        
+        
+        sprintf(mystring,"%05lu",i16ISMP*50);
+        ST7529_printf(mystring,1,40,XL_,0);
+        
+        sprintf(mystring,"%02u:%02u",i8Tmin,i8Tseg);
+        ST7529_printf(mystring,1,94,XL_,0);
+        
+        sprintf(mystring,"%02U",i8PulsosSMP);
+        ST7529_printf(mystring,49,40,XL_,0);
+        
+        sprintf(mystring,"%05LU",redondeoI_50(i16IMedSMP));
+        ST7529_printf(mystring,54,95,S_,0);
+        
+        sprintf(mystring,"%05LU",i16ResSMP);
+        ST7529_printf(mystring,54,108,S_,0);  
+
+    }else{              // Si hay error de electrodo, hay que apagar el canal y tal
+        if (iMenuAnterior!=183){
+            ST7529_clear();
+            controlSonido(1);
+        }
+
+        Calc_representacion_t(i16TimeRaw[0],0);                           // Cálcula de nuevo la representación del tiempo
+        i8Time_min=i8Tmin;                                                         // Recarga de nuevo las variables para usarlas de nuevo en el caso de error de electrodo
+        i8Time_seg=i8Tseg;            
+
+        
+        ST7529_printf("Tactivo",35,102,S_,0);          
+        ST7529_printf(sSMP,10,0,L_,NORMAL);
+        ST7529_printf("ERROR DE ELECTRODO",10,50,L_,NORMAL);
+        sprintf(mystring,"%02u:%02u",i8Time_min,i8Time_seg);
+        ST7529_printf(mystring,37,112,L_,0);
+    }
+    iMenuAnterior=iMenuActual;
+}
+// Menú indicación de autoapagado
+int8 menu_200()   
+{
+   if(iMenuAnterior!=200)
+   {
+      ST7529_clear();
+      iMenuReposo=iMenuAnterior;
+   }
+   int32 iTiempoDesc=(600000-var_tiempo)*0.001;    // Calcula el timepo en segundos
+   /*if(iTiempoDesc<=0 || iTiempoDesc>61){      // Para el caso en que desborde o pase algo raro
+      iTiempoDesc=0;
+   }*/
+   sprintf(mystring,"Quedan %Lu segundos",iTiempoDesc);     // Muestra por pantalla el timepo restante
+   ST7529_printf(mystring,10,30,L_,NORMAL);
+   sprintf(mystring,"para el autoapagado");
+   ST7529_printf(mystring,10,50,L_,NORMAL);
+   sprintf(mystring,"Presione el boton START");
+   ST7529_printf(mystring,0,90,L_,NORMAL);
+   sprintf(mystring,"para continuar");
+   ST7529_printf(mystring,15,110,L_,NORMAL);
+   giPos=0;
+   iMenuAnterior=iMenuActual;
+}
+
+// Menú de apagado del equipo
+int8 menu_201()
+{
+   if(iMenuAnterior!=201){
+      ST7529_clear();
+   }
+
+   sprintf(mystring,"Apagando equipo...");
+   ST7529_printf(mystring,15,50,L_,NORMAL);
+   iMenuAnterior=iMenuActual;
+}
+
+// Pantalla de error de transistores
+int8 menu_202()
+{
+   if(iMenuAnterior!=202)
+   {
+      ST7529_clear();
+   }
+   ST7529_printf("ERROR DE TRANSISTORES",10,50,L_,NORMAL);
+   if (i8ChannelSel==CHA_C)
+   {
+      ST7529_printf("CANAL A",30,70,L_,NORMAL);      
+   }
+   if (i8ChannelSel==CHB_C)
+   {
+      ST7529_printf("CANAL B",30,70,L_,NORMAL);      
+   }
+
+   delay_ms(1000);
+   ControlSonido(0);
+   iMenuAnterior=iMenuActual;   
+}
+
+// Pantalla de error de sistema de medida
+int8 menu_203()
+{
+   ST7529_clear();
+   ST7529_printf("ERROR SISTEMA DE MEDIDA",5,50,L_,NORMAL);
+   if (i8ChannelSel==CHA_C)
+   {
+      ST7529_printf("CANAL A",30,70,L_,NORMAL);     
+   }
+   if (i8ChannelSel==CHB_C)
+   {
+      ST7529_printf("CANAL B",30,70,L_,NORMAL);      
+   }
+}
+
+// menu de craga del equipo
+int8 menu_204()
+{
+   if(iMenuAnterior!=204)
+   {
+      ST7529_clear();            // Limpia la pantalla  por completo
+   }
+   
+   if(getFC()){                  // Si las baterias han sido cargadas al 100% (comprobado mediante el flag de FC del BQ34Z100G1)              
+      sprintf(mystring,"CARGA COMPLETA");
+   }else{
+      sprintf(mystring,"CARGA EN CURSO");
+   }
+   
+   // Datos de test - Estos datos se sustituirán por un nivel de porcetaje o un dibujo de una bateria en carga
+   ST7529_printf(mystring,15,10,L_,0);
+   sprintf(mystring,"V: %04Ld mV I: %04Ld mA",getVoltage(),getCurrent());
+   ST7529_printf(mystring,10,50,S_,0);
+   sprintf(mystring,"RC/FC: %Ld/%Ld mAh",getRemaining(),getCapacity());
+   ST7529_printf(mystring,10,60,S_,0);
+   sprintf(mystring,"Batt:  %u %%",nivelBateria());
+   ST7529_printf(mystring,10,70,S_,0);
+   sprintf(mystring,"Temp:  %3.1w C",getTemp());
+   ST7529_printf(mystring,10,80,S_,0);
+   sprintf(mystring,"Flags: 0x%LX - FlagsB: 0x%LX",getFlags(),getFlagsB());
+   ST7529_printf(mystring,10,90,S_,0);
+   sprintf(mystring,"Cycle Count:  %Lu",getCycleCount());
+   ST7529_printf(mystring,10,100,S_,0);
+   sprintf(mystring,"Time to Full Charge:  %Lu min",getATTF());
+   ST7529_printf(mystring,10,110,S_,0);
+   iMenuAnterior=iMenuActual;
+}
+
+int8 menu_205(){
+
+    control_DC(0,EN_30);                                                    // Deshabilita DC/DC 30V
+    if(i8CanalesActivados){                                                 // Si estamos en electroestimulación
+        apagadoCanales();                                                   // Inicializo variables
+    }else if(iMenuAnterior>=180){                                           // Si estamos en SMP 
+        apagadoSMP();                                                       // Inicializo variables
+        bTratamientoSMPActivado=0;                                          // Inicializo variable
+    }else{                                                                  // S iestamos en galvánica y/o micro
+        apagadoMicrocorrientes();                                           // Inicializo variables
+        bTratamientoGalvanicaActivado=0;                                    // Inicializo variable
+    }
+    
+    initReles();                                                            // Inicializa el estado de los relés
+    
+    for (int8 i8Leds=0;i8Leds<TOTAL_LEDS;i8Leds++){                         // Recorro todos los LEDs
+        control_led(1,rojo,i8Leds);                                         // Enciendo LED rojo
+    }
+    
+    ST7529_printf("   ERROR DE",,65,M_,NORMAL);
+    ST7529_printf("COMUNICACIONES",8,80,M_,NORMAL);
+
+    controlSonido(1);                                                       // Enciendo pito
+    reset_orco();                                                           // Hago un reset a Orco    
+    delay_ms(3000);                                                         // Delay pito + pantalla          
+    controlSonido(0);                                                       // Apagado pito
+    
+    for (int8 i8Leds=0;i8Leds<TOTAL_LEDS;i8Leds++){                         // Recorro todos los LEDs
+        control_led(0,rojo,i8Leds);                                         // Apagado LED rojo
+    }
+
+    return 0;
+}
+
+// Submenu 22
+void submenu_22(){
+
+    switch (iMenuActual){
+        case 20:
+            if (giPos==1){
+                min=2;
+                max=200;
+                //giPosRulancha=i16Igalv;
+            }else if (giPos==4){
+                min=2;   // 2*50=100uA 
+                max=20;  // 100*50=5000uA
+                //giPosRulancha=i16Imicro; 
+            }
+            break;
+        case 40:
+            max=20;        // 1 mA
+            min=2;
+            gI=50;
+            //giPosRulancha=i16IElec[i8ConfigCanal];
+            break;
+    }
+
+    if(giPosRulancha>max){
+        giPosRulancha=max;
+    }
+    
+    if (giPosRulancha<=min){
+        giPosRulancha=min;
+    }
+
+    switch (iMenuActual){
+        case 20:
+            if(giPos==1){
+                i16Igalv=giPosRulancha;  
+                i32CGalv=calc_CargaGalv(i16Igalv);
+            }else if(giPos==4){
+                i16Imicro=giPosRulancha; 
+            }
+            break;
+        case 40:
+            i16IElec[i8ConfigCanal]=giPosRulancha;
+            break;
+    }
+}
+
+// Submenu 23
+void submenu_23(){
+
+    /*switch (iMenuActual){
+        case 20:
+            if (giPos==3){
+                giPosRulancha=i8Trampagalv;
+            }else if (giPos==6){
+                giPosRulancha=i8Trampamicro;
+            }
+            break;
+        case 40:
+            giPosRulancha=i8TrElec[i8ConfigCanal];
+            break;
+    }*/
+
+    if(giPosRulancha>10){
+        giPosRulancha=10;
+    }
+
+    if (giPosRulancha<=0){
+        giPosRulancha=0;
+    }
+
+    switch (iMenuActual){
+        case 20:
+            if(giPos==3){
+                if(i16Tgalv!=0){
+                    if((float)giPosRulancha>=(i16Tgalv/3.0)){
+                        giPosRulancha=(i16Tgalv/3);
+                    }
+                }
+                i8Trampagalv=giPosRulancha;    
+                i32CGalv=calc_CargaGalv(i16Igalv);
+            }
+            break;
+        case 40:
+            i8TrElec[i8ConfigCanal]=giPosRulancha;
+            if(giPos==4){
+                if((float)giPosRulancha>=(i16TacElec[i8ConfigCanal]/3.0)){
+                    giPosRulancha=(i16TacElec[i8ConfigCanal]/3);
+                }
+                i8TrElec[i8ConfigCanal]=giPosRulancha;
+            }
+            break;
+    }
+}
+
+// Submenu 27
+void submenu_27(){
+
+    switch (iMenuActual){
+        case 20:
+            //giPosRulancha=i16PWmicro/25;      
+            maxBW=20;
+            break;
+        case 40:
+            /*if(giPos==10){
+                giPosRulancha=i16PW_plusElec[i8ConfigCanal]/25;
+            }else if (giPos==11){
+                giPosRulancha=i16PW_minusElec[i8ConfigCanal]/25;
+            }*/
+            if(i8ConfigCanal==POINTER_C){
+                maxBW=20;
+            }else{
+                maxBW=40;
+            }
+            break;
+        case 80:
+            //giPosRulancha=i16PWSMP/25;
+
+            maxBW=20;    // 500us
+            break;
+    }
+
+
+    if(giPosRulancha>=maxBW){
+        giPosRulancha=maxBW;
+    }
+
+    if(giPosRulancha<4){
+        giPosRulancha=4;
+    }
+
+    switch (iMenuActual){
+        case 20:
+            i16PWmicro=giPosRulancha*25;
+            break;
+        case 40:
+            if (giPos==10){
+                i16PW_plusElec[i8ConfigCanal]=giPosRulancha*25;
+                maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+
+                if(i8SimetriaCanales!=0){
+                    copiarDatosSimetria(0);
+                }
+
+                if(i8ConfigCanal==POINTER_C){
+                    i16PW_minusElec[i8ConfigCanal]=i16PW_plusElec[i8ConfigCanal];
+                }
+            }else if(giPos==11){
+                i16PW_minusElec[i8ConfigCanal]=giPosRulancha*25;
+                maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+                if(i8SimetriaCanales!=0){
+                    copiarDatosSimetria(0);
+                }
+            }
+            break;
+        case 80:
+            i16PWSMP=giPosRulancha*25;
+            if((i16PWSMP*2+BANDA_GUARDA*2) >= i32TDesfaseSMP){
+                giPosRulancha=(i32TDesfaseSMP-BANDA_GUARDA*2)/2;
+                giPosRulancha/=25;
+                i16PWSMP=giPosRulancha*25;
+            }
+            //maxBW=maxPWSMP();   //500us
+            break;
+    }
+}
+
+// Submenu 28
+void submenu_28(){
+
+    switch (iMenuActual){
+        case 20:
+            max=100;
+            min=2;                                    
+            //aux=i16frecmicro;
+            gF=1;
+            //giPosRulancha=aux/gF;
+            break;       
+        case 40:
+            // MOD ORIGINAL
+            //aux=i16frecElec[i8ConfigCanal];
+
+            max=i16FrecLimSup[i8ConfigCanal];
+            min=i16FrecLimInf[i8ConfigCanal];
+            break;
+        case 80:
+            max=100;
+            min=2;
+            //aux=i16FrecSMP;
+
+            break;
+    }
+    
+    i16FrecuenciaAnterior=giPosRulancha*gF;
+
+
+    if(iMenuActual!=20){
+        if(i16FrecuenciaAnterior>=10000){
+            gF=1000;
+            giPosRulancha=i16FrecuenciaAnterior/gF;
+        }else if(i16FrecuenciaAnterior>=200){
+            gF=50;
+            giPosRulancha=i16FrecuenciaAnterior/gF;
+        }else if(i16FrecuenciaAnterior>=100){
+            gF=10;
+            giPosRulancha=i16FrecuenciaAnterior/gF;
+        }else if(i16FrecuenciaAnterior>=20){
+            gF=2;
+            giPosRulancha=i16FrecuenciaAnterior/gF;
+        }else{
+            gF=1;
+            giPosRulancha=i16FrecuenciaAnterior;
+        }
+    }
+
+    if ((giPosRulancha*gF)>=max){
+        giPosRulancha=max/gF;
+    }
+
+    if ((giPosRulancha*gF)<min){
+        giPosRulancha=min/gF;
+    }
+
+    switch (iMenuActual){
+        case 20:
+            //aux=giPosRulancha*gF;
+            i16frecmicro=giPosRulancha*gF;
+            maxBW=Calc_BWmax(i16frecmicro,bpolaridadmicro);
+            break;
+        case 40:
+            //aux=giPosRulancha*gF;
+            i16frecElec[i8ConfigCanal]=giPosRulancha*gF;
+            maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+            i16PW_plusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_plusElec[i8ConfigCanal]);
+            i16PW_minusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_minusElec[i8ConfigCanal]);
+
+            if(i8SimetriaCanales!=0){
+                copiarDatosSimetria(0);
+            }
+            break;
+        case 80:
+            //aux=giPosRulancha*gF;
+            i16FrecSMP=giPosRulancha*gF;
+            maxBW=Calc_BWmax(i16FrecSMP,1);
+            i16PWSMP=Calc_BW(maxBW,i16PWSMP);
+            break;
+    }
+}
+
+// Submenu 29
+void submenu_29(){
+
+    /*switch (iMenuActual){
+        case 20:
+            giPosRulancha=bPolaridadMicro;
+            break;                       
+        case 40:
+            giPosRulancha=bpolaridadElec[i8ConfigCanal];
+            break;
+    }*/
+
+    if(giPosRulancha>1){
+        giPosRulancha=1;
+    }
+
+    if (giPosRulancha<=0){
+        giPosRulancha=0;
+    }
+
+    switch(iMenuActual){
+        case 20:
+            bPolaridadMicro=giPosRulancha;
+            maxBW=Calc_BWmax(i16frecmicro,bpolaridadmicro);
+            i16PWmicro=Calc_BW(maxBW,i16PWmicro);
+            break;
+        case 40:
+            bpolaridadElec[i8ConfigCanal]=giPosRulancha;
+            maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+            i16PW_plusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_plusElec[i8ConfigCanal]);
+            i16PW_minusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_minusElec[i8ConfigCanal]);
+            if(i8SimetriaCanales!=0){
+                copiarDatosSimetria(0);
+            }
+            break;      
+    }
+}
+
+// Submenu 33
+void submenu_33(){
+
+    /*switch (iMenuActual){
+        case 40:
+            giPosRulancha=bsimetriaElec[i8ConfigCanal];
+            break;
+    }*/
+   
+    if(giPosRulancha>1){
+        giPosRulancha=1;
+    }
+    
+    if (giPosRulancha<=0){
+        giPosRulancha=0;
+    }
+   
+    if(giPosRulancha){
+        bpolaridadElec[i8ConfigCanal]=1;
+    }
+                 
+    switch (iMenuActual){
+        case 40:
+            bsimetriaElec[i8ConfigCanal]=giPosRulancha;
+            maxBW=Calc_BWmax(i16frecElec[i8ConfigCanal],bpolaridadElec[i8ConfigCanal]);
+            i16PW_plusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_plusElec[i8ConfigCanal]);
+            i16PW_minusElec[i8ConfigCanal]=Calc_BW(maxBW,i16PW_minusElec[i8ConfigCanal]);
+            if(i8SimetriaCanales!=0){
+                copiarDatosSimetria(0);
+            }
+            break;
+    }
+}
+
+// Submenu 42
+void submenu_42(){
+
+    switch (iMenuActual){
+        case 20:
+            if(giPos==2){
+                //giPosRulancha=i16Tgalv;
+                if(giPosRulancha>1800){             // Max 30 min 
+                    giPosRulancha=1800;
+                }
+                if(bSeleccionGalvanica){
+                    if (giPosRulancha<=1){          
+                        giPosRulancha=1;
+                    }
+                }else{
+                    if (giPosRulancha<=0){          // Si es 0, tiempo ilimitado
+                    giPosRulancha=0;
+                    }
+                }
+                i16Tgalv=giPosRulancha;
+
+                if(i16Tgalv!=0){
+                    if((float)i8Trampagalv>=(i16Tgalv/3.0)){
+                        i8Trampagalv=(i16Tgalv/3);
+                    }
+                }
+                if(i8Trampagalv>=10){
+                    i8Trampagalv=10;
+                }
+                i32CGalv=calc_CargaGalv(i16Igalv);
+            }else if (giPos==5){
+                //giPosRulancha=i16Tmicro/5;
+                if(giPosRulancha>720){ //720*5=3600 segundos - 60 min 00 s
+                    giPosRulancha=720;
+                }
+                if (giPosRulancha<=1){
+                    giPosRulancha=1;
+                }
+                i16Tmicro=giPosRulancha*5;
+            }
+            break;
+        case 40:
+            if(giPos==2){
+                //giPosRulancha=i16TacElec[i8ConfigCanal]/5;
+                if(giPosRulancha>719){ //719*5=3595 segundos - 59 min 55 s
+                    giPosRulancha=719;
+                }
+                if (giPosRulancha<=1){
+                    giPosRulancha=1;
+                }
+                i16TacElec[i8ConfigCanal]=giPosRulancha*5;          
+
+                if(i8TrElec[i8ConfigCanal] > i16TacElec[i8ConfigCanal]/3){
+                    i8TrElec[i8ConfigCanal]=i16TacElec[i8ConfigCanal]/3;
+                }
+
+                if((float)i8TrElec[i8ConfigCanal]>=(i16TacElec[i8ConfigCanal]/3.0)){
+                    i8TrElec[i8ConfigCanal]=(i16TacElec[i8ConfigCanal]/3);
+                }
+                if(i8TrElec[i8ConfigCanal]>=10){
+                    i8TrElec[i8ConfigCanal]=10;
+                }
+            }else if(giPos==3){
+                //giPosRulancha=i16TdElec[i8ConfigCanal]/5;
+                if(giPosRulancha>719){ //719*5=3595 segundos - 59 min 55 s
+                    giPosRulancha=719;
+                }
+                if (giPosRulancha<=0){
+                    giPosRulancha=0;
+                }
+                i16TdElec[i8ConfigCanal]=giPosRulancha*5;
+            }
+            break;
+        case 80:
+            if(giPos==0){
+                if(giPosRulancha>719){ //719*5=3595 segundos - 59 min 55 s
+                    giPosRulancha=719;
+                }
+                if (giPosRulancha<=1){
+                    giPosRulancha=1;
+                }
+                i16TacSMP=giPosRulancha*5;
+            }else if(giPos==1){
+                //giPosRulancha=i32TDesfaseSMP/100;
+                if(giPosRulancha>1000){ 
+                    giPosRulancha=1000;
+                }
+                if (giPosRulancha<=5){
+                    giPosRulancha=5;
+                }
+                i32TDesfaseSMP=giPosRulancha*100;
+                if((i16PWSMP*2+BANDA_GUARDA*2) >= i32TDesfaseSMP){
+                    giPosRulancha=(i32TDesfaseSMP-BANDA_GUARDA*2)/2;
+                    giPosRulancha/=25;
+                    i16PWSMP=giPosRulancha*25;
+                }
+            }
+            break;
+    }
+}
+
+// Submenu 43
+void submenu_43(){
+
+    //giPosRulancha=i8Nrep[i8ConfigCanal];
+
+    if(giPosRulancha>100){
+        giPosRulancha=100;  
+    }
+    if (giPosRulancha<1){
+        giPosRulancha=1;
+    }
+    
+    i8Nrep[i8ConfigCanal]=giPosRulancha;   
+}
+
+
+
+
+
+

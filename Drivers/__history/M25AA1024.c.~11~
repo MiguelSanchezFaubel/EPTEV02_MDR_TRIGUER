@@ -1,0 +1,88 @@
+/*
+*   File: M25AA1024.c
+*   
+*   Descripci�n: Driver para la memoria SPI 25AA1024 de 1Mbit
+*   
+*   Versi�n: 2.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+#include "M25AA1024.h"
+
+void M25AA1024_init(){
+    // Se sigue el procedimiento de incio indicado en el datasheet
+    output_low(CS_MEM);             // Habilito memoria
+    output_high(HOLD_MEM);          // Permito escritura
+    output_high(CS_MEM);            // Deshabilito memoria
+}
+
+void M25AA1024_sendAddress(int32 i32Address){              
+    spi_write2((i32Address>>16)&0xFF);          // Se desplaza hacia la derecha 16 bits los 8 bits más significativos de la dirección
+                                                // de memoria de 24 bits (MSB)
+    spi_write2((i32Address>>8)&0xFF);           // Mismo procedimiento pero desplazando solo 8 bits (MidSB)
+    spi_write2((i32Address)&0xFF);              // (LSB)
+}
+
+int8 M25AA1024_read(int32 i32Address){
+   int8 i8Data;                          // Variable para guardar el dato leido
+   
+   // Configuro SPI para funcionar en el modo correcto
+   SSP2CON1=0xA0;                       // Input data is sampled at the middle of data output time          
+   SSP2STAT|=0x40;                      // Transmit occurs on the transition from active to Idle clock state
+                                        
+   output_low(CS_MEM);                  // Activa la memoria
+   spi_write2(READ);                    // Envía comando de lectura
+   M25AA1024_sendAddress(i32Address);   // Envía dirección de memoria a leer
+   i8Data=spi_read2(0);                 // Lee el dato
+   output_high(CS_MEM);                 // Desactiva la memoria
+   
+   return i8Data;                       // Retorna el dato leido
+}
+
+void M25AA1024_write(int32 i32Address,int8 i8Data){
+   // Configuro SPI para funcionar en el modo correcto
+   SSP2CON1=0xA0;                       // Input data is sampled at the middle of data output time          
+   SSP2STAT|=0x40;                      // Transmit occurs on the transition from active to Idle clock state
+   
+   do{
+       output_low(CS_MEM);                  // Activa la memoria
+       spi_write2(WREN);                    // Habilita escritura
+       output_high(CS_MEM);                 // Desactiva la memoria       
+       output_low(CS_MEM);                  // Activa la memoria
+       spi_write2(WRITE);                   // Envia comando de escritura
+       M25AA1024_sendAddress(i32Address);   // Envia dirección de memoria a escribir
+       spi_write2(i8Data);                  // Escribe el dato
+       output_high(CS_MEM);                 // Desactiva la memoria
+       #ifdef SAURON
+       delay_ms_wdt(8);
+       restart_wdt_hw();
+       #else
+       delay_ms(8);
+       #endif
+   }while(M25AA1024_read(i32Address)!=i8Data);
+}
+
+int8 M25AA1024_status(){
+   int8 i8Result;                       // Variable auxiliar donde se guarda el resultado de la memoria
+   
+   output_low(CS_MEM);                  // Activa la memoria
+   i8Result=spi_read2(RDSR);            // Lee estado
+   output_high(CS_MEM);                 // Desactiva la memoria
+       
+   return i8Result;                     // Devuelvo el estado de la memoria
+}
+
+int32 lecturaDirFAT(int32 i32FAT){
+    
+    int32 i32Direcc;
+    int8 i8MSB, i8MedSB, i8LSB;
+
+    i8MSB=M25AA1024_read(i32FAT);
+    i8MedSB=M25AA1024_read(i32FAT+1);
+    i8LSB=M25AA1024_read(i32FAT+2);
+
+    i32Direcc=make32(i8MSB,i8MedSB,i8LSB);
+
+    return i32Direcc;
+}

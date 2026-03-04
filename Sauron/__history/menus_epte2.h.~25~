@@ -1,0 +1,675 @@
+/*
+*   File: menus_epte2.c
+*   
+*   Descripción: Program file del sistema de menús del equipo
+*   
+*   Proyecto: EPTE 2
+*   Versión: 3.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+#define NIVEL   12   			// Define la separación entre lineas
+
+int16 i16FrecuenciaAnterior; 	// Indica cual era el valor de la frecuencia anterior al variarla
+
+/*
+*   Función: pantalla_seleccion
+*   Descripción: Incluye los símbolos principales de los menús
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void pantalla_seleccion();
+
+/*
+*   Función: poner_cancelar
+*   Descripción: Pone el símbolo de cancelar
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void poner_cancelar();
+
+/*
+*   Función: quitar_cancelar
+*   Descripción: Quita el símbolo de cancelar
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void quitar_cancelar();
+
+/*
+*   Función: poner_config
+*   Descripción: Pone el símbolo de configuración
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void poner_config();
+
+/*
+*   Función: quitar_config
+*   Descripción: Quita el símbolo de configuración
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void quitar_config();
+
+/*
+*   Función: poner_flecha_izq
+*   Descripción: Pone la flecha izquierda
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void poner_flecha_izq();
+
+/*
+*   Función: quitar_flecha_izq
+*   Descripción: Quita la flecha izquierda
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void quitar_flecha_izq();
+
+/*
+*   Función: poner_flecha_der
+*   Descripción: Pone la flecha derecha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void poner_flecha_der();
+
+/*
+*   Función: quitar_flecha_der
+*   Descripción: Quita la flecha derecha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void quitar_flecha_der();
+
+/*
+*   Función: poner_guardar
+*   Descripción: Pone el símbolo de guardar
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void poner_guardar();
+
+/*
+*   Función: quitar_guardar
+*   Descripción: Quita el símbolo de guardar
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void quitar_guardar();
+
+/*
+*   Función: poner_cargar
+*   Descripción: Pone el símbolo de cargar
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void poner_cargar();
+
+/*
+*   Función: quitar_cargar
+*   Descripción: Quita el símbolo de guardar
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void quitar_cargar();
+
+/*
+*   Función: representacionPresets
+*   Descripción: Representa por pantalla el menú de presets
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void representacionPresets();
+
+/*
+*   Función: menu_0
+*   Descripción: Menú principal
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_0();
+
+/*
+*   Función: menu_10
+*   Descripción: Menú configuración del dispositivo
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_10(); 
+
+/*
+*   Función: menu_20
+*   Descripción: Menú de galvánica / galvánica + microcorrientes
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_20();
+
+/*
+*   Función: menu_30
+*   Descripción: Menú de trabscraneal
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_30();   
+
+/*
+*   Función: menu_40
+*   Descripción: Menú de electroestimulación
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_40();  
+
+/*
+*   Función: menu_80
+*   Descripción: Menú del sistema multipulsos
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_80();  
+
+/*
+*   Función: menu_90
+*   Descripción: Menú de presets
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_90();  
+
+/*
+*   Función: menu_11
+*   Descripción: Configuración de la iluminación de pantalla
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_11();   
+
+/*
+*   Función: menu_12
+*   Descripción: Configuración de la señal acústica
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_12();
+
+/*
+*   Función: menu_13
+*   Descripción: Información firmware/hardware
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_13();
+
+/*
+*   Función: menu_14
+*   Descripción: Configuración del contraste de pantalla
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_14();
+
+/*
+*   Función: menu_15
+*   Descripción: Selección de idioma
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_15();  
+
+/*
+*   Función: DEPRECATED menu_21
+*   Descripción: DEPRECATED Ajuste del nivel de carga 
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_21();   
+
+/*
+*   Función: menu_22
+*   Descripción: Ajuste del nivel de corriente 
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_22(); 
+
+/*
+*   Función: menu_23
+*   Descripción: Ajuste del tiempo de rampa
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_23();
+
+/*
+*   Función: menu_27
+*   Descripción: Ajuste del ancho de pulso positivo y negativo
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_27();
+
+/*
+*   Función: menu_28
+*   Descripción: Ajuste de la frecuencia  de tratamiento
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_28(); 
+
+/*
+*   Función: menu_29
+*   Descripción: Ajuste de la polaridad de la señal
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_29(); 
+
+/*
+*   Función: menu_33
+*   Descripción: Ajuste de la simetría de la señal
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_33();
+
+/*
+*   Función: menu_34
+*   Descripción: Ajuste de la superficie del electrodo
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_34();  
+
+/*
+*   Función: menu_41
+*   Descripción: Selección del canal de electroestimulación
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_41();
+
+/*
+*   Función: menu_42
+*   Descripción: Ajuste del tiempo de tratamiento
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_42(); 
+
+/*
+*   Función: menu_43
+*   Descripción: Ajuste del número de repeticiones en electroestimulación
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_43(); 
+
+/*
+*   Función: menu_91
+*   Descripción: Menú de selección del canal de electroestimulación
+* 					a cargar en el menú de presets
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_91(); 
+
+/*
+*   Función: menu_92
+*   Descripción: Menú de guardado de presets
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_92(); 
+
+/*
+*   Función: menu_120
+*   Descripción: Menú de tratamiento galvánica / galvánica+microcorrientes
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_120(); 
+
+/*
+*   Función: menu_130
+*   Descripción: Menú de tratamiento transcraneal
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_130(); 
+
+/*
+*   Función: menu_140
+*   Descripción: Menú de tratamiento de electroestimulación
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_140();
+
+/*
+*   Función: menu_180
+*   Descripción: Menú de tratamiento del sistema multipulsos
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_180(); 
+
+/*
+*   Función: menu_200
+*   Descripción: Menú de autoapagado
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_200(); 
+
+/*
+*   Función: menu_201
+*   Descripción: Menú de apagado del equipo
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_201(); 
+
+/*
+*   Función: DEPRECATED menu_202
+*   Descripción: DEPRECATED Menú de error de transistores
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_202();
+
+/*
+*   Función: DEPRECATED menu_203
+*   Descripción: DEPRECATED Menú de error del sistema de medida
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_203();
+
+/*
+*   Función: menu_204
+*   Descripción: Menú de carga del dispositivo
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_204();
+
+/*
+*   Función: menu_205
+*   Descripción: Menú de error de comunicaciones
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_205();
+
+/*
+*   Función: menu_206
+*   Descripción: Menú de error de calibrado
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_206();
+
+/*
+*   Función: menu_207
+*   Descripción: Menú código de error genérico
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+int8 menu_207();
+
+/*
+*   Función: submenu_22
+*   Descripción: Ajuste del nivel de corriente con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_22();
+
+/*
+*   Función: submenu_23
+*   Descripción: Ajuste del tiempo de rampa con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_23();
+
+/*
+*   Función: submenu_27
+*   Descripción: Ajuste del ancho de pulso con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_27();
+
+/*
+*   Función: submenu_28
+*   Descripción: Ajuste de la frecuencia con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_28();
+
+/*
+*   Función: submenu_29
+*   Descripción: Selección de polaridad de la señal con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_29();
+
+/*
+*   Función: submenu_33
+*   Descripción: Selección de simetría de la señal con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_33();
+
+/*
+*   Función: submenu_34
+*   Descripción: Selección de la superficie del electrodo con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_34();
+
+/*
+*   Función: submenu_42
+*   Descripción: Ajuste del tiempo de tratamiento con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_42();
+
+/*
+*   Función: submenu_43
+*   Descripción: Ajuste del número de repeticiones con rulancha
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void submenu_43();

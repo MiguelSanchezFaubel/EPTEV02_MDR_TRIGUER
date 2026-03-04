@@ -1,0 +1,439 @@
+/*
+*   File: comunicacionSO.c
+*   
+*   Descripción: Program file que describe los parámetros 
+*      necesarios para la comunicación Sauron->Orco
+*   
+*   Proyecto:EPTE V2
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+#include "comunicacionSO.h"
+    
+/********************************* Funciones *****************************************/
+    
+int8 enviaComando(int8 i8Mode){
+    
+    int8 i8Return;
+ 
+    switch (i8Mode){
+        case M_CHECK_ALIVE:                                 // Comunicación entre PICs activa
+            i8Return=enviaCheckAlive();                     // Envía a la función indicada para comprobar el check alive
+            break;
+        case M_START:                                       // Comando START
+            i8Return=enviaStart();                          // Envia el comando START para empezar el tratamiento
+            break;
+        case M_STOP:                                        // Comando STOP
+            i8Return=enviaStop();                           // Envia el comando STOP para parar el tratamiento
+            break;         
+        case M_CONFIG_TRAT_ACT:                             // Configuracia el tratamiento en activo
+            fputc(COMANDO_CONFIG_TRAT_ACT,COM_PIC_UART);    // Envía que se va a configurar un tratamiento en activo
+            fputc('\r',COM_PIC_UART);                       // Envía la secuencia de fin de trama \r\n
+            fputc('\n',COM_PIC_UART);
+            while(!bDatoRecibido);                          // Espera a recibir el ACK
+            i8Return=gi8BufferData[0];                      // Recoge el dato del buffer de entrada
+            break;
+        case M_ACK:                                         // ACK
+            fputc(COMANDO_ACK,COM_PIC_UART);                // Envia el comando ACK
+            fputc('\r',COM_PIC_UART);                       // Envía la secuencia de fin de trama
+            fputc('\n',COM_PIC_UART);  
+            i8Return=COMANDO_ACK;                           // Asigna el valor de COMANDO_ACK para decir que se ha enviado correctamente
+            // Aqui no hay que esperar a que conteste nada ya que no hay que enviar un ACK del ACK
+            break;
+#ifdef CHECKSUM
+        case M_CHECKSUM:                                    // Checksum
+            fputc(COMANDO_CHECKSUM,COM_PIC_UART);           // Envía el comando de checksum
+            fputc('\r',COM_PIC_UART);                       // Envia la secuencia de fin de trama \r\n   
+            fputc('\n',COM_PIC_UART);
+            while(!bDatoRecibido);                          // Espera a que se reciba el ACK
+            i8Return=gi8BufferData[0];                      // Recoge el dato del buffer de entrada
+            if(COMANDO_ACK == i8Return){                    // Si se ha recibido el ACK
+                fputc(gi8CheckSum,COM_PIC_UART);            // Envía el comando de checksum
+                fputc('\r',COM_PIC_UART);                   // Envia la secuencia de fin de trama \r\n   
+                fputc('\n',COM_PIC_UART);
+                while(!bDatoRecibido);                      // Espera a que se reciba el ACK
+                i8Return=gi8BufferData[0];                  // Recoge el dato del buffer de entrada
+            }
+            break;
+#endif
+        default:                                            // En caso de que se introduzca un valor no permitido
+            i8Return=ERROR_DESCONOCIDO;                     // Devuelvo el valor de ERROR_DESCONOCIDO
+    }
+    
+    if(COMANDO_ACK == i8Return){                            // Si se ha recibido el ACK
+        i8Return=NO_ERROR;                                  // Devuelve el valor de que no hay error
+    }else{                                                  // En caso de haber error
+        if(ERROR_DESCONOCIDO != i8Return){                  // Si no es error desconocido  (ya que si lo es, queremos que lo devuelva)
+            i8Return=ERROR_NOACK;                           // Debe de indicarse que no se ha recibido el ACK
+        }
+    }
+    
+    return i8Return;
+}
+   
+int8 enviaComando(int8 i8Mode, int8 i8Comando){
+    
+    int8 i8Return;
+    
+    switch (i8Mode){
+        case M_CONFIG_TRAT:                             // Configuración del tratamiento
+            fputc(COMANDO_CONFIG_TRAT,COM_PIC_UART);    // Envía el comando de configuración de tratamiento
+            fputc('\r',COM_PIC_UART);                   // Envia la secuencia de fin de trama \r\n        
+            fputc('\n',COM_PIC_UART);   
+            while(!bDatoRecibido);                      // Espera a que se reciba el ACK
+            bDatoRecibido=0;                            // Pone el bit de dato recibido a cero
+            i8Return=gi8BufferData[0];                  // Recoge el dato del buffer de entrada
+            break;
+        case M_ERRORES:                                 // Informe de errores
+            fputc(COMANDO_ERRORES,COM_PIC_UART);        // Envía el comando de errores
+            fputc('\r',COM_PIC_UART);                   // Envía la secuencia de fin de trama \r\n
+            fputc('\n',COM_PIC_UART);
+            while(!bDatoRecibido);                      // Espera a que se reciba el ACK
+            i8Return=gi8BufferData[0];                  // Recoge el dato del buffer de entrada
+            break;
+        case M_CONFIGURACION:                           // Menú de configuración
+            fputc(COMANDO_CONFIGURACION,COM_PIC_UART);  // Envia el comando de selección del menú de configuración
+            fputc('\r',COM_PIC_UART);                   // Envia la secuencia de fin de tramma \r\n
+            fputc('\n',COM_PIC_UART);
+            while(!bDatoRecibido);                      // Espera a que se reciba el ACK
+            i8Return=gi8BufferData[0];                  // Recoge el dato del buffer de entrada
+            break;
+        case M_TEST:                                    // Menú de test
+            fputc(COMANDO_TEST,COM_PIC_UART);           // Envia el comando de selección del menú de configuración
+            fputc('\r',COM_PIC_UART);                   // Envia la secuencia de fin de tramma \r\n
+            fputc('\n',COM_PIC_UART);
+            while(!bDatoRecibido);                      // Espera a que se reciba el ACK
+            i8Return=gi8BufferData[0];                  // Recoge el dato del buffer de entrada
+            break;
+      default:                                          // En caso de que se introduzca un valor no permitido
+         i8Return=ERROR_DESCONOCIDO;                    // Devuelvo el valor de ERROR_DESCONOCIDO
+    }
+    
+    if(COMANDO_ACK == i8Return){                        // Si se ha recibido el ACK
+        fputc(i8Comando,COM_PIC_UART);                  // Envia la selección realizada de los enum correspondientes
+        fputc('\r',COM_PIC_UART);                       // Envia la secuencia de fin de tramma \r\n
+        fputc('\n',COM_PIC_UART);
+        while(!bDatoRecibido);                          // Espera a que se reciba el ACK
+        i8Return=gi8BufferData[0];                      // Recoge el dato del buffer de entrada
+    
+        if(COMANDO_ACK == i8Return){                    // Si se recibe ACK
+            i8Return=NO_ERROR;                          // Devuelve el valor de que no hay error
+        }else{                                          // En caso de error
+            i8Return=ERROR_NOACK;                       // Debe indicarse que no se ha recibido el ACK
+        }
+    }else{                                              // En caso de haber error
+        if(ERROR_DESCONOCIDO != i8Return){              // Si no es error desconocido (ya que si lo es, queremos que lo devuelva)
+            i8Return=ERROR_NOACK;                       // Debe de indicarse que no se ha recibido el ACK
+        }
+    }
+    
+    return i8Return;
+}
+    
+int8 enviaConfiguracionCanal(   int8 i8Canal, int16 i16TiempoActivo, int8 i8TiempoReposo, int8 i8TiempoRampa, 
+                        int8 i8Repeticiones, int16 i16Corriente, int16 i16Frecuencia, int1 bSimetria, 
+                        int1 bPolaridad, int16 i16PWP, int16 i16PWN, int1 bSimetriaCanales){
+    
+    int8 i8Return;
+    int16 i16Envio;                                         // Variable utilizada para juntar los bytes sin que de problemas de desbordamiento
+                                                            //      No tendría que darlos, pero por si acaso
+#ifdef CHECKSUM                                             // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum=0;
+#endif
+    // Preparo primer paquete (8bits) (Simetría entre canales | Simetría | Polaridad | Canal)
+    i16Envio=(bSimetriaCanales<<DESP_SIMETRIA_CANALES) | (bSimetria<<DESP_SIMETRIA)   |
+            (bPolaridad<<DESP_POLARIDAD) | i8Canal;
+    
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el primer paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum                              
+#endif
+    
+    // Preparo el segundo paquete (16 bits) (TiempoActivo)
+    // MSB
+    i16Envio=(i16TiempoActivo & MSB) >> 8;                      // Preparo el MSB
+    fputc(i16Envio,COM_PIC_UART);                               // Envio el MSB del segundo paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // LSB
+    i16Envio=(i16TiempoActivo & LSB);                           // Preparo el LSB
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el LSB del segundo paquete
+                    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // Preparo el tercer paquete (8 bits) (TiempoReposo)
+    i16Envio=i8TiempoReposo;                                    
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el tercer paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // Preparo el cuarto paquete (8 bits) (TiempoRampa)
+    i16Envio=i8TiempoRampa;
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el cuarto paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // Preparo el quinto paquete (8 bits) (Repeticiones)
+    i16Envio=i8Repeticiones;
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el quinto paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // Preparo el sexto paquete (16 bits) (Corriente)
+    // MSB
+    i16Envio=(i16Corriente & MSB) >> 8;                         // Preparo el MSB
+    fputc(i16Envio,COM_PIC_UART);                               // Envio el MSB del sexto paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // LSB
+    i16Envio=(i16Corriente & LSB);                              // Preparo el LSB                 
+    fputc(i16Envio,COM_PIC_UART);                               // Envio el LSB del sexto paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // Preparo el sÃ©ptimo paquete (16 bits) (Frecuencia)
+    // MSB
+    i16Envio=(i16Frecuencia & MSB) >> 8;                        // Preparo el MSB
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el MSB del séptimo paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // LSB
+    i16Envio=(i16Frecuencia & LSB);                             // Preparo el LSB                  
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el LSB del séptimo paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // Preparo el octavo paquete (16 bits) (PW+)
+    // MSB
+    i16Envio=(i16PWP & MSB) >> 8;                               // Preparo el MSB                  
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el MSB del octavo paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // LSB
+    i16Envio=(i16PWP & LSB);                                    // Preparo el LSB                  
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el LSB del octavo paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // Preparo el noveno paquete (16 bits) (PW-)
+    // MSB
+    i16Envio=(i16PWN & MSB) >> 8;                               // Preparo el MSB                  
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el MSB del noveno paquete
+    
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+#endif
+    
+    // LSB
+    i16Envio=(i16PWN & LSB);                                    // Preparo el LSB                  
+    fputc(i16Envio,COM_PIC_UART);                               // Envío el LSB del noveno paquete
+    fputc('\r',COM_PIC_UART);                                   // Envío la secuencia de fin de trama \r\n
+    fputc('\n',COM_PIC_UART);
+
+#ifdef CHECKSUM                                                 // En el caso en el que se habilite el CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                              // Sumo el valor al cheksum 
+    gi8CheckSum=calculaChecksum();                              // Calcula el checksum con los valores recibidos
+    fputc(gi8CheckSum,COM_PIC_UART);                            // Envio el checksum
+#endif
+
+    while(!bDatoRecibido);                                      // Espero a la recepción del ACK
+    bDatoRecibido=0;                                            // Reseteo el bit de dator recibido
+    i8Return=gi8BufferData[0];                                  // Leo el valor del buffer
+    
+#ifdef CHECKSUM                                                 // Si se ha habilitado el uso del CHEKCSUM
+    if(COMANDO_CHECKSUM == i8Return){                           // Si el cheksum es correcto
+      i8Return=NO_ERROR;                                        // Devuelve NO_ERROR
+    }else{                                                      // Si no fuera correcto
+#endif
+    
+      if(COMANDO_ACK == i8Return){                              // Si la respuesta coincide con el comando      
+         i8Return=NO_ERROR;                                     // Devuelve NO_ERROR
+      }else{                                                    // Si no existe respuesta o es erronea      
+         i8Return=ERROR_NOACK;                                  // Devuelve ERROR_NOACK   
+      }
+    
+#ifdef CHECKSUM                                                 // Si se ha habiltado el uso del CHECKSUM
+    }                                                           // Cierro el if anterior
+#endif
+    
+    return i8Return;
+}
+    
+int8 enviaConfiguracionCanalActivo(int8 i8Canal, int16 i16Corriente){
+    
+    int8 i8Return;
+    int16 i16Envio;            // Variable utilizada para juntar los bytes sin que de problemas de desbordamiento
+    
+#ifdef CHECKSUM                                         // Si se ha habiltado el uso del CHECKSUM
+    gi8CheckSum=0;                                      // Inicializo la variable contador del checksum
+#endif
+    // Prepara primer paquete (8bits) (Canal)
+    i16Envio=i8Canal;
+    
+    fputc(i16Envio,COM_PIC_UART);                       // Envío el primer paquete
+    
+#ifdef CHECKSUM                                         // Si se ha habiltado el uso del CHECKSUM
+    gi8CheckSum+=(i16Envio & LSB);                      // Sumo el valor al checksum
+#endif
+    
+    // Envía el segundo paquete (16 bits) (Frecuencia)
+    // MSB
+    i16Envio=(i16Corriente & MSB) >> 8;                 // Preparo el MSB
+    fputc(i16Envio,COM_PIC_UART);                       // Envío el MSB del segundo paquete
+    
+#ifdef CHECKSUM                                         // Si se ha habilitado el uso del checksum
+    gi8CheckSum+=(i16Envio & LSB);                      // Sumo el valor al checksum
+#endif
+    
+    // LSB
+    i16Envio=(i16Corriente & LSB);                      // Preparo el LSB                   
+    fputc(i16Envio,COM_PIC_UART);                       // Envío el LSB del segundo paquete 
+    
+#ifdef CHECKSUM                                         // Si se ha habilitado el uso del checksum
+    gi8CheckSum+=(i16Envio & LSB);                      // Hago la suma de los valores
+    gi8CheckSum=calculaChecksum();                      // Calcula el checksum con los valores que le paso
+    fputc(gi8CheckSum,COM_PIC_UART);                    // Envio el checksum
+#endif
+    
+    while(!bDatoRecibido);                              // Espero a recibir el ACK
+    bDatoRecibido=0;                                    // Reseteo el valor de dato recibido
+    i8Return=gi8BufferData[0];                          // Leo el valor del buffer de entrada
+    
+#ifdef CHECKSUM                                         // Si se ha habilitado el uso del checksum
+    if(COMANDO_CHECKSUM == i8Return){                   // Si el cheksum es correcto
+      i8Return=NO_ERROR;                                // Devuelve NO_ERROR
+    }else{                                              // Si no fuera correcto
+#endif
+    
+      if(COMANDO_ACK == i8Return){                      // Si la respuesta coincide con el comando      
+         i8Return=NO_ERROR;                             // Devuelve NO_ERROR
+      }else{                                            // Si no existe respuesta o es erronea      
+         i8Return=ERROR_NOACK;                          // Devuelve ERROR_NOACK   
+      }
+    
+#ifdef CHECKSUM                                         // Si se ha habilitado el uso del checksum
+    }                                                   // Cierro el if anterior
+#endif
+    
+    return i8Return;
+}
+    
+int8 enviaAsignacionCanales(int8 i8Canal){
+    
+    int8 i8Return;
+    
+    fputc(i8Canal,COM_PIC_UART);            // Envia el valor del enum eCANAL para que el otro PIC sepa que canales se van a configurar
+    fputc('\r',COM_PIC_UART);               // Envía la secuencia de fin de trama \r\n
+    fputc('\n',COM_PIC_UART);
+    
+    while(!bDatoRecibido);                  // Espera a recbir el ACK
+    bDatoRecibido=0;                        // Resetea el bit de dato recibido
+    i8Return=gi8BufferData[0];              // Recoge el dato del buffer de entrada
+    
+    if(COMANDO_ACK == i8Return){            // Si la respuesta coincide con el comando      
+      i8Return=NO_ERROR;                    // Devuelve NO_ERROR
+    }else{                                  // Si no existe respuesta o es erronea      
+      i8Return=ERROR_NOACK;                 // Devuelve ERROR_NOACK   
+    }
+    
+    return i8Return;
+}
+    
+int8 enviaStart(){
+    
+    int8 i8Return;
+    
+    fputc(COMANDO_START,COM_PIC_UART);      // Envía comando de START
+    fputc('\r',COM_PIC_UART);               // Envía la secuencia de fin de trama \r\n
+    fputc('\n',COM_PIC_UART);
+    
+    while(!bDatoRecibido);                  // Espera a recibir el ACK
+    bDatoRecibido=0;                        // Resetea el bit de dato recibido
+    i8Return=gi8BufferData[0];              // Recoge el dato del buffer de entrada
+    
+    if(COMANDO_ACK == i8Return){            // Si la respuesta coincide con el comando      
+      i8Return=NO_ERROR;                    // Devuelve NO_ERROR
+    }else{                                  // Si no existe respuesta o es erronea      
+      i8Return=ERROR_NOACK;                 // Devuelve ERROR_NOACK   
+    }
+    
+    return i8Return;
+}
+    
+int8 enviaStop(){
+    
+    int8 i8Return;
+    
+    fputc(COMANDO_STOP,COM_PIC_UART);       // Envía comando de STOP
+    fputc('\r',COM_PIC_UART);               // Envía la secuencia de fin de trama \r\n
+    fputc('\n',COM_PIC_UART);
+    
+    while(!bDatoRecibido);                  // Espera a recibir el ACK
+    bDatoRecibido=0;                        // Resetea el bit de dato recibido
+    i8Return=gi8BufferData[0];              // Recoge el dato del buffer de entrada
+    
+    if(COMANDO_ACK == i8Return){            // Si la respuesta coincide con el comando      
+      i8Return=NO_ERROR;                    // Devuelve NO_ERROR
+    }else{                                  // Si no existe respuesta o es erronea      
+      i8Return=ERROR_NOACK;                 // Devuelve ERROR_NOACK   
+    }
+    
+    return i8Return;
+}
+    
+int8 enviaCheckAlive(){
+    
+    int8 i8Return;               
+   
+    fputc(COMANDO_CHECK_ALIVE,COM_PIC_UART);        // Envia el comando CheckAlive
+    fputc('\r',COM_PIC_UART);                       // Envía la secuencia de fin de trama \r\n
+    fputc('\n',COM_PIC_UART);
+    
+    while(!bDatoRecibido);                          // Espera a recibir el ACK
+    bDatoRecibido=0;                                // Resetea el bit de dato recibido
+    i8Return=gi8BufferData[0];                      // Recoge el dato del buffer de entrada
+    
+    if(COMANDO_CHECK_ALIVE == i8Return){            // Si la respuesta coincide con el comando
+      i8Return=NO_ERROR;                            // Devuelve NO_ERROR
+    }else{                                          // Si no existe respuesta o es erronea
+      i8Return=ERROR_NOACK;                         // Devuelve ERROR_NOACK
+    }
+    
+    return i8Return;
+}
+
+#ifdef CHECKSUM                                     // Si se ha definido el uso del checksum
+int8 calculaChecksum(){
+    return (0xFF - gi8CheckSum + 1);                // Devuelve el checksum
+}
+#endif
+

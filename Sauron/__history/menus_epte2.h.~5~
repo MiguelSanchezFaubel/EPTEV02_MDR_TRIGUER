@@ -1,0 +1,84 @@
+/*   
+*   header file: Definición menús gráficos para la EPTE 2
+*
+*   Developed by: Ionclinics & Deionics SL
+*   Rev: 1.0
+*
+*/
+
+#define NIVEL   12   // Define la separación entre lineas
+
+typedef enum {
+   SELECCION=0,
+   GUARDAR,
+}ModosPantallas_e;
+
+int8 iModoPantalla=SELECCION; // Init distinta de cero
+int32 giPos=0;
+int16 Anterior_giPos[2]={0,0};
+//int16 iMenuAnterior=1000;
+//int16 iMenuActual=1000;
+
+
+// Pantallas generales
+void pantalla_seleccion();
+
+//   Bloque general
+int8 menu_0();    // Menu principal
+int8 menu_10();   // Confiuración dispositivo 
+int8 menu_20();   // Galvanica + microcorrientes
+int8 menu_30();   // Pointer
+int8 menu_40();   // Electro-Estimulador
+int8 menu_60();   // Test dispositivo
+int8 menu_80();   // Sistema Multipulsos SMP
+
+//   Configuracion del dispositivo
+int8 menu_11();   // Ilumninación
+int8 menu_12();   // Pito (Señal acústica)
+int8 menu_13();   // Version SW/HW
+int8 menu_14();   // Cargar valores de memoria
+
+
+//   Galvánica + microcorrientes
+int8 menu_21();   // Nivel de carga eléctrica
+int8 menu_22();   // Nivel de corriente 
+int8 menu_23();   // Rampa + tiempo de rampa
+int8 menu_27();   // Ancho de pulso
+int8 menu_28();   // frecuencia
+int8 menu_29();   // Polaridad
+int8 menu_33();   // simetria
+
+int8 menu_41();   // Numero de canales
+int8 menu_42();   // Control del tiempo
+int8 menu_43();   // Numero de repeticiones
+
+int8 menu_61();   // Test del bicolor
+int8 menu_63();   // Test del pulsadores
+int8 menu_65();   // Test del acelerometro
+int8 menu_66();   // Test del alimentacion ext
+int8 menu_67();   // Test del status cargador
+int8 menu_68();   // Test del DC/DC 12V
+int8 menu_69();   // Test del DC/DC 48V
+int8 menu_70();   // Test reles
+int8 menu_71();   // Test BQ34Z1000G1   
+int8 menu_72();   // Test COMUNICACION ENTRE PIC�S
+int8 menu_73();   // Test ENB   
+int8 menu_74();   // Test CHA   
+int8 menu_75();   // Test CHB   
+
+  
+
+// TERAPIAS
+int8 menu_120();  // Número de repeticiones
+int8 menu_130();  // Número de repeticiones
+int8 menu_140();  // Men� tratamiento electroestimulaci�n
+int8 menu_180();  // Men� tratamiento SMP
+
+int8 menu_200();  // Número de repeticiones
+int8 menu_201();  // Número de repeticiones
+int8 menu_202();
+int8 menu_203();
+int8 menu_204();
+
+
+

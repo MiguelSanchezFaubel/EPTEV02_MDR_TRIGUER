@@ -1,0 +1,353 @@
+/**************************************************************************/
+/*
+                           DRIVER DE MMA8451Q
+    
+*/
+/**************************************************************************/
+#define I2C_ADDRESS_W                  0x3A
+#define I2C_ADDRESS_R                  0x3B         
+
+#define ACK   1
+#define NACK  0     
+
+#define MMA8451_STATUS               0x00
+#define MMA8451_REG_OUT_X_MSB         0x01
+#define MMA8451_REG_OUT_X_LSB         0x02
+#define MMA8451_REG_OUT_Y_MSB         0x03
+#define MMA8451_REG_OUT_Y_LSB         0x04
+#define MMA8451_REG_OUT_Z_MSB         0x05
+#define MMA8451_REG_OUT_Z_LSB         0x06
+// 0x07 to 0x08 - RESERVED
+#define MMA8451_F_SETUP                0x09
+#define MMA8451_TRIG_CFG             0x0A
+#define MMA8451_REG_SYSMOD            0x0B
+#define MMA8451_INT_SOURCE            0x0C
+#define MMA8451_REG_WHOAMI            0x0D
+#define MMA8451_REG_XYZ_DATA_CFG      0x0E
+#define MMA8451_HP_FILTER_CUTOFF    0x0F
+#define MMA8451_REG_PL_STATUS         0x10
+#define MMA8451_REG_PL_CFG            0x11
+#define MMA8451_REG_PL_COUNT          0x12
+#define MMA8451_PL_BF_ZCOMP         0x13
+#define    MMA8451_P_L_THS_REG            0x14
+#define MMA8451_FF_MT_CFG            0x15
+#define MMA8451_FF_MT_SRC            0x16
+#define MMA8451_FF_MT_THS            0x17
+#define MMA8451_FF_MT_COUNT          0x18
+// 0x19 to 0x1C - RESERVED
+#define MMA8451_TRANSIENT_CFG         0x1D
+#define MMA8451_TRANSIENT_SRC         0x1E
+#define MMA8451_TRANSIENT_THS         0x1F
+#define MMA8451_TRANSIENT_COUNT        0x20
+#define MMA8451_PULSE_CFG            0x21
+#define MMA8451_PULSE_SRC            0x22
+#define MMA8451_PULSE_THSX            0x23
+#define MMA8451_PULSE_THSY            0x24
+#define MMA8451_PULSE_THSZ            0x25
+#define MMA8451_PULSE_TMLT            0x26
+#define MMA8451_PULSE_LTCY            0x27
+#define MMA8451_PULSE_WIND            0x28
+#define MMA8451_ASLP_COUNT            0x29
+#define MMA8451_REG_CTRL_REG1         0x2A
+#define MMA8451_REG_CTRL_REG2         0x2B
+#define MMA8451_REG_CTRL_REG3         0x2C
+#define MMA8451_REG_CTRL_REG4         0x2D
+#define MMA8451_REG_CTRL_REG5         0x2E
+#define MMA8451_OFF_X                0x2F
+#define MMA8451_OFF_Y                0x30
+#define MMA8451_OFF_Z                0x31
+
+
+/*
+#define MMA8451_PL_PUF            0
+#define MMA8451_PL_PUB            1
+#define MMA8451_PL_PDF            2
+#define MMA8451_PL_PDB            3
+#define MMA8451_PL_LRF            4
+#define MMA8451_PL_LRB            5
+#define MMA8451_PL_LLF            6
+#define MMA8451_PL_LLB            7   
+*/
+
+
+int16  x=0;
+int16  y=0;
+int16  z=0;
+
+signed int16 sx=0;
+signed int16 sy=0;
+signed int16 sz=0;
+
+float x_g=0;
+float y_g=0;
+float z_g=0;
+
+//int16 auxX;
+
+typedef enum
+{
+  MMA8451_RANGE_8_G           = 0b10,   // +/- 8g
+  MMA8451_RANGE_4_G           = 0b01,   // +/- 4g
+  MMA8451_RANGE_2_G           = 0b00    // +/- 2g (default value)
+} mma8451_range_t;
+
+
+/* Used with register 0x2A (MMA8451_REG_CTRL_REG1) to set bandwidth */
+typedef enum
+{
+  MMA8451_DATARATE_800_HZ     = 0b000, //  800Hz
+  MMA8451_DATARATE_400_HZ     = 0b001, //  400Hz
+  MMA8451_DATARATE_200_HZ     = 0b010, //  200Hz
+  MMA8451_DATARATE_100_HZ     = 0b011, //  100Hz
+  MMA8451_DATARATE_50_HZ      = 0b100, //   50Hz
+  MMA8451_DATARATE_12_5_HZ    = 0b101, // 12.5Hz
+  MMA8451_DATARATE_6_25HZ     = 0b110, // 6.25Hz
+  MMA8451_DATARATE_1_56_HZ    = 0b111, // 1.56Hz
+
+  MMA8451_DATARATE_MASK       = 0b111
+} mma8451_dataRate_t;
+
+
+void writeRegister8_MMA8451(int i8reg,int i8data);
+int8 readRegister8_MMA8451(int i8reg);
+int1 begin_MMA8451();
+void read_MMA8451();
+int8 getOrientation_MMA8451();
+void setRange_MMA8451(mma8451_range_t range);
+mma8451_range_t getRange_MMA8451();
+void setDataRate_MMA8451(mma8451_dataRate_t dataRate);
+mma8451_dataRate_t getDataRate_MMA8451();
+
+signed long conv_a2_2_d(long num);
+
+/**************************************************************************/
+/*
+    @brief  Writes 8-bits to the specified destination register
+*/
+/**************************************************************************/
+                        
+void writeRegister8_MMA8451(int i8reg,int i8data)
+{
+    i2c_start();   
+    if(i2c_write(I2C_address_w)!=1){                                                 // Device address to write
+        i2c_write(i8reg);                                                         // byte of command                                                       // byte of command
+        i2c_write(i8data);          
+        i2c_stop();
+        bErrorI2C=0;
+    }else{
+        bErrorI2C=1;
+    }
+}         
+      
+/**************************************************************************/
+/*
+    @brief  Reads 8-bits from the specified register
+*/
+/**************************************************************************/
+int8 readRegister8_MMA8451(int i8reg)
+{                   
+    int8  data_acc=0;
+    i2c_start( );
+    if(i2c_write(I2C_address_w)==0){                                                      // Device address to write
+        i2c_write(i8reg);                                                               // byte of command
+        i2c_start( );
+        i2c_write(I2C_address_r);                                                      // byte of command
+        data_acc= i2c_read(nack);
+        i2c_stop( );
+        bErrorI2C=0;
+    }else{
+        bErrorI2C=1;
+    }
+
+   return(data_acc);
+}   
+
+/**************************************************************************/
+/*
+    @brief  Setups the HW (reads coefficients values, etc.)
+*/
+/**************************************************************************/
+//#define MOTION_MODE
+#define TRANSIENT_MODE
+int1 begin_MMA8451(){
+      i2c_init(1);
+    int8 deviceid=readRegister8_MMA8451(MMA8451_REG_WHOAMI);
+
+    if (deviceid != 0x1A){                                                      // 0x1A es su nombre y apellidos                                                     
+        return (false);                                                            // No MMA8451 detected ... return false
+    }
+
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG2, 0x40);                           // Reset
+    while (readRegister8_MMA8451(MMA8451_REG_CTRL_REG2) & 0x40);                   // Comprobamos cuando el bit de reset es 0 para seguir.
+
+#ifdef MOTION_MODE
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG1, 0x04);                        // Set - ASLP_RATE=50 (0b00) - DR=800 (0b000) - LNOISE=Reduced (1) - F_READ=Normal (0) - Set to STANDBY (0)
+
+    writeRegister8_MMA8451(MMA8451_REG_XYZ_DATA_CFG, 0x02);                       // enable 8G range FS1=1 FS0=0; disable High-pass
+
+    writeRegister8_MMA8451(MMA8451_FF_MT_CFG,0xF8);                               // ELE = 1, OAE = 1, ZEFE=1, YEFE=1, XEFE=1
+
+    writeRegister8_MMA8451(MMA8451_FF_MT_THS,0xC0);                               // DBCNTM=1 ; THS=48*0.063g=3g
+
+    writeRegister8_MMA8451(MMA8451_FF_MT_COUNT,0x05);                             // count=16*1.25=20ms Tiempo de overaceleration
+
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG2, 0x12);                           // High res MODS1=1 MODS0=0
+
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG4, 0x04);                           // HABILITAMOS INTERRUPCION DE DATo Motion
+
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG5, 0x04);                           // Direccionamos interrupcion de dato listo al pin INT1
+#endif
+
+#ifdef TRANSIENT_MODE
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG1, 0x04);                        // Set - ASLP_RATE=50 (0b00) - DR=800 (0b000) - LNOISE=Reduced (1) - F_READ=Normal (0) - Set to STANDBY (0)
+
+    writeRegister8_MMA8451(MMA8451_REG_XYZ_DATA_CFG, 0x12);                     // enable 8G range FS1=1 FS0=0; enable High-pass
+    
+    writeRegister8_MMA8451(MMA8451_TRANSIENT_CFG,0x1e);                               // ELE=1, HPF_BYP=0, ZtEFE=1, YtEFE=1, XtEFE=1
+
+    writeRegister8_MMA8451(MMA8451_TRANSIENT_THS,0x30);                               // DBCNTM=1 ; THS=(0x30)48*0.063g=3g
+
+    writeRegister8_MMA8451(MMA8451_TRANSIENT_COUNT,0x05);                             // count=5*1.25=6.25ms Tiempo de overaceleration
+
+    writeRegister8_MMA8451(MMA8451_HP_FILTER_CUTOFF,0x01);                          // HPF 8 Hz
+    
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG2, 0x12);                           // High res MODS1=1 MODS0=0
+
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG4, 0x20);                           // Habilitamos interrupcion TRANSIENT
+
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG5, 0x20);                           // Direccionamos interrupcion de dato listo al pin INT1
+    
+#endif
+
+    writeRegister8_MMA8451(MMA8451_REG_CTRL_REG1, readRegister8_MMA8451(MMA8451_REG_CTRL_REG1) | 0x01);                    // Active mode
+
+    return (true);
+}
+/**************************************************************************/
+/*
+    @brief  Lectura de los datos obtenidos en los tres ejes
+*/
+/**************************************************************************/
+
+void read_MMA8451() 
+{
+   // read x y z at once
+   i2c_start( );
+   i2c_write(I2C_address_w);                                                  // Direccion del dispositivo en modo escritura
+   i2c_write(MMA8451_REG_OUT_X_MSB);                                          // Direccionamos registro OUT_X_MSB
+   i2c_start( );
+   i2c_write(I2C_address_r);                                                  // Direccion del dispositivo en modo lectura
+   
+   x= i2c_read(ack);                                                          // Leemos el MSB de X
+   x <<= 8;                                                                   // Desplazamos 8 bits a la izq
+   x |= i2c_read(ack);                                                        // Leemos el LSB y realizamos la or con el anterior resultado
+   x >>= 2;                                                                   // Desplazamos dos bits a la derecha para compensar el offset
+   
+   sx= conv_a2_2_d(x);
+   
+   y= i2c_read(ack);                                                          // Igual para el eje Y
+   y <<= 8;
+   y |= i2c_read(ack);
+   y >>= 2;
+   sy= conv_a2_2_d(y);
+   z= i2c_read(ack);                                                          // Igual para el eje Z
+   z <<= 8; 
+   z |= i2c_read(nack);
+   z >>= 2;
+   sz= conv_a2_2_d(z);
+   i2c_stop( );
+   
+   int8 range = getRange_MMA8451();
+   int16 divider = 1;
+   
+   if (range == MMA8451_RANGE_8_G)
+      divider = 1024;
+   if (range == MMA8451_RANGE_4_G)
+      divider = 2048;
+   if (range == MMA8451_RANGE_2_G)
+      divider = 4096;
+   
+   x_g = (float)sx / divider;
+   y_g = (float)sy / divider;
+   z_g = (float)sz / divider;
+   
+}
+
+/**************************************************************************/
+/*
+    @brief  Read the orientation:
+    Portrait/Landscape + Up/Down/Left/Right + Front/Back
+*/
+/**************************************************************************/
+int8 getOrientation_MMA8451() 
+{
+  return (readRegister8_MMA8451(MMA8451_REG_PL_STATUS) & 0x07);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Sets the g range for the accelerometer
+*/
+/**************************************************************************/
+void setRange_MMA8451(mma8451_range_t range)
+{
+  int8 reg1 = readRegister8_MMA8451(MMA8451_REG_CTRL_REG1);                   // Almacenamos valores del registro
+  writeRegister8_MMA8451(MMA8451_REG_CTRL_REG1, 0x00);                        // colocamos en standby para poder cambiar el registro
+  writeRegister8_MMA8451(MMA8451_REG_XYZ_DATA_CFG, range & 0x3);              // Almacenamos el rango
+  writeRegister8_MMA8451(MMA8451_REG_CTRL_REG1, reg1 | 0x01);                 // activamos otra vez con los valores anteriores
+  return;
+}
+
+/**************************************************************************/
+/*!
+    @brief  Gets the g range for the accelerometer
+*/
+/**************************************************************************/
+mma8451_range_t getRange_MMA8451()
+{
+  /* Read the data format register to preserve bits */
+  return (mma8451_range_t)(readRegister8_MMA8451(MMA8451_REG_XYZ_DATA_CFG) & 0x03);
+}
+
+/**************************************************************************/
+/*
+    @brief  Sets the data rate for the MMA8451 (controls power consumption)
+*/
+/**************************************************************************/
+void setDataRate_MMA8451(mma8451_dataRate_t dataRate)
+{
+  int8 ctl1 = readRegister8_MMA8451(MMA8451_REG_CTRL_REG1);                           // Almacenamos valores del registro
+  writeRegister8_MMA8451(MMA8451_REG_CTRL_REG1, 0x00);                                // colocamos en standby para poder cambiar el registro
+  ctl1 &= ~(MMA8451_DATARATE_MASK << 3);                                                // mask off bits
+  ctl1 |= (dataRate << 3);
+  writeRegister8_MMA8451(MMA8451_REG_CTRL_REG1, ctl1 | 0x01);                         // activate
+}
+
+/**************************************************************************/
+/*
+    @brief  Gets the data rate for the MMA8451 (controls power consumption)
+*/
+/**************************************************************************/
+mma8451_dataRate_t getDataRate_MMA8451()
+{
+  return (mma8451_dataRate_t)((readRegister8_MMA8451(MMA8451_REG_CTRL_REG1) >> 3) & MMA8451_DATARATE_MASK);
+}
+
+
+signed long conv_a2_2_d(long num)
+{
+   signed long pp4=0;
+   long pp3=num>>13;
+
+   if (pp3)
+   {
+      num=num|0xC000;
+      pp4=-(~(num)+1);
+   }
+   else
+   {
+      pp4=num;
+   }
+   return(pp4);
+
+}

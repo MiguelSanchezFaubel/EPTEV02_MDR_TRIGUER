@@ -1,0 +1,544 @@
+/*
+*   File: EPTE_V2_1_SAURON.h
+*   
+*   Descripción: Header file del programa principal de Sauron
+*   
+*   Proyecto: EPTE V2.1
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+#include <18F67K22.h>
+
+#device ADC=12                                                              // Set ADC 12 bits
+#device PASS_STRINGS=IN_RAM                                                 // Permite pasar strings en las funciones, si no, hay que crear variales
+//#device HIGH_INTS=TRUE 
+
+//#FUSES NOWDT                                                                // No Watch Dog Timer
+#FUSES WDT128                                                               // Watch Dog Timer uses 1:128 Postscale
+//#FUSES WDT_NOSLEEP              //Watch Dog Timer
+#FUSES WDT1024                  //Watch Dog Timer uses 1:1024 Postscale (Cada )
+#FUSES NOXINST                                                              // Extended set extension and Indexed Addressing mode disabled (Legacy mode)
+#FUSES NOBROWNOUT                                                           // No brownout reset
+//#FUSES CCP2E7                                                               // CCP2 input/output multiplexed with RE7
+#fuses INTRC_IO
+
+#use delay(clock=64000000)
+
+#byte SSP2CON1=0xF67                                                        // Definiciones del registro SSP2
+#byte SSP2STAT=0xF68                                                        // Definiciones del registro SSP2
+#byte SSP2BUF=0xF6A                                                         // Definiciones del registro SSP2                   
+#bit  SSPEN=SSP2CON1.5                                                      // Habilita/Deshabilita SSP2
+#bit  WCOL=SSP2CON1.7                                                       // Write Collision Detect bit
+
+#byte MEMCON=0xF26
+
+#bit  SPI_2_ON = 0xF67.5                                                    // Bit para encendido y apagado de SPI2
+#bit  I2C_1_ON=0xFC6.5                                                      // Bit para encendido y apagado de I2C1
+#bit  DEBUG_UART_ON=0xFAB.7                                                 // Bit para encendido y apagado de DEBUG_UART UART1
+#bit  COM_PIC_UART_ON=0xF22.7                                               // Bit para encendido y apagado de COM_PIC_UART UART2
+
+//#byte    RCSTA1=0xFAB                                                       // Reg. de configuración de UART 1                   
+//#bit     SPEN=RCSTA1.7                                                      // Bit de habilitación de UART 1
+
+#byte    ECCP2DEL=0xF51                                                     // CONFIGURACION DE BANDA MUERTA DEL PWM2
+
+#byte ANCON0=0xF25                                                          // Definicion de las entradas analogicas
+#byte ANCON1=0xF24                                                          // Definicion de las entradas analogicas
+#byte ANCON2=0xF23                                                          // Definicion de las entradas analogicas
+
+#byte CVRCON=0xFB5                                                          // Configuracion del nivel de referencia del comparador
+#byte CM1CON=0xF54                                                          // Definicion del registro COMP 1
+
+#byte TRISA=0xF92
+#byte TRISB=0xF93
+#byte TRISC=0xF94
+#byte TRISD=0xF95
+#byte TRISE=0xF96
+#byte TRISF=0xF97
+#byte TRISG=0xF98
+
+// Definición Timers
+// Timers 3/5/7
+#byte TMR3H   = 0xFB3
+#byte TMR3L   = 0xFB2
+#byte T3GCON   = 0xFB0
+#byte T3CON   = 0xFB1
+#byte TMR5H   = 0xF7D
+#byte TMR5L   = 0xF7C
+#byte T5GCON   = 0xF7A
+#byte T5CON   = 0xF7B
+#byte TMR7H   = 0xF3F
+#byte TMR7L   = 0xF3E
+#byte T7GCON   = 0xF3C
+#byte T7CON   = 0xF3D
+#byte OSCCON2   = 0xF64
+#byte PMD1   = 0xF18
+#byte PMD2   = 0xF17
+
+#byte T0CON=0xFD5
+
+// Timers 4/6/8/10/12
+#byte TMR4     = 0xF6D
+#byte T4CON    = 0xF6B
+#byte PR4      = 0xF6C
+#byte TMR6     = 0xF3B
+#byte T6CON    = 0xF39
+#byte PR6      = 0xF3A
+#byte TMR8     = 0xF38
+#byte T8CON    = 0xF36
+#byte PR8      = 0xF37
+#byte TMR10    = 0xF35
+#byte T10CON   = 0xF33
+#byte PR10     = 0xF34
+#byte TMR12    = 0xF32
+#byte T12CON   = 0xF30
+#byte PR12     = 0xF31
+#byte PMD3     = 0xF16
+
+#byte T2CON    = 0xFCA
+#byte T1CON    = 0xFCD
+
+#bit TIMER0_ON = T0CON.7
+#bit TIMER1_ON = T1CON.0
+#bit TIMER2_ON = T2CON.2
+#bit TIMER3_ON = T3CON.0
+#bit TIMER4_ON = T4CON.2
+#bit TIMER5_ON = T5CON.0
+#bit TIMER6_ON = T6CON.2
+#bit TIMER7_ON = T7CON.0
+#bit TIMER8_ON = T8CON.2
+#bit TIMER10_ON= T10CON.2
+#bit TIMER12_ON= T12CON.2
+
+// Definicion de bits de control de interrupciones
+#byte INTCON=0xFF2
+#bit enable_High=INTCON.7                                                      // Enables all high-priority interrupts
+#bit enable_low=INTCON.6                                                       // Enables all low-priority peripheral interrupts
+#bit enable_TMR0=INTCON.5                                                      // Enables the TMR0 overflow interrupt
+#bit enable_INT0=INTCON.4                                                      // Enables the INT0 external interrupt
+#bit enable_RB=INTCON.3                                                        // Enables the RB port change interrupt
+
+#byte INTCON2=0xFF1
+#bit TMR0_Prio=INTCON2.2                                                        // TMR0 Overflow Interrupt Priority bit 
+#bit INT3_Prio=INTCON2.1                                                        // INT3 External Interrupt Priority bit
+#bit RB_Prio=INTCON2.0                                                          // RB Port Change Interrupt Priority bit
+
+#byte INTCON3=0xFF0
+#bit INT2_Prio=INTCON3.7                                                        // INT2 External Interrupt Priority bit
+#bit INT1_Prio=INTCON3.6                                                        // INT1 External Interrupt Priority bit
+#bit enable_INT3=INTCON3.5                                                      // Enables the INT3 external interrupt
+#bit enable_INT2=INTCON3.4                                                      // Enables the INT2 external interrupt
+#bit enable_INT1=INTCON3.3                                                      // Enables the INT1 external interrupt
+
+#byte PIE1=0xF9D
+#bit enable_TMR2=PIE1.1                                                      // Enables the TMR2 to PR2 match interrupt
+#bit enable_TMR1=PIE1.1                                                      // Enables the TMR1 overflow interrupt
+
+#byte PIE2=0xFA0
+#bit enable_TMR3=PIE2.1                                                      // Enables the TMR3 overflow interrupt
+
+#byte PIE5=0xFB9
+#bit enable_TMR12=PIE5.6                                                     // Enables the TMR12 to PR12 match interrupt
+#bit enable_TMR10=PIE5.5                                                     // Enables the TMR10 to PR10 match interrupt
+#bit enable_TMR8=PIE5.4                                                      // Enables the TMR8 to PR8 match interrupt
+#bit enable_TMR7=PIE5.3                                                      // Enables the TMR7 overflow interrupt
+#bit enable_TMR6=PIE5.2                                                      // Enables the TMR6 to PR6 match interrupt
+#bit enable_TMR5=PIE5.1                                                      // Enables the TMR5 overflow interrupt
+#bit enable_TMR4=PIE5.0                                                      // Enables the TMR4 to PR4 match interrupt
+
+#byte IPR1=0xF9F
+#bit TMR2_Prio=IPR1.1                                                        // TMR2 to PR2 Match Interrupt Priority bit 
+#bit TMR1_Prio=IPR1.0                                                        // TMR1 Overflow Interrupt Priority bit
+
+#byte IPR2=0xFA2
+#bit TMR3_Prio=IPR2.1                                                        // TMR3 Overflow Interrupt Priority bit 
+
+#byte IPR5=0xFD2
+#bit TMR12_Prio=IPR5.6                                                       // TMR12 to PR12 Match Interrupt Priority bit
+#bit TMR10_Prio=IPR5.5                                                       // TMR10 to PR10 Match Interrupt Priority bit
+#bit TMR8_Prio=IPR5.4                                                        // TMR8 to PR8 Match Interrupt Priority bit
+#bit TMR7_Prio=IPR5.3                                                        // TMR7 Overflow Interrupt Priority bit
+#bit TMR6_Prio=IPR5.2                                                        // TMR6 to PR6 Match Interrupt Priority bit
+#bit TMR5_Prio=IPR5.1                                                        // TMR5 Overflow Interrupt Priority bit
+#bit TMR4_Prio=IPR5.0                                                        // TMR4 to PR4 Match Interrupt Priority bit
+
+#byte PIR2   = 0xFA1
+#bit TMR3IF = PIR2.1
+#bit SSP2IF=PIR2.5
+
+#byte RCON=0xFD0
+#bit enable_Prio=RCON.7                                                      // Interrupt Priority Enable bit
+#bit POR=RCON.1                                                              // Power-On Reset bit
+                                                                              //    0 -> Power-On Reset has ocurred, must be set in software after POR occurs)
+                                                                              //    1 -> POR has not ocurred
+#byte PORTB=0xF81
+#bit  clear_RB=0xFF2.0
+
+// Definicion PWM
+#byte CCP1CON=0xFBB
+#byte CCP2CON=0xF4E
+#byte CCP3CON=0xF49
+#byte CCP4CON=0xF77
+#byte CCP5CON=0xF74
+#byte CCP6CON=0xF71
+#byte CCP7CON=0xF6E
+#byte CCP8CON=0xF46
+#byte CCP9CON=0xF43
+
+#bit AD_ON=0xFC2.0
+
+
+// Definiciones de comunicaciones
+#use RS232(UART1,baud=9600,parity=N,errors,stream=DEBUG_UART)         // UART para depuración - bootloader
+#use RS232(UART2,baud=57600,parity=N,errors,stream=COM_PIC_UART)      // UART para comunicación entre Orco-Sauron
+#use SPI(MASTER, SPI2, MODE=3, BITS=8,NOINIT)                                                       // Comunicación con periféricos SPI  
+#use I2C(Master,slow,I2C1,NOINIT)                                             // Comunicación con perifericos I2C
+
+// Definición entradas/salidas puertos
+#use FIXED_IO(A_outputs=PIN_A7,PIN_A6,PIN_A5,PIN_A4,PIN_A3,PIN_A1)                          // Puerto A: Entradas -> 0,2                    Salidas -> 1,3,4,5,6,7
+#use FIXED_IO(B_outputs=PIN_B7)                                                             // Puerto B: Entradas -> 0,1,2,3,4,5,6          Salidas -> 7                                                             
+#use FAST_IO(C)                                                                             // Puerto C: FAST_IO  -> En main se configura TRISC
+#use FIXED_IO(D_outputs=PIN_D7,PIN_D6,PIN_D4,PIN_D3,PIN_D2,PIN_D1,PIN_D0)                   // Puerto D: Entradas -> 5                      Salidas -> 0,1,2,3,4,6,7    
+#use FIXED_IO(E_outputs=PIN_E2,PIN_E3,PIN_E4,PIN_E5,PIN_E6)                                 // Puerto E: Entradas -> 0,1,7                  Salidas -> 2,3,4,5,6
+#use FIXED_IO(F_outputs= PIN_F7,PIN_F1)                                                     // Puerto F: Entradas -> 2,3,4,5,6              Salidas -> 1,7
+#use FIXED_IO(G_outputs=PIN_G3,PIN_G1,PIN_G0 )                                              // Puerto G: Entradas -> 2,4                    Salidas -> 0,1,3
+
+// Definiciones Puerto A
+#define POK_12V         PIN_A0                      // Power OK 12 V                                
+#define EN_30           PIN_A1                      // Control del DC/DC de 30 V                          
+#define POK_30V         PIN_A2                      // Power OK 30 V
+#define PIN_TEST        PIN_A3                      // Pin A3 (No utilizado)
+#define EN_5_SW         PIN_A4                      // Control del DC/DC de 5 V una vez haya sido inicializado por EN_5
+#define EN_12           PIN_A5                      // Control del DC/DC de 12 V
+#define RA6             PIN_A6                      // Pin A6 (No utilizado)
+#define RA7             PIN_A7                      // Pin A7 (No utilizado)
+                    
+// Definiciones Puerto B
+#define ON_OFF          PIN_B0                      // Pulsador de encendido/apagado
+#define COD_A           PIN_B1                      // Pulsos A del codificador rotativo
+#define COD_B           PIN_B2                      // Pulsos B del codificador rotativo
+#define INT_TECLADO     PIN_B3                      // Interrupción en caso de apretar alguno de los pulsadores del equipo
+#define INT_ACEL        PIN_B4                      // Interrupción del acelerómetro
+#define V_CHG           PIN_B5                      // Indicador de que se encuentra el cargador conectado
+#define PGM_C_1         PIN_B6                      // Señales del programador - (Señal compartida con ORCO_DTR)
+#define CTS             PIN_B6                      // Control de flujo por HW entre Sauron-Orco (CTS) - (Señal compartida con PGM_C_1)
+#define PGM_D_1         PIN_B7                      // Señales del programador
+    
+// Definiciones Puerto C
+#define LED_CHG_R       PIN_C0                      // Control del LED indicativo de carga (Color rojo)
+#define EN_5            PIN_C1                      // Control del DC/DC de 5 V
+#define W_DOG           PIN_C2                      // Control del perro guardian hardware
+#define I2C_SCL         PIN_C3                      // Señal SCL del I2C
+#define I2C_SDA         PIN_C4                      // Señal SDA del I2C
+#define LED_CHG_V       PIN_C5                      // Control del LED indicativo de carga (Color verde)
+#define TX_AUX_1        PIN_C6                      // UART auxiliar (TX)
+#define RX_AUX_1        PIN_C7                      // UART auxiliar (RX)
+    
+// Definiciones Puerto D
+#define LCD_A0          PIN_D0                      // Control de comando/dato del GLCD
+#define LCD_RST         PIN_D1                      // Control del reset del SPI2
+#define LCD_XCS         PIN_D2                      // Chip Select del GLCD
+#define HOLD_MEM        PIN_D3                      // Control para pausar la comunicación con la memoria EEPROM (Nivel bajo!)
+#define SPI2_SDO        PIN_D4                      // Señales SDO del SPI2
+#define SPI2_SDI        PIN_D5                      // Señales SDI del SPI2
+#define SPI2_SCLK       PIN_D6                      // Señales SLCK del SPI2
+#define CS_MEM          PIN_D7                      // Chip-Select de la memoria
+
+// Definiciones Puerto E
+#define SW_EXT_2        PIN_E0                      // Pulsador externo 2
+#define SW_EXT_1        PIN_E1                      // Pulsador externo 1
+#define C_RL_PGM_S      PIN_E2                      // Control del relé de programación - Set
+#define C_RL_PGM_R      PIN_E3                      // Control del relé de programación - Reset
+#define PWM_LUS         PIN_E4                      // Control de iluminación del GLCD    
+#define PWM_PITO        PIN_E5                      // Control de volumen del pito
+#define EN_ISO          PIN_E6                      // Control del DC/DC isolado de lplaca de conectores
+#define CHG_STAT        PIN_E7                      // Indica el estado de carga de la batería
+
+// Definiciones Puerto F
+#define LED_ALPP        PIN_F1                      // LED de alegre parpadeo
+#define MENU_3          PIN_F2                      // Pulsadores selectores del menu
+#define MENU_4          PIN_F3                      // Pulsadores selectores del menu
+#define ST_STOP         PIN_F4                      // Pulsador Start/Stop tratamiento
+#define MENU_1          PIN_F5                      // Pulsadores selectores del menu
+#define MENU_2          PIN_F6                      // Pulsadores selectores del menu
+#define SEL_PGM         PIN_F7                      // Control para seleccioar que PIC se ha de programar via bootloader
+
+// Definiciones Puerto G
+#define RST_ORCO        PIN_G0                      // Control del reset al PIC Orco
+#define TX_ORCO_SAURON  PIN_G1                      // Transmisión de datos al PIC Orco
+#define RX_ORCO_SAURON  PIN_G2                      // Recepción de datos del PIC Orco
+#define RTS             PIN_G3                      // Control de flujo por HW entre Sauron-Orco (RTS)
+#define SW_EXT_3        PIN_G4                      // Pulsador externo 3
+
+// Definiciones Expansor
+#define mask_PCA9555D      0x78C7
+
+#define  led_CHC    0               // Definición del led del CHC
+#define  led_CHB    1               // Definición del led del CHB                    
+#define  led_CHA    2               // Definición del led del CHA                     
+#define  led_GALV   3               // Definición del led de galvánica                     
+#define  TOTAL_LEDS 4               // Número total de LEDs
+
+#define  rele_GALV      0           // Definición del relé de galvánica
+#define  rele_CHA       1           // Definición del relé del CHA                         
+#define  rele_CHB       2           // Definición del relé del CHB                         
+#define  rele_CHC       3           // Definición del relé del CHC         
+#define  rele_PGM       4           // Definición del relé de programación
+#define  TOTAL_RELES    5           // Número total de relés
+
+#define PULSO_POS   0               // Define el pulso positivo
+#define PULSO_NEG   1               // Define el pulso negativo
+
+
+#define MASK_RELE_RESET     0x0F00
+#define MASK_RELE_SET       0xF000
+
+#define rojo    0                   // Definimos rojo como 0
+#define verde   1                   // Definimos verde como 1
+
+// Definición para el codificador rotativo
+#define MASK         0b0000111111000000             // Define la máscara utilizada para eliminar rebotes    
+
+// Definición canales
+#define CHA_C       0 
+#define CHB_C       1
+#define CHC_C       2
+#define POINTER_C   3     
+#define GALVANICA_C 4  
+
+#define CHA_ACT       1 
+#define CHB_ACT       2
+#define CHC_ACT       4
+#define POINTER_ACT   8     
+#define GALVANICA_ACT 16  
+
+// Autoapagado
+#define TIEMPO_DESCUENTO    1       // Indica que se encuentra en tiempo de reposo ( >= 9 minutos)
+#define INACTIVO            2       // Indica que se encuentra en modo inactivo ( == 10 minutos)
+
+// Pulsos
+#define BANDA_GUARDA        15      // Banda de guarda en us
+
+// Watchdog Hardware
+#define WDG_T 100                   // TODO - REVISAR
+
+#define DELAY_PITIDO_TECLADO 50
+#define DELAY_TECLADO       200-DELAY_PITIDO_TECLADO // Tiempo en ms
+
+// Lineas menus
+#define COLUMNA_1   6
+#define COLUMNA_2   40
+
+#define SALTO_FILA  14
+#define FILA_INIT   30
+
+#define FILA_1      FILA_INIT+SALTO_FILA
+#define FILA_2      FILA_1+SALTO_FILA
+#define FILA_3      FILA_2+SALTO_FILA
+#define FILA_4      FILA_3+SALTO_FILA
+#define FILA_5      FILA_4+SALTO_FILA
+#define FILA_6      FILA_5+SALTO_FILA
+#define FILA_7      FILA_6+SALTO_FILA
+
+#define FILA_RELISTO    115
+
+#define FILA_CORRIENTE     118
+
+#define COLUMNA_IA  3
+#define COLUMNA_IB  28
+#define COLUMNA_IC  53
+
+// Idiomas
+#define NUM_IDIOMAS 2
+#define SPANISH 0
+#define ENGLISH 1
+
+// Pitidos
+#define PITIDO_CORTO 500
+#define PITIDO_LARGO 1000
+
+/********************************** Definiciones necesarias para el GLCD ****************************************/
+const char  *sCo_ELECTRICA[] ="CORRIENTE ELECTRICA";
+const char  *sPOINTER[]="POINTER";
+const char  *sFRECUENCIA[]="FRECUENCIA";
+const char  *sPOLARIDAD[]="POLARIDAD";
+const char  *sMONOPOLAR[]="MONOPOLAR ";
+const char  *sBIPOLAR[]="BIPOLAR   ";
+const char  *sMICRO_CORRIENTES[]="MICRO-CORRIENTES";
+const char  *sSIMETRIA[]="SIMETRIA";
+const char  *sTIEMPO_RAMPA[]="TIEMPO DE RAMPA";
+const char  *sCa_ELECTRICA[]="CARGA ELECTRICA";
+const char  *sASIMETRICA[]="ASIMETRICA";
+const char  *sSIMETRICA[]= "SIMETRICA ";
+const char  *sELECTRO_ESTIMULACION[]="ELECTRO-ESTIMULACION";
+const char  *sSMP[]="SIST MULTIPULSOS";
+const char  *sGALV[]="GALVANICA";
+const char  *sGALVANICA_MICRO[]="GALVANICA + MICRO";
+const char  *sCanal_A[]="Canal A         ";
+const char  *sCanal_B[]="Canal B         ";
+const char  *sCanal_C[]="Canal C         ";
+const char  *sCanal_POINTER[]="Pointer         ";
+const char  *sSimetriaCanalesNO[]="NO ";
+const char  *sSimetriaCanalesAB[]="AB ";
+const char  *sSimetriaCanalesABC[]="ABC";
+
+/********************************** Definición de versión HW/FW ****************************************/
+#define HW_VERSION 11
+
+char sHW_Ver[10]="BOARD 1.1";                              // Version del hardware
+char sFW_Ver[10]="FIRMW 3.0";                              // Version del firmware
+
+/********************************** Definición de variables globales ***********************************/
+// Variables de tipo booleano
+int1 bSleepMode=0;                  // Indica que se encuentra en modo sleep
+int1 bSimetriaElec[4]={1,1,1,1};      // Indica si la señal es asimétrica (0) o simétrica (1)
+int1 bPolaridadElec[4]={1,1,1,1};     // Indica si la señal es monopolar (0) o bipolar (1)
+int1 f_segundo=0;                   // Indica que ha pasado un segundo para contabilizar en el tratamiento
+int1 pulsacion=0;                   // Indica que se ha pulsado y detectado correctamente una tecla
+int1 bGirDerecha=0;                 // Indica que se ha girado el codificador hacia la derecha
+int1 bGirIzquierda=0;               // Indica que se ha girado el codificador hacia la izquierda
+int1 bcargador=0;                   // Indica si hay un cargador conectado
+int1 baceleron=0;                   // Indica si ha ocurrido una caida del dispositivo
+int1 bascendente=1;                 // Indica si la pulsación es ascenndente o descendente
+int1 bTerapia=0;                    // 0--> Terapia galvanica   1--> Terapia microcorrientes
+int1 bPolaridadMicro=0;             // Polaridad en microcorrientes:  0--> monopolar,  1--> Bipolar
+int1 bborrado=0;                    // Indica que hay que limpiar la pantalla
+int1 switch_led=1;                  // Variable utilizada para cambiar el estado de un LED en el modo test
+int1 bDebug=0;                      // Variable de depuración booleana              
+int1 bErrorElectrodo[4]={0};    // Indica que hay error de electrodo
+int1 bCambiado=0;                   // Indica si se ha cambiado el valor de corriente por el usuario
+int1 bMAX[4][2];                    // Indica si se ha llegado al máximo duty [CANAL,PW+/PW-]
+int1 bCC[4];                        // Indidca si hay cortocircuito en la carga [CANAL]        
+int1 bCorrientePulsos=0;            // 0 - Modifica corriente .. 1 - Modifica pulsos
+int1 bEmpiezaContadorTiempo=0;      // Indica que empieza el contador de tiempo
+int1 bDescuentaCargaRampa=0;        // Indica cuando hay que descontar el valor de carga de rampa
+int1 bSeleccionGalvanica=0;         // Variable que indica si se trata de un tratamiento en galvánica (0) o galvánica+microcorrientes(1)
+int1 bMicrocorrientesEncendido=0;   // Indica que se encuenntra realizando el tratamiento de microcorrientes
+int1 bAlMenuPrincipal=0;            // Indica que ha de ir almenu principal cuando se aprieta el boton de on/off una sola vez
+int1 bPointerSeleccionado=0;        // Indica que se ha seleccionado el pointer
+int1 bModoRulancha=0;               // Indica que se está usando la rulancha para el cambio de valor
+int1 bPrimeraMedida=0;
+int1 bBateriaBaja=0;
+int1 bParpadeoBateria=0;
+
+// Variables de tipo unsiged int8
+int8 i8Nrep[4]={1,1,1,1};                      // Numero de repeticiones
+int8 i8TrElec[4]={0};                    // Tiempo de rampa en electroestimulación
+int8 cuenta=0;                      // Indica el número de veces que se ha pasado por el bucle del sistema anti-rebotes
+int8 itecla=0;                      // Indica que tecla del teclado se ha presionado
+int8 iMenuActual=0;                 // Indica en que menú nos encontramos actualmente
+int8 iMenuAnterior=0;               // Indica en que menú nos encontrábamos anteriormente
+int8 iMenuReposo=0;                 // Indica en que menú estaba cuando ha entrado en modo reposo
+int8 aux=0;                         // Variable auxiliar usada mayormente para leer el puerto B para limpiar problemas
+int8 i8Bat=0;                       // Nivel de batería en porcentaje
+int8 i8punt_bat=0;                  // Indicador de número de barras de batería para la representación en la pantalla
+int8 i8streamGray=0xA0;             // ff--> Black  a0--> Gray9
+int8 i8Trampagalv=0;                // Ajuste del tiempo de rampa en galvánica
+int8 i8Trampamicro=0;               // Ajuste del tiempo de rampa en microcorrientes          
+int8 i8Tmin=0;                      // Variable de representacon en pantalla durante tratamiento (minutos)
+int8 i8Tseg=0;                      // Variable de representacon en pantalla durante tratamiento (segundos)
+int8 i8T1min=0;                     // Variable de representacon en pantalla durante reposo (minutos)
+int8 i8T1seg=0;                     // Variable de representacon en pantalla durante reposo (segundos)    
+int8 i8nivel_ilum=15;               // Nivel de iluminacion [10..100]
+int8 i8NivelContraste=0;           // Nivel de contrsate [0...100]
+int8 var_puls=0;                    // Indica que pulsador a sido pulsado
+int8 i8ChannelSel=0;                // Indica que canal ha sido seleccionado
+int8 result;                        // Variable donde se guarda el cammbio de pantalla
+int8 i8NrepRaw[3]={0};                   // Variable usada para el descuento del número de repeticiones
+int8 i8CanalesElec=0;               // Selecciona los diferentes modos de canales (0-A,1-B,2-C,3-AB,4-BC,5-AC,6-ABC)
+int8 i8ConfigCanal=0;               // Variable que indica el canal que se va a configurar
+int8 i8SimetriaCanales=0;           // Indica si existe simetría entre canales (0-No,1-AB,2-BC,3-AC,4-ABC)
+int8 ai8EscalaGrises[2]={0xFF,0xA0};// Definen la escala de grises
+int8 i8PulsosSMP=1;                 // Número de pulsos del sistema SMP
+int8 i8MaxPulsosSMP;                // Máximo número de pulsos que puede realizar por periodo en SMP
+int8 aux_m=0;                       // Variable auxiliar para cálculos/menú
+int8 i8CanalesActivados=0;          // Variable que nos indica mediante máscaras que canales se encuentra dando tratamiento en este momento
+int8 i8CanalesConfigurados=0;       // Nos indica que canales han sido configurados para tratamiento, para saber si tiene que entrar en menú de activación de tratamiento (140) o configuración (40)                 
+int8 i8ReposoActivados=0;
+int8 i8RawAux=0;
+int8 i8SelIdioma=0;
+
+// Variables de tipo signed int8
+
+
+// Variables de tipo unsigned int16
+int16 i16FrecElec[4]={100,100,100,10};     // Frecuencia de los canales A,B y C respectivamente en electroestimulación
+int16 i16PW_plusElec[4]={200,200,200,200};  // PW del pulso positivo o de ambos en el caso de simetría 
+int16 i16PW_minusElec[4]={200,200,200,200}; // PW del pulso negativo
+int16 i16TacElec[4]={200,200,200,200};                    // Tiempo de electroestimulación activo
+int16 i16TdElec[4]={0,0,0,0};                      // Tiempo de electroestimulación reposo
+int16 button_history=0;                 // Comprueba el estado del codificador durante las cuentas del Timer 12
+int16 i16nivel_son=50;                   // Ajusta el nivel sonoro del equipo - TODO: Guardar valor en EEPROM y leerlo de ahi
+int16 i16Cmicro=0;                     // Variable para ajustar la carga eléctrica en microcorrientes  
+int16 i16Imicro=10;                     // Variable para ajustar la corriente eléctrica en microcorrientes
+int16 i16Tmicro=30;                    // Variable para ajustar el tiempo en microcorrientes                                        
+int16 i16Igalv=20;                      // Variable para ajustar la corriente eléctrica en galvánica 
+int16 i16Tgalv=5;                      // Variable para ajustar el tiempo en galvánica                                                
+int16 i16IMedGalv;                      // Indica el valor medido de corriente en galvánica
+int16 i16VMedGalv;                      // Indica el valor medido de tensión en galvánica
+int16 i16ResGalv;                       // Indica el valor medido de resistencia en galvánica
+int16 i16IMedElec[4]={0,0,0,0};                      // Indica el valor medido de corriente en electro
+int16 i16VMedElec[4]={0,0,0,0};                       // Indica el valor medido de tensión en electro
+int16 i16ResElec[4]={0,0,0,0};                       // Indica el valor medido de resistencia en electro
+int16 min=0;                            // Valor minimo del rango de variacion
+int16 max=0;                            // Valor maximo del rango de variacion
+int16 gI=50;                            // Resolución de las variaciones de corriente
+int16 gF=1;                             // Resolución de las variaciones de frecuencia
+int16 gC=100;                           // Resolución de las variaciones de carga eléctrica
+int16 i16PWmicro=500;                   // Ancho de pulso en microcorrientes
+int16 i16frecmicro=60;                   // Frecuencia en microcorrientes
+int16 maxBW=40;                         // Valor maxim que puede alcanzar el ancho de pulso dependiendo de polaridad y frecuencia
+int16 i16IElec[4]={12,12,12,12};           // Nivel de corriente canales [A,B,C]
+int16 i16TfElec12=500;                  // Tiempo de desfase entre canal 1 y 2
+int16 i16TfElec23=500;                  // Tiempo de desfase entre canal 2 y 3
+int16 i16TimeRaw[3]={10,20,30};                     // Variable usada para el descuento del tiempo de tratamiento
+int16 i16TimeRepRaw[3]={40,50,60};                  // Variable usada para el descuento del tiempo de tratamiento (reposo)
+int16 i16IRepresentacion[4]={0};    // Variable utilizada para la representación de la corriente en tratamiento (A,B,C)
+int16 i16TfElec12Min=0;                 // Tiempo de desfase entre dos canales de electroestimulación
+int16 i16TfElec23Min=0;                 // Tiempo de desfase entre dos canales de electroestimulación cuando hay tres canales activados
+int16 i16TacSMP=90;                     // Tiempo activo en el sistema multipulsos (SMP)
+int16 i16FrecSMP=10;                    // Frecuencia del SMP
+int16 i16PWSMP=100;                     // Ancho de pulso del sistema multipulsos
+int16 i16ISMP=4;                        // Corriente del sistema multipulsos
+int16 i16IMedSMP;                       // Medida de corriente en el sistema multipulsos
+int16 i16ResSMP;                        // Medida de impedancia en el sistema multipulsos
+int16 i16CRampaGalv=0;                     // Tiempo de descuento de rampa
+int16 i16TiempoApretado=0;              // Cuenta el tiempo que s emantiene el boton de encendido/apagado presionado
+int16 i16DecrementoCargaGalvanica;      // Decremento que se aplica a la variable i32CargaGalvanicaRestante
+int16 i16CRampaGalvInc=0;
+int16 i16FrecLimSup[4]={1000,1000,1000,1000};
+int16 i16FrecLimInf[4]={2,2,2,2};
+
+
+// Variables de tipo signed int16
+
+
+// Variables de tipo unsigned int22
+int32 var_tiempo=0;                     // Variable utilizada para contar los desbordamientos del Timer10 (Timer de base de tiempos)
+int32 var_tiempo2=0;
+int32 i32TDesfaseSMP=500;               // Desfase entre pulsos SMP (set a 10ms -> 10000us)
+int32 i32CargaGalvanicaRestante;        // Cuenta el nivel de carga restante del tratamiento
+int32 i32Cgalv=1000;                      // Variable para ajustar la carga eléctrica en galvánica     
+int32 i32Debug=0;
+// Variables de tipo signed int32
+
+
+// Variables de tipo float
+
+// Variables de tipo double
+
+
+// Variables de tipo string
+char mystring[30];
+char mystring1[30];
+char mystring2[30];
+char mystring3[30];
+char mystring4[10];
+char mystring5[30];
+
+// DEBUG VARS
+int16 i16DutyDebug;
+int1 bImprime[4]={0};
+

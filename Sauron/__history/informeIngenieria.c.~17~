@@ -1,0 +1,172 @@
+/*
+*   File: regErrores.c
+*   
+*   Descripción: Main file para el control de registro de errores
+*   
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+// Funciones
+#include "informeIngenieria.h"
+
+void initRegError(int1 bSeleccion){
+    for(int8 i8Registro=i8OffsetErrorParcial*bSeleccion; i8Registro<(REG_ERROR_MAX+i8OffsetErrorParcial*bSeleccion); i8Registro++){    // Recorre todas las posiciones de los errores definicdos
+        write_eeprom(i8Registro,0x00);                        // Inicializa elcontador de errores de los registros
+        delay_ms(DELAY_ESCRITURA_EEPROM);                                    // Pequeño delay de espea para ecritura
+    }
+}
+
+void initRegCont(int1 bSeleccion){
+    for(int8 i8Registro=REG_TRAT_CHA+i8OffsetContParcial*bSeleccion; i8Registro<(REG_CONT_MAX+i8OffsetContParcial*bSeleccion); i8Registro++){    // Recorre todas las posiciones de los errores definicdos
+        write_eeprom(i8Registro,0x00);                        // Inicializa elcontador de errores de los registros
+        delay_ms(DELAY_ESCRITURA_EEPROM);                                    // Pequeño delay de espea para ecritura
+    }
+}
+
+void initRegistros(){
+    // GENERAL 
+    initRegError(GENERAL);
+    initRegCont(GENERAL);
+    
+    // PARCIAL
+    initRegError(PARCIAL);
+    initRegCont(PARCIAL);
+}
+
+void incRegError(int8 i8Registro){
+    write_eeprom(i8Registro,read_eeprom(i8Registro)+1);    // Lee el valor del registro y incrementa el valor, luego lo vuelve a guardar
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+i8OffsetErrorParcial,read_eeprom(i8Registro+i8OffsetErrorParcial)+1);
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+}
+
+void incRegCont(int8 i8Registro){
+    
+    int16 i16Raw;  
+    // GENERAL
+    i16Raw=make16(read_eeprom(i8Registro),read_eeprom(i8Registro+1));        // Obtengo el valor
+    i16Raw++;                                                               // Lo incremento
+    
+    write_eeprom(i8Registro,make8(i16Raw,1));                               // Escribo MSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+1,make8(i16Raw,0));                               // Escribo LSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    
+    // PARCIAL
+    i16Raw=make16(read_eeprom(i8Registro+i8OffsetContParcial),read_eeprom(i8Registro+i8OffsetContParcial+1));        // Obtengo el valor
+    i16Raw++;                                                               // Lo incremento
+    
+    write_eeprom(i8Registro+i8OffsetContParcial,make8(i16Raw,1));                               // Escribo MSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+i8OffsetContParcial+1,make8(i16Raw,0));                               // Escribo LSB
+    delay_ms(DELAY_ESCRITURA_EEPROM); 
+}
+
+void incRegTiempo(int8 i8Registro){
+
+    int32 i32Raw;  
+    // GENERAL
+    i32Raw=make32(read_eeprom(i8Registro),read_eeprom(i8Registro+1),read_eeprom(i8Registro+2),read_eeprom(i8Registro+3));        // Obtengo el valor
+    i32Raw++;                                                               // Lo incremento
+    
+    write_eeprom(i8Registro,make8(i32Raw,3));                               // Escribo MSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+1,make8(i32Raw,2));                               // Escribo MidMSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+2,make8(i32Raw,1));                               // Escribo MidLSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+3,make8(i32Raw,0));                             // Escribo LSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    
+    // PARCIAL
+    i32Raw=make32(read_eeprom(i8Registro+i8OffsetContParcial),read_eeprom(i8Registro+i8OffsetContParcial+1),read_eeprom(i8Registro+i8OffsetContParcial+2),read_eeprom(i8Registro+i8OffsetContParcial+3));        // Obtengo el valor
+    i32Raw++;                                                               // Lo incremento
+    
+    write_eeprom(i8Registro+i8OffsetContParcial,make8(i32Raw,3));                               // Escribo MSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+i8OffsetContParcial+1,make8(i32Raw,2));                               // Escribo MidHSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+i8OffsetContParcial+2,make8(i32Raw,1));                               // Escribo MidLSB
+    delay_ms(DELAY_ESCRITURA_EEPROM);
+    write_eeprom(i8Registro+i8OffsetContParcial+3,make8(i32Raw,0));                               // Escribo LSB
+    delay_ms(DELAY_ESCRITURA_EEPROM); 
+}
+
+void muestraRegError(){
+    fprintf(DEBUG_UART,"\r\nREGISTRO ERRORES EPTE 2\r\n");
+    fprintf(DEBUG_UART,"*********************************\r\n\r\n");
+    fprintf(DEBUG_UART,"-----------------------------------\r\n");
+    fprintf(DEBUG_UART,"Code\t  General\t Parcial\r\n");
+    fprintf(DEBUG_UART,"-----------------------------------\r\n");
+    for(int8 i8Registro=1; i8Registro<REG_ERROR_MAX; i8Registro++){
+        fprintf(DEBUG_UART,"%03u\t\t%u\t\t%u\r\n",i8Registro,read_eeprom(i8Registro),read_eeprom(i8Registro+i8OffsetErrorParcial));    
+    }
+}
+
+void muestraRegCont(){
+    fprintf(DEBUG_UART,"\r\nINFORME INGENIERIA EPTE 2\r\n");
+    fprintf(DEBUG_UART,"*********************************\r\n\r\n");
+    fprintf(DEBUG_UART,"-------------------------------------------------------\r\n");
+    fprintf(DEBUG_UART,"Info                      General     Parcial\r\n");
+    fprintf(DEBUG_UART,"-------------------------------------------------------\r\n");
+    fprintf(DEBUG_UART,"Ciclos bateria:                   %lu\r\n",getCycleCount());
+    fprintf(DEBUG_UART,"Veces encendido:            %lu         %lu\r\n",make16(read_eeprom(REG_VECES_ENCENDIDO),read_eeprom(REG_VECES_ENCENDIDO+1))
+                                                                        ,make16(read_eeprom(REG_VECES_ENCENDIDO+i8OffsetContParcial),read_eeprom(REG_VECES_ENCENDIDO+i8OffsetContParcial+1)));
+                                                                        
+    fprintf(DEBUG_UART,"Tratamientos CHA:           %lu         %lu\r\n",make16(read_eeprom(REG_TRAT_CHA),read_eeprom(REG_TRAT_CHA+1))
+                                                                        ,make16(read_eeprom(REG_TRAT_CHA+i8OffsetContParcial),read_eeprom(REG_TRAT_CHA+i8OffsetContParcial+1)));
+                                                                        
+    fprintf(DEBUG_UART,"Tratamientos CHB:           %lu         %lu\r\n",make16(read_eeprom(REG_TRAT_CHB),read_eeprom(REG_TRAT_CHB+1))
+                                                                        ,make16(read_eeprom(REG_TRAT_CHB+i8OffsetContParcial),read_eeprom(REG_TRAT_CHB+i8OffsetContParcial+1)));
+                                                                        
+    fprintf(DEBUG_UART,"Tratamientos CHC:           %lu         %lu\r\n",make16(read_eeprom(REG_TRAT_CHC),read_eeprom(REG_TRAT_CHC+1))
+                                                                        ,make16(read_eeprom(REG_TRAT_CHC+i8OffsetContParcial),read_eeprom(REG_TRAT_CHC+i8OffsetContParcial+1)));
+                                                                        
+    fprintf(DEBUG_UART,"Tratamientos Pointer:       %lu         %lu\r\n",make16(read_eeprom(REG_TRAT_POINTER),read_eeprom(REG_TRAT_POINTER+1))
+                                                                        ,make16(read_eeprom(REG_TRAT_POINTER+i8OffsetContParcial),read_eeprom(REG_TRAT_POINTER+i8OffsetContParcial+1)));
+                                                                        
+    fprintf(DEBUG_UART,"Tratamientos Galv:          %lu         %lu\r\n",make16(read_eeprom(REG_TRAT_GALV),read_eeprom(REG_TRAT_GALV+1))
+                                                                        ,make16(read_eeprom(REG_TRAT_GALV+i8OffsetContParcial),read_eeprom(REG_TRAT_GALV+i8OffsetContParcial+1)));
+                                                                        
+    fprintf(DEBUG_UART,"Tratamientos Galv+micro:    %lu         %lu\r\n",make16(read_eeprom(REG_TRAT_GALV_MICRO),read_eeprom(REG_TRAT_GALV_MICRO+1))
+                                                                        ,make16(read_eeprom(REG_TRAT_GALV_MICRO+i8OffsetContParcial),read_eeprom(REG_TRAT_GALV_MICRO+i8OffsetContParcial+1)));
+                                                                        
+    fprintf(DEBUG_UART,"Tratamientos SMP:           %lu         %lu\r\n",make16(read_eeprom(REG_TRAT_SMP),read_eeprom(REG_TRAT_SMP+1))
+                                                                        ,make16(read_eeprom(REG_TRAT_SMP+i8OffsetContParcial),read_eeprom(REG_TRAT_SMP+i8OffsetContParcial+1)));
+                                                                        
+    fprintf(DEBUG_UART,"Tiempo Activo CHA:          %5.1f       %5.1f     min\r\n"  ,make32(read_eeprom(REG_TIEMPO_CHA),read_eeprom(REG_TIEMPO_CHA+1),read_eeprom(REG_TIEMPO_CHA+2),read_eeprom(REG_TIEMPO_CHA+3))/60.0
+                                                                                    ,make32(read_eeprom(REG_TIEMPO_CHA+i8OffsetContParcial),read_eeprom(REG_TIEMPO_CHA+i8OffsetContParcial+1),read_eeprom(REG_TIEMPO_CHA+i8OffsetContParcial+2),read_eeprom(REG_TIEMPO_CHA+i8OffsetContParcial+3))/60.0);
+                                                                        
+    fprintf(DEBUG_UART,"Tiempo Activo CHB:          %5.1f       %5.1f     min\r\n"  ,make32(read_eeprom(REG_TIEMPO_CHB),read_eeprom(REG_TIEMPO_CHB+1),read_eeprom(REG_TIEMPO_CHB+2),read_eeprom(REG_TIEMPO_CHB+3))/60.0                                                                          
+                                                                                    ,make32(read_eeprom(REG_TIEMPO_CHB+i8OffsetContParcial),read_eeprom(REG_TIEMPO_CHB+i8OffsetContParcial+1),read_eeprom(REG_TIEMPO_CHB+i8OffsetContParcial+2),read_eeprom(REG_TIEMPO_CHB+i8OffsetContParcial+3))/60.0);
+                                                                        
+    fprintf(DEBUG_UART,"Tiempo Activo CHC:          %5.1f       %5.1f     min\r\n"  ,make32(read_eeprom(REG_TIEMPO_CHC),read_eeprom(REG_TIEMPO_CHC+1),read_eeprom(REG_TIEMPO_CHC+2),read_eeprom(REG_TIEMPO_CHC+3))/60.0                                                                          
+                                                                                    ,make32(read_eeprom(REG_TIEMPO_CHC+i8OffsetContParcial),read_eeprom(REG_TIEMPO_CHC+i8OffsetContParcial+1),read_eeprom(REG_TIEMPO_CHC+i8OffsetContParcial+2),read_eeprom(REG_TIEMPO_CHC+i8OffsetContParcial+3))/60.0);    
+                                                                        
+    fprintf(DEBUG_UART,"-------------------------------------------------------\r\n");
+}
+
+void refreshRegError(){
+    for(int8 i8Registro=0; i8Registro<REG_ERROR_MAX; i8Registro++){
+        write_eeprom(i8Registro,read_eeprom(i8Registro));    // Lee el valor del registro y incrementa el valor, luego lo vuelve a guardar
+        delay_ms(DELAY_ESCRITURA_EEPROM);
+        write_eeprom(i8Registro+i8OffsetErrorParcial,read_eeprom(i8Registro+i8OffsetErrorParcial));
+        delay_ms(DELAY_ESCRITURA_EEPROM);
+    }
+}
+
+void refreshRegCont(){
+    for(int8 i8Registro=REG_TRAT_CHA; i8Registro<REG_CONT_MAX; i8Registro++){
+        write_eeprom(i8Registro,read_eeprom(i8Registro));    // Lee el valor del registro y incrementa el valor, luego lo vuelve a guardar
+        delay_ms(DELAY_ESCRITURA_EEPROM);
+        write_eeprom(i8Registro+i8OffsetContParcial,read_eeprom(i8Registro+i8OffsetContParcial));
+        delay_ms(DELAY_ESCRITURA_EEPROM);
+    }
+}
+
+void informeIngenieria(){
+    muestraRegCont();
+    muestraRegError();
+}

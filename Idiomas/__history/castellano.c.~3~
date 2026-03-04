@@ -1,0 +1,197 @@
+/*
+*   File: castellano.c
+*   
+*   Descripción: Texto en castellano para los menús
+*   
+*   Proyecto: EPTE 2
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+/********************************** Definiciones necesarias para el GLCD ****************************************/
+const char *sCo_ELECTRICA[] ="CORRIENTE ELECTRICA";
+const char *sFRECUENCIA[]="FRECUENCIA";
+const char *sPOLARIDAD[]="POLARIDAD";
+const char *sMONOPOLAR[]="MONOPOLAR ";
+const char *sBIPOLAR[]="BIPOLAR   ";
+const char *sMICRO_CORRIENTES[]="MICROCORRIENTES";
+const char *sSIMETRIA[]="SIMETRIA";
+const char *sTIEMPO_RAMPA[]="TIEMPO DE RAMPA";
+const char *sCa_ELECTRICA[]="CARGA ELECTRICA";
+const char *sASIMETRICA[]="ASIMETRICA";
+const char *sSIMETRICA[]= "SIMETRICA ";
+const char *sELECTRO_ESTIMULACION[]="ELECTRO-ESTIMULACION";
+const char *sSMP[]="SIST MULTIPULSOS";
+const char *sGALV[]="GALVANICA";
+const char *sGALVANICA_MICRO[]="GALVANICA + MICRO";
+const char *sCanal_A[]="Canal A         ";
+const char *sCanal_B[]="Canal B         ";
+const char *sCanal_C[]="Canal C         ";
+const char *sCanal_POINTER[]="Pointer         ";
+const char *sSimetriaCanalesNO[]="NO ";
+const char *sSimetriaCanalesAB[]="AB ";
+const char *sSimetriaCanalesABC[]="ABC";
+const char *sCONFIG_TRAT[]="CONFIG. TRATAMIENTO";
+
+const char sMENU_PRINCIPAL[]="MENU PRINCIPAL";
+const char sMENU_CONFIG[]="        Configuracion        ";
+const char sMENU_GALV[]="          Galvanica          ";
+const char sMENU_GALVMICRO[]=" Galvanica + microcorrientes ";
+const char sMENU_ELECTRO[]="     Electro-Estimulacion    ";
+const char sMENU_SMP[]="             SMP             ";
+const char sMENU_TEST[]="            Test             ";
+
+const char *sCONFIG[]="CONFIGURACION";
+const char *sCONFIG_ILUM[]=" Iluminacion ";
+const char *sCONFIG_PITO[]=" Aviso acustico ";
+const char *sCONFIG_VERS[]=" Version FW/HW ";
+const char *sCONFIG_CONT[]=" Contraste ";
+const char *sCONFIG_IDIO[]=" Idioma ";
+
+const char *sCONFIG_VERS_MAYUS[]="VERSION FW/HW";
+const char *sCONFIG_CONT_MAYUS[]="CONTRASTE";
+const char *sCONFIG_IDIO_MAYUS[]="IDIOMA";
+
+const char *sTEST[]="TEST DISPOSITIVO";
+const char *sTEST_LEDS[]="LED BICOLOR";
+const char *sTEST_PITO[]="AVISO ACUSTICO";
+const char *sTEST_PULS[]="PULSADORES";
+const char *sTEST_ILUM[]="ILUMINACION";
+const char *sTEST_ACCE[]="ACELEROMETRO";
+const char *sTEST_AEXT[]="ALIMENTACION EXT";
+const char *sTEST_SCAR[]="STATUS CARGADOR";
+const char *sTEST_DC12[]="DC/DC 12V";
+const char *sTEST_DC30[]="DC/DC 30V";
+const char *sTEST_RELE[]="RELES";
+const char *sTEST_BQ34[]="BQ34Z100G1";
+const char *sTEST_CPIC[]="COMUNICACION PIC";
+const char *sTEST_ECHA[]="ELEC CHA";
+const char *sTEST_ECHB[]="ELEC CHB";
+const char *sTEST_ECHC[]="ELEC CHC";
+
+const char *sRANGO_100_10[]="(Rango 100uA..10mA)";
+const char *sRANGO_100_1[]="(Rango 100uA..1mA)  ";
+
+const char *sPW_POS[]="ANCHO DE PULSO +";
+const char *sPW_NEG[]="ANCHO DE PULSO -";
+const char *sPW_GEN[]="ANCHO DE PULSO  ";
+
+const char *sSIM_CANALES[]="SIMETRIA ENTRE CANALES";
+const char *sPW_SIM[]="(Ancho de pulso +/- configurables) ";
+const char *sPW_ASIM[]="(Ancho de pulso +/- iguales) ";
+
+const char *sSEL_CANAL[]="SELECCION DEL CANAL";
+
+const char *sTIEMPO_ACT[]="TIEMPO ACTIVO";
+const char *sTIEMPO_REP[]="TIEMPO REPOSO";
+const char *sTIEMPO_DESF[]="TIEMPO DESFASE";
+
+const char *sTIEMPO_ACT_EESTIM[]="(Tiempo activo de estimulacion)";
+const char *sTIEMPO_REP_EESTIM[]="(Tiempo reposo de estimulacion)";
+const char *sTIEMPO_ACT_SMP[]="       (Tiempo activo SMP)";
+const char *sTIEMPO_DESF_SMP[]="(Desfase entre pulsos)";
+const char *sTIEMPO_ACT_GALV[]="  (Tiempo activo galvanica)";
+const char *sTIEMPO_ACT_MICRO[]="(Tiempo activo microcorrientes)";
+const char *sILIMITADO[]="Ilimitado ";
+
+const char *sNUM_REPS[]="NUMERO REPETICIONES";
+
+const char *sLED_CHC[]="LED CHC";
+const char *sLED_CHB[]="LED CHB";
+const char *sLED_CHA[]="LED CHA";
+const char *sLED_GAL[]="LED GALV";
+
+const char *sTEXTO_PULSADORES[]="(PULSAR P4 EL ULTIMO)";
+
+const char *sALIMENTACION[]="ALIMENTACION";
+const char *sCONECTADA[]="CONECTADA";
+const char *sDESCONECTADA[]="DESCONECTADA";
+
+const char *sCARGADO[]=" CARGADO ";
+const char *sENCARGA[]="EN CARGA ";
+
+const char *sDC12_OK[]="DC/DC 12V OK";
+const char *sDC12_NOK[]="DC/DC 12V NOK ";
+
+const char *sDC30_OK[]="DC/DC 30V OK";
+const char *sDC30_NOK[]="DC/DC 30V NOK ";
+
+const char *sRELE_GALV[]="RELE GALVANICA+MICRO";
+const char *sRELE_ECHA[]="RELE ESTIMULACION CHA";
+const char *sRELE_ECHB[]="RELE ESTIMULACION CHB";
+const char *sRELE_ECHC[]="RELE ESTIMULACION CHC";
+const char *sRELE_PROG[]="RELE PROGRAMACION";
+
+const char *sDEV_OK[]="Device Type OK";
+const char *sDEV_NOK[]="Device Type NOK";
+
+const char *sINTENSIDAD[]="Intensidad";
+const char *sCARGA[]="Carga";
+const char *sTIEMPO[]="Tiempo";
+const char *sPULSOS[]="Pulsos";
+const char *sOHM[]="ohm";
+
+const char *sIMED[]="Imed =";
+const char *sVMED[]="Vmed =";
+const char *sRMED[]="Rmed =";
+
+const char *sERROR_ELECTRODO[]="ERROR DE ELECTRODO";
+const char *sERROR_TRANSISTORES[]="ERROR DE TRANSISTORES";
+const char *sERROR_SISTEMA_MEDIDA[]="ERROR SISTEMA DE MEDIDA";
+const char *sERROR_COMS1[]="   ERROR DE";
+const char *sERROR_COMS2[]="COMUNICACIONES";
+
+const char *sTACTIVO[]="Tactivo";
+const char *sTREPOSO[]="Treposo";
+
+const char *sA[]="  A  ";
+const char *sB[]="  B  ";
+const char *sC[]="  C  ";
+const char *sP[]="  P  ";
+
+const char *sCHA_EE[]="      CANAL A     ";
+const char *sCHB_EE[]="      CANAL B     ";
+const char *sCHC_EE[]="      CANAL C     ";
+
+const char *sAUTOAPAG_1[]="para el autoapagado";    
+const char *sAUTOAPAG_2[]="Presione el boton START";
+const char *sAUTOAPAG_3[]="para continuar";
+
+const char *sAPAGADO_EQUIPO[]="Apagando equipo...";
+
+const char *sCARGA_COMPLETA[]="CARGA COMPLETA";
+const char *sCARGA_CURSO[]="CARGA EN CURSO";
+const char *sORCO_SAURON[]="ORCO A SAURON";
+
+const char *sACC_NOK[]="Acelerometro NOK";
+
+const char *sAPAG_TRAT_ACT1[]="APAGANDO TRATAMIENTOS";
+const char *sAPAG_TRAT_ACT2[]="     ACTIVOS...";
+
+const char *sACC_DETECT1[]="     MOVIMIENTO BRUSCO    ";
+const char *sACC_DETECT2[]="         DETECTADO";
+
+const char *sERROR_ALIM1[]="     ERROR ALIMENTACION    ";
+const char *sERROR_ALIM2[]="        TRATAMIENTO";
+
+const char *sMAX_A[]="MAX A ";
+const char *sMAX_B[]="MAX B ";
+const char *sMAX_C[]="MAX C ";
+
+const char *sMAX_AB[]="MAX AB";
+const char *sMAX_AC[]="MAX AC";
+const char *sMAX_BC[]="MAX BC";
+
+const char *sMAX_ABC[]="MAX   ";
+
+const char *sCC_A[]="CC A ";
+const char *sCC_B[]="CC B ";
+const char *sCC_C[]="CC C ";
+
+const char *sCC_AB[]="CC AB";
+const char *sCC_AC[]="CC AC";
+const char *sCC_BC[]="CC BC";
+
+const char *sCC_ABC[]="CC   ";
+const char *sESPACIO[]="     ";

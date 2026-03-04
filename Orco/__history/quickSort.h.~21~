@@ -1,0 +1,90 @@
+
+void Array_sort(int16 *array , int16 n){ 
+    // declare some local variables
+    int16 i=0 , j=0 , temp=0;
+
+    for(i=0 ; i<n ; i++){
+        for(j=0 ; j<n-1 ; j++){
+            if(array[j]>array[j+1]){
+                temp        = array[j];
+                array[j]    = array[j+1];
+                array[j+1]  = temp;
+            }
+        }
+    }
+}
+
+void swapQ(int16* a, int16* b){ 
+    int16 t = *a; 
+    *a = *b; 
+    *b = t; 
+} 
+
+/* This function is same in both iterative and recursive*/
+int partition(int16 *arr, int8 l, int8 h){ 
+
+    int16 x = arr[h]; 
+    int8 i = (l - 1); 
+
+    for (int8 j = l; j <= h - 1; j++) { 
+        if (arr[j] <= x) { 
+            i++; 
+            swapQ(&arr[i], &arr[j]); 
+        } 
+    } 
+    swapQ(&arr[i + 1], &arr[h]); 
+    return (i + 1); 
+} 
+
+/* A[] --> Array to be sorted, 
+l --> Starting index, 
+h --> Ending index */
+void quickSortIterative(int16 *arr, int8 l, int8 h){ 
+
+    // Create an auxiliary stack 
+    int8 stack[30]; 
+
+    // initialize top of stack 
+    signed int16 top = -1; 
+
+    // push initial values of l and h to stack 
+    stack[++top] = l; 
+    stack[++top] = h; 
+
+    // Keep popping from stack while is not empty 
+    while (top >= 0) { 
+        // Pop h and l 
+        h = stack[top--]; 
+        l = stack[top--]; 
+
+        // Set pivot element at its correct position 
+        // in sorted array 
+        int16 p = partition(arr, l, h); 
+
+        // If there are elements on left side of pivot, 
+        // then push left side to stack 
+        if (p - 1 > l) { 
+            stack[++top] = l; 
+            stack[++top] = p - 1; 
+        } 
+
+        // If there are elements on right side of pivot, 
+        // then push right side to stack 
+        if (p + 1 < h) { 
+            stack[++top] = p + 1; 
+            stack[++top] = h; 
+        } 
+    } 
+} 
+
+void printArr(int16 *arr, int8 n){ 
+
+    int8 i; 
+    
+    fprintf(DEBUG_UART,"------------------\r\n");
+    
+    for (i = 0; i < n; ++i){
+        fprintf(DEBUG_UART,"%lu \r\n", arr[i]);
+    }
+} 
+

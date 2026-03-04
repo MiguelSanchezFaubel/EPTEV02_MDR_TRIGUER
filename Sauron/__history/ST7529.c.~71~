@@ -1,0 +1,753 @@
+/*     
+*   Code: GLCD Driver for ST7529
+*   Developed by: Ionclinics & Deionics SL
+*   Rev: 1.0
+*
+*/
+
+#include "ST7529.h"
+#include "glcd_fonts.h"
+#include "xlargeFont.c"
+//#include "check.c"
+#include "icon.h"
+//#include "MATLAB/output.c"
+
+
+/* Functions */
+// Estan configuradas para invertir la salida de lo que ponemos 
+// i.e: Si ponemos ST7529_cs(HIGH), en la placa el CS estará en HIGH enviando un LOW por la salida del PIC
+
+/*
+*   Función: Chip Select
+*   Descripción: Habilita / Deshabilita la escritura.
+*
+*   Input:
+*         - iValue - Nivel al que se pone el chip select. Este es activo a nivel bajo
+*               - Se han definido varios defines para solo tener que 
+*                     colocar HIGH o LOW como argumento de entrada
+*   Output:
+*         - 
+*/
+void ST7529_cs(int1 iValue){
+                  // Se hace la operacion OR, de forma que solo modifico el bit que me interesa, poniendolo a nivel alto
+   iValue ? output_high(LCD_XCS) : output_low(LCD_XCS);   // Sentencia if resumida
+}
+
+/*
+*   Función: Modo de comandos
+*   Descripción: Habilita capturar los datos que enviamos 
+*   por SPI como comando o como dato
+*
+*   Input:
+*         - iValue - Selección de modo.
+*               - Se han definido varios defines para solo tener que 
+*                     colocar COMMAND o DATA como argumento de entrada
+*   Output:
+*         - 
+*/
+void ST7529_a0(int1 iValue){
+   iValue ? output_high(LCD_A0) : output_low(LCD_A0);   // Sentencia if resumida
+}
+
+/*
+*   Función: Sleep
+*   Descripción: Envia la pantalla a dormir
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_sleep(){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_send(COMMAND,SLPIN);
+   ST7529_send(COMMAND,DISON);      // Display On
+}
+
+
+/*
+*   Función: Despertar
+*   Descripción: Despierta la pantalla del modo sleep
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_wakeUp(){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_send(COMMAND,SLPOUT);
+   ST7529_send(COMMAND,DISON);      // Display On
+}
+
+
+/*
+*   Función: Pantalla ON
+*   Descripción: Enciende la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_displayOn(){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_send(COMMAND,EXTIN);
+   ST7529_send(COMMAND,DISON);      // Display On
+   delay_ms(300);               // Delay para estabilizar tensiones
+}
+
+
+/*
+*   Función: Pantalla OFF
+*   Descripción: Apaga la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_displayOff(){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_send(COMMAND,EXTIN);
+   ST7529_send(COMMAND,DISOFF);      // Display On
+}
+
+
+/*
+*   Función: Reset
+*   Descripción: Resetea la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_reset(){
+   output_low(LCD_RST);
+   delay_ms(100);      // Delay para estabilizar tensiones
+   output_high(LCD_RST);
+   delay_ms(300);      // Delay para estabilizar tensiones
+}
+
+/*
+*   Función: Inicialización
+*   Descripción: Inicializa la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_init(){
+   SSPEN=0;
+   SSP2STAT=0x00;
+   SSP2CON1=0x90;
+   SSPEN=1;
+   //SSP2CON1=0xA0;
+   //SSP2STAT|=0x40;
+
+   ST7529_reset();
+       
+   ST7529_send(COMMAND,EXTIN);      // Ext =0
+   ST7529_send(COMMAND,SLPOUT);      // Sleep out
+   ST7529_send(COMMAND,OSCON);      // Osc On
+   ST7529_send(COMMAND,PWRCTRL);      // Power Ctrl Set
+   ST7529_send(DATA,0x08);         // Booster must be on first
+   delay_ms(5);
+   ST7529_send(COMMAND,PWRCTRL);      // Power Ctrl Set
+   ST7529_send(DATA,0x0B);         // Booster, Regulator, Follower ON
+   if(i8NivelContraste==0){
+    i8NivelContraste=0x1C;
+   }
+   ST7529_send(COMMAND,VOLCTRL);      // Electronic Control
+   ST7529_send(DATA,i8NivelContraste);    // Vop=18V - DS: 7.10.2 pg. 32   1C
+   ST7529_send(DATA,0x04);          // 04
+
+   ST7529_send(COMMAND,DISCTRL);      // Display Control
+   ST7529_send(DATA,0x00);         // CL=X1
+   ST7529_send(DATA,0x23);         // Duty=1/144
+   ST7529_send(DATA,0x00);         // FR Inverse - Set value
+   ST7529_send(COMMAND,DISINV);      // Normal Display
+   ST7529_send(COMMAND,COMSCN);      // COM Scan Direction
+   ST7529_send(DATA,0x02);         // 0->79 80->159
+   ST7529_send(COMMAND,DATSDR);      // Data Scan Direction
+   ST7529_send(DATA,0x03);         // Normal
+   ST7529_send(DATA,0x01);         // RGB Arrangement
+   ST7529_send(DATA,0x02);         // Grayscale setup - 3Byte 3Pixel mode
+       
+   ST7529_send(COMMAND,LASET);      // Line Address Set
+   ST7529_send(DATA,MINLINE);            // Start Line - 0
+   ST7529_send(DATA,MAXLINE);         // End Line - 159
+   ST7529_send(COMMAND,CASET);      // Column Address Set
+   ST7529_send(DATA,MINCOL);            // Start Col - 0
+   ST7529_send(DATA,MAXCOL);         // End Col - 84
+   ST7529_send(COMMAND,RAMWR);
+       
+   for(int i = MINLINE; i < MAXLINE ; i++ ){
+      for(int j = MINCOL; j < MAXCOL ; j++ ){
+            ST7529_send(DATA,WHITE); // Display Data Write
+            ST7529_send(DATA,WHITE); // Display Data Write
+            ST7529_send(DATA,WHITE); // Display Data Write
+      }
+   }
+
+   ST7529_send(COMMAND,NOP);
+   ST7529_send(COMMAND,PTLOUT);
+   //ST7529_send(COMMAND,NOP);
+   //while(1);
+   ST7529_send(COMMAND,EXTOUT);      // Ext = 1 
+   ST7529_send(COMMAND,ANASET);      // Analog Circuit Set
+   ST7529_send(DATA,0x01);         // OSC Frequency = 000 (Default)   01
+   ST7529_send(DATA,0x00);         // Booster Efficiency = 01 (Default)
+   ST7529_send(DATA,0x02);         // Bias = 1/12
+   ST7529_send(COMMAND,SWINT);      // Software Initial
+   //while(1);
+   ST7529_send(COMMAND,GRAY1SET);
+   ST7529_send(DATA,0x00);
+   ST7529_send(DATA,0x02);
+   ST7529_send(DATA,0x04);
+   ST7529_send(DATA,0x06);
+   ST7529_send(DATA,0x08);
+   ST7529_send(DATA,0x0a);
+   ST7529_send(DATA,0x0c);
+   ST7529_send(DATA,0x0e);
+   ST7529_send(DATA,0x10);
+   ST7529_send(DATA,0x12);
+   ST7529_send(DATA,0x14);
+   ST7529_send(DATA,0x16);
+   ST7529_send(DATA,0x18);
+   ST7529_send(DATA,0x1a);
+   ST7529_send(DATA,0x1c);
+   ST7529_send(DATA,0x1f);
+   ST7529_send(COMMAND,GRAY2SET);
+   ST7529_send(DATA,0x00);
+   ST7529_send(DATA,0x02);
+   ST7529_send(DATA,0x04);
+   ST7529_send(DATA,0x06);
+   ST7529_send(DATA,0x08);
+   ST7529_send(DATA,0x0a);
+   ST7529_send(DATA,0x0c);
+   ST7529_send(DATA,0x0e);
+   ST7529_send(DATA,0x10);
+   ST7529_send(DATA,0x12);
+   ST7529_send(DATA,0x14);
+   ST7529_send(DATA,0x16);
+   ST7529_send(DATA,0x18);
+   ST7529_send(DATA,0x1a);
+   ST7529_send(DATA,0x1c);
+   ST7529_send(DATA,0x1f);
+
+   ST7529_displayOn();
+}   
+
+
+/*
+*   Función: Enviar dato
+*   Descripción: Envio de datos a la pantalla
+*
+*   Input:
+*            - iSel - Seleccionar entre COMMAND o DATA, 
+*            dependiendo de lo que se va a enviar
+*         - iData - Dato o comando a enviar
+*   Output:
+*         - 
+*/
+void ST7529_send(int1 iSel, int8 iData){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_cs(LOW);
+   ST7529_a0(iSel);
+       
+   //spi_xfer(iData);      // Envia dato
+   SSP2IF=0;
+   WCOL=0;
+   SSP2BUF=iData;
+   while(!SSP2IF);
+   
+   ST7529_cs(HIGH);      // Disable CS
+}
+
+
+/*
+*   Función: Incrementar contraste
+*   Descripción: Incrementa el contraste de la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_incContrast(){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_send(COMMAND,EXTIN);
+   ST7529_send(COMMAND,VOLUP);
+}
+
+
+/*
+*   Función: Decrementar contraste
+*   Descripción: Decrementa el contraste de la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_decContrast(){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_send(COMMAND,EXTIN);
+   ST7529_send(COMMAND,VOLDOWN);
+}
+
+
+/*
+*   Función: Clear
+*   Descripción: Borra toda la pantalla
+*
+*   Input:
+*         -
+*   Output:
+*         - 
+*/
+void ST7529_clear(){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_send(COMMAND,EXTIN);
+   //ST7529_displayOff();
+   ST7529_send(COMMAND,LASET);      
+   ST7529_send(DATA,MINLINE);      
+   ST7529_send(DATA,MAXLINE);      
+   ST7529_send(COMMAND,CASET);      
+   ST7529_send(DATA,MINCOL);      
+   ST7529_send(DATA,MAXCOL);      
+   ST7529_send(COMMAND,RAMWR);
+       
+   for(int i = MINLINE; i < MAXLINE ; i++ ){
+      for(int j = MINCOL; j < MAXCOL ; j++ ){
+         ST7529_send(DATA,WHITE); // Display Data Write
+         ST7529_send(DATA,WHITE); // Display Data Write
+         ST7529_send(DATA,WHITE); // Display Data Write
+      }
+   }
+   //ST7529_displayOn();
+   ST7529_send(COMMAND,NOP);
+}
+
+
+/*
+*   Función: PutChar
+*   Descripción: Envia un caracter la pantalla
+*
+*   Input:
+*         - iChar      - Caracter a enviar  
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*         - iFont      - Fuente seleccionada, se selecciona con los defines definidos
+*               - S_  - Tamaño pequeño
+*               - M_  - Tamaño Mediano
+*               - L_  - Tamaño Grande
+*               - XL_ - Tamaño Muu grande
+*                  
+*         - iGrayScale - Color eleido para pintar el caracter, 
+*               existen los siguientes niveles definidos
+*               - WHITE
+*               - GRAY1
+*               - GRAY2
+*               - GRAY3
+*               - GRAY4
+*               - GRAY5
+*               - GRAY6
+*               - GRAY7
+*               - GRAY8
+*               - GRAY9
+*               - GRAY10
+*               - GRAY11
+*               - GRAY12
+*               - GRAY13
+*               - GRAY14
+*               - BLACK
+*
+*         - iInvert - Selecciona lainversion de texto.
+*               Existen los siguientes niveles definidos  
+*               - NORMAL
+*               - INVERT
+*
+*   Output:
+*         - 
+*/
+void ST7529_putChar(int8 iChar, int8 iX, int8 iY, int8 iFont, int8 iGrayScale, int1 iInvert)
+{
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0;                 // Input data is sampled at the middle of data output time
+                                    // Transmit occurs on the transition from Idle to active clock state 
+   int16 iIndexData;
+   int8  iData;     
+       
+   iX+=MINCOL;
+   iY+=MINLINE;
+   //iX/=3;
+   ST7529_selectFont(iFont);
+       
+   iIndexData = iChar-32;         // Busca el dato en el array (restem el caracter que volem menys el 32 (espai, inici del array))
+   iIndexData *= iNumBytes;         // Busca l'inici del caracter da l'array (sabem el numero on està, pero tenim que multiplicarlo per 8 perque es el número de bytes per caracter)
+       
+   //output_high(ALPP);
+   //ST7529_clear();
+   ST7529_send(COMMAND,EXTIN);
+   ST7529_send(COMMAND,LASET);          
+   ST7529_send(DATA,iY);             
+   ST7529_send(DATA,iY+iRowStep);//iY+8);             
+   ST7529_send(COMMAND,CASET);          
+   ST7529_send(DATA,iX);                
+   ST7529_send(DATA,iX+iColumnStep);//iX+2);             
+       
+   ST7529_send(COMMAND,RAMWR);
+       
+   for(int16 iCont=iIndexData; iCont<(iIndexData+iNumBytes); iCont++){      // Bucle que recorre tots els bytes del array que componen el caracter
+      iData = pCurrentFont[iCont];                  // Busca el byte en el array que anem a representar
+      //ST7529_send(DATA,iData);
+      for(int8 iContBit=0; iContBit<8; iContBit++){           // Mirem le valor de tots els bits de cada byte
+         if((iData & 0x80)==0){                     // Mascara 0x80
+            if(iInvert){
+               ST7529_send(DATA,BLACK);
+            }else{
+               ST7529_send(DATA,WHITE);   
+            }
+            //iInvert ? ST7529_send(DATA,BLACK) : ST7529_send(DATA,WHITE); 
+         }else{
+            if(iInvert){
+               ST7529_send(DATA,WHITE);   
+            }else{
+               ST7529_send(DATA,iGrayScale);   
+            }
+           // iInvert ? ST7529_send(DATA,WHITE) : ST7529_send(DATA,iGrayScale); 
+         }
+         iData <<= 1;               // shift data
+      }
+          
+      /*for(int8 iFill=0; iFill<((iRowStep%3)); iFill++){
+         ST7529_send(DATA,0x00);                        // Para fer el pack de 9 bytes
+      }*/
+      if (iFont!=XL_){
+         if(iInvert){
+               ST7529_send(DATA,BLACK);   
+         }else{
+            ST7529_send(DATA,WHITE);   
+         }
+      }
+   }
+   ST7529_send(COMMAND,NOP);
+}
+
+/*
+*   Función: Printf
+*   Descripción: Imprime una string por pantala
+*
+*   Input:
+*         - *sText     - Texto a enviar
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*         - iFont      - Fuente seleccionada, se selecciona con los defines definidos
+*               - S_  - Tamaño pequeño
+*               - M_  - Tamaño Mediano
+*               - L_  - Tamaño Grande
+*               - XL_ - Tamaño Muu grande
+*                  
+*         - iInvert - Selecciona lainversion de texto.
+*               Existen los siguientes niveles definidos  
+*               - NORMAL
+*               - INVERT
+*
+*   Output:
+*         - 
+*/
+void ST7529_printf(char *sText, int8 iX, int8 iY, int1 iFont, int iInvert)
+{
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   int8 iIndex=0;
+       
+   while((int8)sText[iIndex])
+   {
+      ST7529_putChar(sText[iIndex++],iX,iY,iFont,BLACK,iInvert);
+      if (iFont==S_ || iFont==XL_)
+      {
+         iX+=(iColumnStep);
+      }
+      else
+      {
+         iX+=(iColumnStep+1);
+      }            
+   }
+}
+
+/*
+*   Función: PrintfG
+*   Descripción: Envia una string la pantalla de la escala de grises que elijas
+*
+*   Input:
+*         - *sText     - Texto a enviar  
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*         - iFont      - Fuente seleccionada, se selecciona con los defines definidos
+*               - S_  - Tamaño pequeño
+*               - M_  - Tamaño Mediano
+*               - L_  - Tamaño Grande
+*               - XL_ - Tamaño Muu grande
+*                  
+*         - iGrayScale - Color eleido para pintar el caracter, 
+*               existen los siguientes niveles definidos
+*               - WHITE
+*               - GRAY1
+*               - GRAY2
+*               - GRAY3
+*               - GRAY4
+*               - GRAY5
+*               - GRAY6
+*               - GRAY7
+*               - GRAY8
+*               - GRAY9
+*               - GRAY10
+*               - GRAY11
+*               - GRAY12
+*               - GRAY13
+*               - GRAY14
+*               - BLACK
+*
+*         - iInvert - Selecciona lainversion de texto.
+*               Existen los siguientes niveles definidos  
+*               - NORMAL
+*               - INVERT
+*
+*   Output:
+*         - 
+*/
+void ST7529_printfg(char *sText, int8 iX, int8 iY, int iFont, int8 iGrayScale, int1 iInvert){
+
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   int8 iIndex=0;
+       
+   while((int8)sText[iIndex]){
+      ST7529_putChar(sText[iIndex++],iX,iY,iFont,iGrayScale,iInvert);
+      if (iFont==S_ || iFont==XL_){
+         iX+=(iColumnStep);
+      }else{
+         iX+=(iColumnStep+1);
+      }
+             
+   }
+}
+
+void ST7529_selectFont(int8 iFont)
+{
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0;                 // Input data is sampled at the middle of data output time
+                                    // Transmit occurs on the transition from Idle to active clock state 
+   switch(iFont){
+      case S_:
+         pCurrentFont=&smallFont[0];
+         iNumBytes=8;
+         iRowStep=8;
+         iColumnStep=2;
+         break;
+      case M_:
+         pCurrentFont=&mediumFont[0];
+         iNumBytes=8;
+         iRowStep=8;
+         iColumnStep=2;
+         break;
+      case L_:
+         pCurrentFont=&largeFont[0];
+         iNumBytes=16;
+         iRowStep=16;
+         iColumnStep=2;
+         break;
+      case XL_:
+         pCurrentFont=&xlargeFont[0];
+         iNumBytes=75;
+         iRowStep=24;
+         iColumnStep=7;
+         break;
+      default:
+         pCurrentFont=&mediumFont[0];
+         iNumBytes=8;
+         iRowStep=8;
+         iColumnStep=2;
+         break;
+   }
+}
+
+void ST7529_putImage(int8 *pImagen, int8 iX, int8 iY, int16 iRow, int16 iCol)
+{
+  //SSP2CON1=0xB0;
+  //SSP2STAT&=~0xC0;                 // Input data is sampled at the middle of data output time
+                                    // Transmit occurs on the transition from Idle to active clock state        
+   //int16 iIndexData;
+   int8  iData;     
+       
+   iX+=MINCOL;
+   iY+=MINLINE;
+       
+   //output_high(ALPP);
+   //ST7529_clear();
+   ST7529_send(COMMAND,EXTIN);
+   ST7529_send(COMMAND,LASET);
+   ST7529_send(DATA,iY);
+   ST7529_send(DATA,iY+iRow-1);
+   ST7529_send(COMMAND,CASET);          
+   ST7529_send(DATA,iX);                
+   ST7529_send(DATA,iX+((iCol*8)/3)-1);            // Va de 3 en 3       
+       
+   ST7529_send(COMMAND,RAMWR);
+       
+   for(int16 iCont=0; iCont<iRow*iCol; iCont++){      // Bucle que recorre tots els bytes del array que componen el caracter
+      iData = pImagen[iCont];                  // Busca el byte en el array que anem a representar
+      //ST7529_send(DATA,iData);
+      for(int8 iContBit=0; iContBit<8; iContBit++){           // Mirem le valor de tots els bits de cada byte
+         if((iData & 0x80)==0){                     // Mascara 0x80
+            ST7529_send(DATA,WHITE);             
+         }else{
+            ST7529_send(DATA,BLACK);
+         }
+         iData <<= 1;               // shift data
+         //delay_ms(100);
+      }
+          
+      if (iCont%72 && iCont!=0){
+         ST7529_send(DATA,0x00);
+         //ST7529_send(DATA,0x00);
+      }
+
+   }
+   ST7529_send(COMMAND,NOP);
+}
+/*
+*   Función: PutIcon
+*   Descripción: Pone un icono en pantalla
+*
+*   Input:
+*         - iIcon   - Icono a poner en pantalla. 
+*            Existen los siguientes iconos definidos
+*               - ICON_BAT     
+*               - ICON_ON       
+*               - ICON_ALERT    
+*               - ICON_LEFT   
+*               - ICON_RIGHT    
+*               - ICON_DOWN    
+*               - ICON_UP      
+*               - ICON_CANCEL    
+*               - ICON_ALTON   
+*               - ICON_ALTOFF    
+*               - ICON_ILUM   
+*               - ICON_CONTRAS 
+*               - ICON_FLECHA   
+*               - ICON_CONFIG    
+*               - 
+
+*               - ICON_TEST   
+*               
+*         - iX         - Coordenada del eje X
+*         - iY         - Coordenada del eje Y
+*
+*   Output:
+*         - 
+*/
+void ST7529_putIcon(int8 iIcon, int8 iX, int8 iY){
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0; 
+   ST7529_putIcon2(iIcon, iX, iY, BLACK);
+}
+
+void ST7529_putIcon2(int8 iIcon, int8 iX, int8 iY, int8 iGray){
+
+   //SSP2CON1=0xB0;
+   //SSP2STAT&=~0xC0;                 // Input data is sampled at the middle of data output time
+                                    // Transmit occurs on the transition from Idle to active clock state        
+   //int16 iIndexData;
+   int8  iData;     
+       
+   iX+=MINCOL;
+   iY+=MINLINE;
+       
+   ST7529_send(COMMAND,EXTIN);
+   ST7529_send(COMMAND,LASET);
+   ST7529_send(DATA,iY);
+   ST7529_send(DATA,iY+ICON_HEIGHT-1);
+   ST7529_send(COMMAND,CASET);          
+   ST7529_send(DATA,iX);                
+   ST7529_send(DATA,iX+5);      // Va de 3 en 3       
+       
+   ST7529_send(COMMAND,RAMWR);
+   int iTesteo=0;
+
+   for(int16 iCont=0; iCont<(int16)(ICON_LENGTH); iCont++){      // Bucle que recorre tots els bytes del array que componen el caracter
+      iData = ICON_16X16[(int16)iIcon*ICON_LENGTH+iCont];                  // Busca el byte en el array que anem a representar
+      //ST7529_send(DATA,iData);
+      for(int8 iContBit=0; iContBit<8; iContBit++){           // Mirem le valor de tots els bits de cada byte
+         if((iData & 0x80)==0){                     // Mascara 0x80
+            ST7529_send(DATA,WHITE);             
+         }else{
+            ST7529_send(DATA,BLACK);
+         }
+         iData <<= 1;               // shift data
+      }
+          
+      if(iTesteo%2 && iTesteo!=0){
+         ST7529_send(DATA,WHITE);
+         ST7529_send(DATA,WHITE);
+      }
+      iTesteo++;
+
+   }
+   ST7529_send(COMMAND,NOP);
+}
+
+void ST7529_putImageGS(rom int8 *pImagen, int8 iX, int8 iY, int16 iRow, int16 iCol)
+{
+   //SSP2CON1=0xB2;
+   //SSP2STAT&=~0xC0;                 // Input data is sampled at the middle of data output time
+                                    // Transmit occurs on the transition from Idle to active clock state 
+   int8  iData;     
+
+   iX+=MINCOL;
+   iY+=MINLINE;
+
+   ST7529_send(COMMAND,EXTIN);
+   ST7529_send(COMMAND,LASET);
+   ST7529_send(DATA,iY);
+   ST7529_send(DATA,iY+iRow-1);
+   ST7529_send(COMMAND,CASET);          
+   ST7529_send(DATA,iX);                
+   ST7529_send(DATA,iX+((iCol*2)/3));//(iImagCol*2/3)-1);            // Va de 3 en 3       
+       
+   ST7529_send(COMMAND,RAMWR);
+       
+   for(int16 iCont=0; iCont<iRow*iCol; iCont++){      // Bucle que recorre tots els bytes del array que componen el caracter
+      iData = pImagen[iCont];                  // Busca el byte en el array que anem a representar
+      //ST7529_send(DATA,iData);
+      //for(int8 iContBit=0; iContBit<8; iContBit++){         // Mirem le valor de tots els bits de cada byte
+
+      ST7529_send(DATA,iData&0xF0);         
+      ST7529_send(DATA,(iData&0x0F)<<4);    
+
+         //iData <<= 1;               // shift data
+      //}
+      //ST7529_send(DATA,iData);
+      if ((iCont%(((iCol*2)/3)-1)-1==0) && iCont!=0){
+         ST7529_send(DATA,WHITE);
+         //ST7529_send(DATA,WHITE);
+         //ST7529_send(DATA,WHITE);
+         delay_ms(50);
+      }
+     //ST7529_send(COMMAND,NOP);
+   }
+   //ST7529_send(COMMAND,NOP);
+}

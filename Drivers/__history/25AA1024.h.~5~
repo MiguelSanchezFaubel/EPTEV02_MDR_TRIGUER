@@ -1,0 +1,99 @@
+/*
+*   File: 25AA1024.h
+*   
+*   Descripción: Header file del driver para la memoria SPI 25AA1024 de 1Mbit
+*   
+*   Versión: 2.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+/* Definciones */
+#ifndef   HIGH                  // Si no se ha definido el nivel alto
+   #define HIGH   1             // Define nivel alto
+#endif
+
+#ifndef   LOW                   // Si no se ha definido el nivel bajo
+   #define LOW   0              // Defino nivel bajo
+#endif
+
+/* Registros */
+#define READ      0x03          // Read data from memory array beginning at selected address
+#define WRITE     0x02          // Write data to memory array beginning at selected address
+#define WREN      0x06          // Set the write enable latch (enable write operations)
+#define WRDI      0x04          // Reset the write enable latch (disable write operations)
+#define RDSR      0x05          // Read STATUS register
+#define WRSR      0x01          // Write STATUS register
+#define PEE        0x42          // Page Erase â€“ erase one page in memory array
+#define SE        0xD8          // Sector Erase â€“ erase one sector in memory array
+#define CE        0xC7          // Chip Erase â€“ erase all sectors in memory array
+#define RDID      0xAB          // Release from Deep Power-down and Read Electronic Signature
+#define DPD       0xB9          // Deep Power-Down mode
+
+
+/* Prototipo de funciones */
+
+/*
+*   Función: Inicialización
+*   Descripción: Inicializa el SPI y la memoria
+*
+*   Input:
+*         - 
+*   Output:
+*         -
+*/
+void M25AA1024_init();
+
+/*
+*   Función: Envio de dirección de memoria
+*   Descripción: Envía por SPI la direcciÃ³n de memoria seleccionada.
+*      Se hace uso de esta función debido a que la dirección tiene 
+*      un tamaño de 24 bits y la función spi_write solo permite 8bits
+*   
+*   DirecciÃ³n 
+*
+*   31                 23                  15                    7                  0   
+*    _______________________________________________________________________________
+*   |   NO USADO        |      MSB          |      MidSB         |      LSB         |
+*   |___________________|___________________|____________________|__________________|
+*
+*   Input:
+*         - iAddress
+*   Output:
+*         -
+*/
+void M25AA1024_sendAddress(int32);
+
+/*
+*   Función: Lectura datos
+*   Descripción: Lee el dato guardado en la dirección seleccionada
+*
+*   Input:
+*         - iAddress - Dirección de memoria
+*   Output:
+*         - iData    - Dato leido
+*/
+int8 M25AA1024_read(int32);
+
+/*
+*   Función: Envio datos
+*   Descripción: Envía el dato seleccionado a la dirección seleccionada
+*
+*   Input:
+*       - iAddress   - Dirección de memoria
+*         - iData      - Dato a enviar
+*   Output:
+*         -
+*/
+void M25AA1024_write(int32,int8*);
+
+/*
+*   Función: Lectura estado
+*   Descripción: Lee el estado de la memoria
+*
+*   Input:
+*      -
+*   Output:
+*         - iResult      - Lectura de la memoria
+*/
+int8 M25AA1024_status();

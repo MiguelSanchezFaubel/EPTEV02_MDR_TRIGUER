@@ -1,0 +1,76 @@
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_MMA8451.h" Line 131(15,16): A numeric expression must appear here
+*** Error 102 "Z:\CCS\Firmware\Drivers\driver_MMA8451.h" Line 132(18,32): Expect comma
+*** Error 102 "Z:\CCS\Firmware\Drivers\driver_MMA8451.h" Line 133(19,24): Expect comma
+*** Error 173 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 32(6,19): Functions may not be nested
+*** Error 173 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 33(6,18): Functions may not be nested
+*** Error 173 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 34(6,17): Functions may not be nested
+*** Error 173 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 35(6,18): Functions may not be nested
+*** Error 173 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 38(6,19): Functions may not be nested
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 40(15,16): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 41(27,34): Undefined identifier   address
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 42(12,17): Undefined identifier   model
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 44(8,12): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 47(18,23): Undefined identifier   data0
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 48(12,17): Undefined identifier   model
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 50(18,19): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 51(9,18): Undefined identifier   bErrorI2C
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 52(5,9): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 53(5,14): Undefined identifier   bErrorI2C
+*** Error 173 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 57(6,18): Functions may not be nested
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 63(14,15): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 65(28,35): Undefined identifier   address
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 66(12,17): Undefined identifier   model
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 68(8,12): A numeric expression must appear here
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 71(19,20): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 72(29,36): Undefined identifier   address
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 73(12,17): Undefined identifier   model
+*** Error 102 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 75(28,32): Expect comma
+*** Error 102 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 76(28,33): Expect comma
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 79(8,12): A numeric expression must appear here
+*** Error 102 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 81(27,32): Expect comma
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 83(18,19): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 84(8,17): Undefined identifier   bErrorI2C
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 85(5,9): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 86(5,14): Undefined identifier   bErrorI2C
+*** Error 127 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 88(4,10): Return value not allowed in void function
+*** Error 173 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 91(6,17): Functions may not be nested
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 93(15,16): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 94(27,34): Undefined identifier   address
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 95(12,17): Undefined identifier   model
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 97(8,12): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 99(12,17): Undefined identifier   model
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 101(21,26): Undefined identifier   data0
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 102(21,26): Undefined identifier   data1
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 104(8,12): A numeric expression must appear here
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 107(18,19): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 108(4,13): Undefined identifier   bErrorI2C
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 109(5,9): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 110(9,18): Undefined identifier   bErrorI2C
+*** Error 173 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 115(6,18): Functions may not be nested
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 117(15,16): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 119(27,34): Undefined identifier   address
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 120(12,17): Undefined identifier   model
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 122(8,12): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 124(12,17): Undefined identifier   model
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 126(21,26): Undefined identifier   data0
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 127(21,26): Undefined identifier   data1
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 129(8,12): A numeric expression must appear here
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 131(24,25): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 132(9,18): Undefined identifier   bErrorI2C
+*** Error 51 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 133(5,9): A numeric expression must appear here
+*** Error 12 "Z:\CCS\Firmware\Drivers\driver_PCA9555_PCA9554.h" Line 134(9,18): Undefined identifier   bErrorI2C
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 31(6,15): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 32(6,17): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 33(6,16): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 34(6,18): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 35(6,19): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 36(6,17): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 37(6,23): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 38(6,13): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 39(6,20): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 40(6,18): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 41(6,17): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 42(7,17): Functions may not be nested
+*** Error 173 "EPTE_V2_1_SAURON.c" Line 43(9,23): Functions may not be nested
+*** Error 79 "EPTE_V2_1_SAURON.c" Line 43(40,41): Expect }
+*** Error 79 "EPTE_V2_1_SAURON.c" Line 43(40,41): Expect }

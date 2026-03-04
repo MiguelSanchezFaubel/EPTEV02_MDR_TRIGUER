@@ -1,0 +1,45 @@
+/*
+*   File: regErrores.c
+*   
+*   Descripción: Main file para el control de registro de errores
+*   
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+// Funciones
+#include "regErrores.h"
+
+void initRegError(int1 bSeleccion){
+    for(int8 i8Registro=i8OffsetParcial*bSeleccion; i8Registro<(REG_ERROR_MAX+i8OffsetParcial*bSeleccion); i8Registro++){    // Recorre todas las posiciones de los errores definicdos
+        write_eeprom(i8Registro,0x00);                        // Inicializa elcontador de errores de los registros
+        delay_ms(5);                                    // Pequeño delay de espea para ecritura
+    }
+}
+
+void incRegError(int8 i8Registro){
+    write_eeprom(i8Registro,read_eeprom(i8Registro)+1);    // Lee el valor del registro y incrementa el valor, luego lo vuelve a guardar
+    delay_ms(5);
+    write_eeprom(i8Registro+i8OffsetParcial,read_eeprom(i8Registro+i8OffsetParcial)+1);
+    delay_ms(5);
+}
+
+void muestraRegError(){
+    fprintf(DEBUG_UART,"\r\nREGISTRO ERRORES EPTE 2\r\n");
+    fprintf(DEBUG_UART,"*********************************\r\n\r\n");
+    fprintf(DEBUG_UART,"Code\t  General\t Parcial\r\n");
+    fprintf(DEBUG_UART,"-------------------------------\r\n");
+    for(int8 i8Registro=0; i8Registro<REG_ERROR_MAX; i8Registro++){
+        fprintf(DEBUG_UART,"%u\t\t%u\t\t%u\r\n",i8Registro,read_eeprom(i8Registro),read_eeprom(i8Registro+i8OffsetParcial));    
+    }
+}
+
+void refreshRegError(){
+    for(int8 i8Registro=0; i8Registro<REG_ERROR_MAX; i8Registro++){
+        write_eeprom(i8Registro,read_eeprom(i8Registro));    // Lee el valor del registro y incrementa el valor, luego lo vuelve a guardar
+        delay_ms(5);
+        write_eeprom(i8Registro+i8OffsetParcial,read_eeprom(i8Registro+i8OffsetParcial));
+        delay_ms(5);
+    }
+}

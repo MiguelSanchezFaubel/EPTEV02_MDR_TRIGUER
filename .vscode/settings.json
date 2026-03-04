@@ -1,0 +1,16 @@
+{
+    "files.associations": {
+        "glcd_fonts.h": "c",
+        "random": "c",
+        "limits": "c",
+        "internal_eeprom_registers.h": "c",
+        "bq34z100g1.h": "c",
+        "preset_registers.h": "c",
+        "comunicacion_struct.h": "c",
+        "epte_v2_1_sauron.h": "c",
+        "st7529_mem.h": "c",
+        "driver_pca9555_pca9554.h": "c"
+    },
+    "C_Cpp.errorSquiggles": "Disabled",
+    "editor.fontFamily": "Cascadia Mono, 'Courier New', monospace"
+}

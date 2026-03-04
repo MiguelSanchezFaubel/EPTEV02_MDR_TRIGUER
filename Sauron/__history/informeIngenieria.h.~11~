@@ -1,0 +1,116 @@
+/*
+*   File: regErrores.h
+*   
+*   Descripción: Header file para el control de registro de errores
+*   
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+// Definiciones
+enum{
+    REG_ERROR_DUMMY=0,      // Contador de encendidos del equipo
+    REG_ERROR_COMMS_S_O,        // Error de comunicaciones Sauron -> Orco        
+    REG_ERROR_COMMS_O_S,        // Error de comunicaciones Orco -> Sauron        
+    REG_ERROR_ALIM_5V,            // Error alimentación 5V
+    REG_ERROR_ALIM_12V,            // Error alimentación 12V    
+    REG_ERROR_ALIM_48V,            // Error alimentación 48V    
+    REG_ERROR_BQ34Z100,            // Error BQ34Z100-G1 - Inicialización    
+    REG_ERROR_ACC_INIT,            // Error acelerómetro - Inicialización    
+    REG_ERROR_ACC_MOV,            // Error acelerómetro - Movimiento brusco    
+    REG_ERROR_CARGADOR,            // Error cargador - Alimentación incorrecta    
+    REG_ERROR_WDT_SW,            // Error watchdog software    
+    REG_ERROR_WDT_HW,            // Error watchdog hardware    
+    REG_ERROR_SIM_A,            // Error simetría A
+    REG_ERROR_SIM_B,            // Error simetría B
+    REG_ERROR_SIM_C,            // Error simetría C
+    REG_ERROR_CAL_A,            // Error calibrado A
+    REG_ERROR_CAL_B,            // Error calibrado B
+    REG_ERROR_CAL_C,            // Error calibrado C
+    REG_ERROR_TRAN_A,            // Error transistores A
+    REG_ERROR_TRAN_B,            // Error transistores B
+    REG_ERROR_TRAN_C,            // Error transistores C
+    REG_ERROR_VREF_ORCO,        // Error tensión referencia Orco    
+    REG_ERROR_MAX,
+} REG_ERRORES;
+
+int8 i8OffsetErrorParcial=REG_ERROR_MAX+1;    // Offset donde empieza el bloque de parcial
+
+enum{
+    REG_VECES_ENCENDIDO=2*REG_ERROR_MAX+1,
+    REG_TRAT_CHA=REG_VECES_ENCENDIDO+2,
+    REG_TRAT_CHB=REG_TRAT_CHA+2,
+    REG_TRAT_CHC=REG_TRAT_CHB+2,
+    REG_TRAT_POINTER=REG_TRAT_CHC+2,
+    REG_TRAT_GALV=REG_TRAT_POINTER+2,
+    REG_TRAT_GALV_MICRO=REG_TRAT_GALV+2,
+    REG_TRAT_TRANS=REG_TRAT_GALV_MICRO+2,
+    REG_TRAT_SMP=REG_TRAT_TRANS+2,
+    REG_TIEMPO_CHA=REG_TRAT_SMP+2,
+    REG_TIEMPO_CHB=REG_TIEMPO_CHA+4,         // 32 bytes
+    REG_TIEMPO_CHC=REG_TIEMPO_CHB+4,
+    REG_CONT_MAX=REG_TIEMPO_CHC+4,
+} REG_CONTADORES;
+int8 i8OffsetContParcial=REG_CONT_MAX+4;    // Offset donde empieza el bloque de parcial
+
+
+char sInforme[30];
+
+#define GENERAL    0             // Selección bloque general
+#define PARCIAL 1            // Selección bloque parcial 
+
+#define DELAY_ESCRITURA_EEPROM  5       // Tiempo en ms
+
+// Def. Funciones
+void initRegError(int1);
+void initRegCont(int1);
+void initRegistros();
+
+void incRegError(int8);
+void incRegCont(int8);
+void incRegTiempo(int8);
+
+void muestraRegError();
+void muestraRegCont();
+
+void refreshRegError();
+void refreshRegCont();
+
+void informeIngenieria();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

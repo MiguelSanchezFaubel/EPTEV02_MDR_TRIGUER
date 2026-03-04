@@ -1,0 +1,4 @@
+*** Error 12 "Z:\CCS\Firmware\Orco\calibracion_adc.h" Line 14(17,24): Undefined identifier   ADC_CAL
+*** Error 12 "Z:\CCS\Firmware\Orco\calibracion_adc.h" Line 15(14,27): Undefined identifier   DELAY_INT_SIG
+*** Error 12 "Z:\CCS\Firmware\Orco\calibracion_adc.h" Line 22(25,32): Undefined identifier   ADC_CAL
+*** Error 12 "Z:\CCS\Firmware\Orco\calibracion_adc.h" Line 23(18,31): Undefined identifier   DELAY_INT_SIG

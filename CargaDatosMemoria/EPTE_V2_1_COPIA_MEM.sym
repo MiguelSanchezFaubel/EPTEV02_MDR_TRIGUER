@@ -1,0 +1,471 @@
+000     @SCRATCH
+001     @SCRATCH
+001     _RETURN_
+002     @SCRATCH
+003     @SCRATCH
+004     rs232_errors
+005.0   bDebug
+006     i8nivel_ilum
+007     i8NivelContraste
+008     result
+009     i8PercentMem
+00A-00B i16nivel_son
+00C-029 mystring
+02A-02B strtok.save
+02C-02F _Randseed
+030-033 i32OffsetDireccionIdioma
+034-037 pCurrentFont
+038     iRowStep
+039     iColumnStep
+03A     iNumBytes
+03B-03C iImagRow
+03D-03E iImagCol
+03F     i8OffsetErrorParcial
+040     i8OffsetContParcial
+041-042 @sprintf_string
+043     @SPI_XFER_1_8.P1
+043-046 atan2.y
+043     MAIN.i8Init
+044-047 MAIN.iAddress
+047-04A atan2.x
+048-049 MAIN.cstring
+04A-04D MAIN.iConv
+04B-04E atan2.z
+04E-051 MAIN.iCont
+04F.0   atan2.sign
+050     atan2.quad
+052-0B5 MAIN.string1
+0B6     MAIN.i8Length
+0B7-0BA MAIN.i32Cont
+0BB-0BE MAIN.i32Indice
+0BF-0C2 MAIN.i32Cont
+0C3-0C6 MAIN.i32Indice
+0C7-0DC MAIN.@STRPARAM
+0DD-0DE @ITOF.P1
+0DD-0E0 showMem.iAddress
+0DD     ST7529_clear.i
+0DD-0E0 @MULFF.P1
+0DD     ST7529_init.i
+0DD-0E0 @SFTOI.P1
+0DD-0DE initPresetsPredefinidos.direccion_aux
+0DD-0DE strlen.s
+0DD     @PSTRINGCN_1555.P1
+0DD     control_DC.control
+0DD     MAIN.@SCRATCH1
+0DD     @PSTRINGC_1555.@SCRATCH1
+0DE     ST7529_init.j
+0DE     ST7529_clear.j
+0DE     control_DC.DC
+0DE     MAIN.@SCRATCH2
+0DE     @PSTRINGC_1555.@SCRATCH2
+0DE     @PSTRINGCN_1555.@SCRATCH1
+0DF     @WRITEBITA.P1
+0DF-0E0 strlen.sc
+0DF     ST7529_displayOn.@SCRATCH1
+0DF     ST7529_reset.@SCRATCH1
+0DF     MAIN.@SCRATCH3
+0DF     @PSTRINGC_1555.@SCRATCH3
+0DF     @PSTRINGCN_1555.@SCRATCH2
+0DF     initPresetsPredefinidos.@SCRATCH1
+0E0     @WRITEBITA.P1
+0E0     MAIN.@SCRATCH4
+0E0     @PSTRINGCN_1555.@SCRATCH3
+0E0     initPresetsPredefinidos.@SCRATCH2
+0E1-0E2 @WRITEBITA.P1
+0E1-0E4 @PRINTF_L32U_1555.P2
+0E1-0E2 writeEEPROM_8bits.i16Dir
+0E1-0E2 ST7529_printf.sText
+0E1-0E2 @PRINTF_LU_1555.P1
+0E1     @PRINTF_U_1555.P2
+0E1-0E2 writeEEPROM_16bits.i16Dir
+0E1-0E4 @MULFF.P1
+0E1-0E2 writeEEPROM_32bits.i16Dir
+0E1-0E4 @MUL3232.P1
+0E1     strlen.@SCRATCH1
+0E1     MAIN.@SCRATCH5
+0E1     showMem.@SCRATCH1
+0E2     @PRINTF_U_1555.P1
+0E2-0E5 M25AA1024_write.i32Address
+0E2     showMem.@SCRATCH2
+0E3     writeEEPROM_8bits.i8Data
+0E3     @DIV88.P1
+0E3-0E4 writeEEPROM_16bits.i16Data
+0E3-0E6 writeEEPROM_32bits.i32Data
+0E3     ST7529_printf.iX
+0E3     @PRINTF_LU_1555.@SCRATCH1
+0E3     showMem.@SCRATCH3
+0E4     ST7529_printf.iY
+0E4     writeEEPROM_8bits.i8Return
+0E4     @DIV88.P1
+0E4     @PRINTF_LU_1555.@SCRATCH2
+0E4     showMem.@SCRATCH4
+0E5-0E8 @MUL3232.P1
+0E5     ST7529_printf.iFont
+0E5     writeEEPROM_16bits.i8Return
+0E5     @MULFF.@SCRATCH1
+0E5     @PRINTF_L32U_1555.@SCRATCH1
+0E5     @PRINTF_LU_1555.@SCRATCH3
+0E5     @DIV88.@SCRATCH1
+0E6     M25AA1024_write.i8Data
+0E6     ST7529_printf.iInvert
+0E6     @MULFF.@SCRATCH2
+0E6     writeEEPROM_16bits.@SCRATCH1
+0E6     @PRINTF_L32U_1555.@SCRATCH2
+0E6     @PRINTF_LU_1555.@SCRATCH4
+0E7     ST7529_printf.iIndex
+0E7     writeEEPROM_32bits.i8Return
+0E7-0EA M25AA1024_read.i32Address
+0E7     @MULFF.@SCRATCH3
+0E7     M25AA1024_write.@SCRATCH1
+0E7     writeEEPROM_16bits.@SCRATCH2
+0E7     @PRINTF_L32U_1555.@SCRATCH3
+0E7     @PRINTF_LU_1555.@SCRATCH5
+0E8     @delay_ms1.P1
+0E8     ST7529_printf.@SCRATCH1
+0E8     writeEEPROM_16bits.@SCRATCH3
+0E8     writeEEPROM_32bits.@SCRATCH1
+0E8     @PRINTF_L32U_1555.@SCRATCH4
+0E8     @PRINTF_LU_1555.@SCRATCH6
+0E9     ST7529_putChar.iChar
+0E9     @MUL3232.@SCRATCH1
+0E9     writeEEPROM_32bits.@SCRATCH2
+0E9     @PRINTF_L32U_1555.@SCRATCH5
+0E9     @PRINTF_LU_1555.@SCRATCH7
+0EA     ST7529_putChar.iX
+0EA     @MUL3232.@SCRATCH2
+0EA     writeEEPROM_32bits.@SCRATCH3
+0EA     @PRINTF_L32U_1555.@SCRATCH6
+0EB     ST7529_putChar.iY
+0EB     M25AA1024_read.i8Data
+0EB     @MUL3232.@SCRATCH3
+0EB     @PRINTF_L32U_1555.@SCRATCH7
+0EC-0EF M25AA1024_sendAddress.i32Address
+0EC     ST7529_putChar.iFont
+0EC     @MUL3232.@SCRATCH4
+0EC     @PRINTF_L32U_1555.@SCRATCH8
+0ED     ST7529_putChar.iGrayScale
+0ED-0F0 @DIV3232.P1
+0ED     @SPRINTF.P2
+0ED     @MUL3232.@SCRATCH5
+0EE     ST7529_putChar.iInvert
+0EE     @MUL3232.@SCRATCH6
+0EF-0F0 ST7529_putChar.iIndexData
+0F0     M25AA1024_sendAddress.@SCRATCH1
+0F1-0F4 @DIV3232.P1
+0F1     ST7529_putChar.iData
+0F1     M25AA1024_sendAddress.@SCRATCH2
+0F2-0F3 ST7529_putChar.iCont
+0F2     M25AA1024_sendAddress.@SCRATCH3
+0F3     M25AA1024_sendAddress.@SCRATCH4
+0F4     ST7529_putChar.iContBit
+0F4     M25AA1024_sendAddress.@SCRATCH5
+0F5     ST7529_selectFont.iFont
+0F5-0F6 @MUL1616.P1
+0F5     ST7529_putChar.@SCRATCH1
+0F5     @DIV3232.@SCRATCH1
+0F6-0F7 @READ_PROGRAM_MEMORY.P1
+0F6     ST7529_send.iSel
+0F6     @DIV3232.@SCRATCH2
+0F7     ST7529_send.iData
+0F7-0F8 @MUL1616.P1
+0F7     @DIV3232.@SCRATCH3
+0F8     ST7529_a0.iValue
+0F8     ST7529_cs.iValue
+0F8     @DIV3232.@SCRATCH4
+0F9     @MUL1616.@SCRATCH1
+0F9     @DIV3232.@SCRATCH5
+F16     PMD3
+F17     PMD2
+F18     PMD1
+F22.7   COM_PIC_UART_ON
+F23     ANCON2
+F24     ANCON1
+F25     ANCON0
+F26     MEMCON
+F30     T12CON
+F30.2   TIMER12_ON
+F31     PR12
+F32     TMR12
+F33     T10CON
+F33.2   TIMER10_ON
+F34     PR10
+F35     TMR10
+F36     T8CON
+F36.2   TIMER8_ON
+F37     PR8
+F38     TMR8
+F39     T6CON
+F39.2   TIMER6_ON
+F3A     PR6
+F3B     TMR6
+F3C     T7GCON
+F3D     T7CON
+F3D.0   TIMER7_ON
+F3E     TMR7L
+F3F     TMR7H
+F41     CCP_10
+F41     CCP_10_LOW
+F42     CCP_10_HIGH
+F43     CCP9CON
+F44     CCP_9_LOW
+F44     CCP_9
+F45     CCP_9_HIGH
+F46     CCP8CON
+F47     CCP_8
+F47     CCP_8_LOW
+F48     CCP_8_HIGH
+F49     CCP3CON
+F4A     CCP_3_LOW
+F4A     CCP_3
+F4B     CCP_3_HIGH
+F4E     CCP2CON
+F4F     CCP_2
+F4F     CCP_2_LOW
+F50     CCP_2_HIGH
+F51     ECCP2DEL
+F54     CM1CON
+F64     OSCCON2
+F67     SSP2CON1
+F67.5   SPI_2_ON
+F67.5   SSPEN
+F67.7   WCOL
+F68     SSP2STAT
+F6A     SSP2BUF
+F6B     T4CON
+F6B.2   TIMER4_ON
+F6C     PR4
+F6D     TMR4
+F6E     CCP7CON
+F6F     CCP_7_LOW
+F6F     CCP_7
+F70     CCP_7_HIGH
+F71     CCP6CON
+F72     CCP_6_LOW
+F72     CCP_6
+F73     CCP_6_HIGH
+F74     CCP5CON
+F75     CCP_5_LOW
+F75     CCP_5
+F76     CCP_5_HIGH
+F77     CCP4CON
+F78     CCP_4
+F78     CCP_4_LOW
+F79     CCP_4_HIGH
+F7A     T5GCON
+F7B     T5CON
+F7B.0   TIMER5_ON
+F7C     TMR5L
+F7D     TMR5H
+F81     PORTB
+F83     PSP_DATA
+F92     TRISA
+F93     TRISB
+F94     TRISC
+F95     TRISD
+F96     TRISE
+F97     TRISF
+F98     TRISG
+F9D     PIE1
+F9D.1   enable_TMR2
+F9D.1   enable_TMR1
+F9F.0   TMR1_Prio
+F9F     IPR1
+F9F.1   TMR2_Prio
+FA0     PIE2
+FA0.1   enable_TMR3
+FA1     PIR2
+FA1.1   TMR3IF
+FA1.5   SSP2IF
+FA2     IPR2
+FA2.1   TMR3_Prio
+FAB.7   DEBUG_UART_ON
+FB0     T3GCON
+FB1     T3CON
+FB1.0   TIMER3_ON
+FB2     TMR3L
+FB3     TMR3H
+FB4.5   C1OUT
+FB4.6   C2OUT
+FB4.7   C3OUT
+FB5     CVRCON
+FB9     PIE5
+FB9.0   enable_TMR4
+FB9.1   enable_TMR5
+FB9.2   enable_TMR6
+FB9.3   enable_TMR7
+FB9.4   enable_TMR8
+FB9.5   enable_TMR10
+FB9.6   enable_TMR12
+FBB     CCP1CON
+FBC     CCP_1
+FBC     CCP_1_LOW
+FBD     CCP_1_HIGH
+FC2.0   AD_ON
+FC6.5   I2C_1_ON
+FCA     T2CON
+FCA.2   TIMER2_ON
+FCD.0   TIMER1_ON
+FCD     T1CON
+FD0     RCON
+FD0.1   POR
+FD0.7   enable_Prio
+FD2.0   TMR4_Prio
+FD2     IPR5
+FD2.1   TMR5_Prio
+FD2.2   TMR6_Prio
+FD2.3   TMR7_Prio
+FD2.4   TMR8_Prio
+FD2.5   TMR10_Prio
+FD2.6   TMR12_Prio
+FD5     T0CON
+FD5.7   TIMER0_ON
+FE1-FE2 @WRITE_PACKED_MEMORY.P1
+FE1-FE2 @READ_PACKED_MEMORY.P2
+FE9-FEA @WRITE_PACKED_MEMORY.P1
+FE9-FEA @READ_PROGRAM_MEMORY.P2
+FE9-FEA @READ_PACKED_MEMORY.P3
+FE9-FEA @WRITE_PROGRAM_MEMORY.P4
+FF0     INTCON3
+FF0.3   enable_INT1
+FF0.4   enable_INT2
+FF0.5   enable_INT3
+FF0.6   INT1_Prio
+FF0.7   INT2_Prio
+FF1.0   RB_Prio
+FF1     INTCON2
+FF1.1   INT3_Prio
+FF1.2   TMR0_Prio
+FF2.0   clear_RB
+FF2     INTCON
+FF2.3   enable_RB
+FF2.4   enable_INT0
+FF2.5   enable_TMR0
+FF2.6   enable_low
+FF2.7   enable_High
+FF6-FF8 @WRITE_PROGRAM_MEMORY.P1
+FF6-FF8 @READ_PROGRAM_MEMORY.P2
+
+ROM Allocation:
+000004  textoCastellano.call
+000038  textoCastellano.data
+001298  textoIngles.call
+0012CC  textoIngles.data
+002518  @const1596.call
+002542  @const1553.call
+002552  @const1558.call
+00255E  @const1563.call
+00256C  @const1572.call
+00257A  @const1574.call
+002588  @const1576.call
+002596  @const1578.call
+0025A2  @const1580.call
+0025AE  @const1582.call
+0025C4  @const1590.call
+0025CC  @const1591.call
+0025DE  @const1595.call
+0025E6  @const1598.call
+002600  @WRITEBITA
+00263E  control_DC
+002676  @delay_ms1
+00269E  @ITOF
+0026D6  @MULFF
+0027CA  @SFTOI
+002804  @MUL1616
+002822  ST7529_reset
+002846  ST7529_cs
+002862  ST7529_a0
+002880  ST7529_send
+00289E  ST7529_displayOn
+0028C0  ST7529_init
+002B9A  M25AA1024_init
+002BAC  @SPRINTF
+002BC8  @PSTRINGC_1555
+002BF0  ST7529_selectFont
+002C82  @READ_PROGRAM_MEMORY
+002CA0  ST7529_putChar
+002DF0  ST7529_printf
+002E44  ST7529_clear
+002ECA  writeEEPROM_8bits
+002F0A  writeEEPROM_16bits
+002F96  @PSTRINGCN_1555
+002FBC  @DIV3232
+00304A  @PRINTF_L32U_1555
+0030EE  M25AA1024_sendAddress
+003132  M25AA1024_read
+003174  M25AA1024_write
+0031E2  @MUL3232
+003236  @DIV88
+00325E  @PRINTF_U_1555
+0032C6  showMem
+00336A  strlen
+00339E  @PRINTF_LU_1555
+00345A  writeEEPROM_32bits
+003576  initPresetsPredefinidos
+004790  @cinit1
+004790  MAIN
+004808  @cinit2
+0136  StrtoulGO
+0136  StrtolGO
+
+User Memory space: rom
+ 01FB00-01FFFF  smallFont
+ 01F800-01FAFF  mediumFont
+ 01EE00-01F7FF  largeFont
+ 01D22A-01EDFE  xlargeFont
+ 01CECA-01D229  ICON_16X16
+ 01B5B2-01CEC9  imagen
+
+Project Directory:
+    C:\Users\Usuario\Desktop\FIRMAWARE EPTEV02\EPTEV02_MDR\CargaDatosMemoria\
+
+Project Files:
+    EPTE_V2_1_COPIA_MEM.c                                   [25-ago.-23 10:00  CRC=B5269848]
+    EPTE_V2_1_COPIA_MEM.h                                   [20-jul.-23 07:30  CRC=42299EE1]
+    ..\..\..\..\..\..\Program Files (x86)\PICC\Devices\18F67K22.h [24-feb.-17 16:25  CRC=2BC1831E]
+    ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\math.h [22-sep.-16 08:36  CRC=9CF8C837]
+    ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\stdlib.h [29-jun.-16 09:34  CRC=7E9CC16B]
+    ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\stddef.h [05-sep.-14 11:47  CRC=897CEC6C]
+    ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\string.h [26-mar.-15 12:34  CRC=C4814297]
+    ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\ctype.h [03-ene.-08 14:55  CRC=2D1F019F]
+    ..\Drivers\M25AA1024.c                                  [11-may.-23 11:08  CRC=B992A315]
+    ..\Drivers\M25AA1024.h                                  [11-may.-23 11:08  CRC=B392ECCA]
+    ..\Drivers\ST7529.c                                     [11-may.-23 11:08  CRC=C84F3D47]
+    ..\Drivers\ST7529.h                                     [11-may.-23 11:08  CRC=AD50539C]
+    ..\Drivers\fat.c                                        [20-jul.-23 07:30  CRC=4B63F50F]
+    ..\Drivers\glcd_fonts.h                                 [11-may.-23 11:08  CRC=0DC27BA8]
+    ..\Drivers\xlargeFont.c                                 [11-may.-23 11:08  CRC=428A775E]
+    ..\Drivers\icon.h                                       [17-jul.-23 09:56  CRC=01D2E0A2]
+    ..\Drivers\Pictures\main_logo.c                         [19-jul.-23 08:59  CRC=E8C36DB2]
+    ..\Idiomas\castellano_mem.c                             [20-jul.-23 07:30  CRC=250188D3]
+    ..\Idiomas\ingles_mem.c                                 [20-jul.-23 07:30  CRC=DAD40796]
+    ..\Sauron\preset_registers.h                            [20-jul.-23 07:30  CRC=F26BFFAF]
+    ..\Sauron\internal_eeprom_registers.h                   [11-may.-23 11:08  CRC=671D4A05]
+
+Source signature=E34CEFD8
+Program memory checksum=40B9
+Program memory CRC=933C
+Hex file CRC=C2A3
+
+Units:
+    EPTE_V2_1_COPIA_MEM (main)
+
+Compiler Settings:
+    Processor:      PIC18F67K22
+    Pointer Size:   16
+    ADC Range:      0-4095
+    Opt Level:      9
+    Short,Int,Long: UNSIGNED: 1,8,16
+    Float,Double:   32,32
+    Compile Mode:       CCS5
+
+Output Files:
+    XREF file:   EPTE_V2_1_COPIA_MEM.xsym
+    Errors:      EPTE_V2_1_COPIA_MEM.err
+    Ext Symbols: EPTE_V2_1_COPIA_MEM.esym
+    INHX32:      EPTE_V2_1_COPIA_MEM.hex
+    Symbols:     EPTE_V2_1_COPIA_MEM.sym
+    List:        EPTE_V2_1_COPIA_MEM.lst
+    Debug/COFF:  EPTE_V2_1_COPIA_MEM.cof
+    Project:     EPTE_V2_1_COPIA_MEM.ccspjt
+    Call Tree:   EPTE_V2_1_COPIA_MEM.tre
+    Statistics:  EPTE_V2_1_COPIA_MEM.STA

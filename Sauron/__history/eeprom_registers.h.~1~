@@ -1,0 +1,16 @@
+/*
+*   File: eeprom_registers.c
+*   
+*   Descripción: Definiciones de los registros EEPROM 
+*       para guardar los presets
+*   
+*   Proyecto: EPTE 2
+*   Versión: 3.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+#include <internal_eeprom.h>
+
+
+

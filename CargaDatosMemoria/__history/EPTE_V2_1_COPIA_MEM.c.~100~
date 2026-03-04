@@ -1,0 +1,316 @@
+/*
+*   File: EPTE_V2_1_COPIA_MEM.c
+*   
+*   Descripción: Program file del programa principal de Sauron
+*   
+*   Proyecto: EPTE 2
+*   Versión: 3.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+/******************************** Identificador del programma ********************************/
+#define CARGA_DATOS
+
+/************************************ Libreria de Programa ***********************************/
+#include <EPTE_V2_1_COPIA_MEM.h>        // Libreria de definiciones
+#include <math.h>                       // Libreria matemática
+#include <stdlib.h>                     // Libreria estándar
+#include <string.h>
+
+/************************************ Librerias Definidas ************************************/
+#include "../Drivers/M25AA1024.c"  
+#include "../Drivers/ST7529.c"                     // Librería del GLCD 
+#include "../Drivers/Pictures/main_logo.c"
+#include "../Idiomas/castellano_mem.c"
+#include "../Idiomas/ingles_mem.c"
+
+/*********************************** Definiciones de tipo ************************************/
+
+/************************************ Prototipo Funciones ************************************/
+void control_DC(int1 control,int8 DC);                                  // Control de las alimentaciones
+void showMem(int32);
+
+/************************************ Librerias Definidas ************************************/
+
+/************************************** Interrupciones ***************************************/
+
+/************************************ Programa Principal *************************************/
+void main() {
+    
+    // Asignación de puertos analógicos +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    ANCON0=0x00;        // ANCON0: Analógicas -> X    Digitales -> AN0,AN1,AN2,AN3,AN4,AN5,AN6,AN7
+    ANCON1=0x00;        // ANCON1: Analógicas -> X    Digitales -> AN8,AN9,AN10,AN11,AN12,AN14,AN14,AN15 
+    ANCON2=0x00;        // ANCON2: Analógicas -> X    Digitales -> AN16,AN17,AN18,AN19,AN20,AN21,AN22,AN23
+    
+    // Puesta a nivel bajo de todos los pines ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+    output_a(0x00);                     // Pongo a nivel bajo el puerto A
+    output_b(0x00);                     // Pongo a nivel bajo el puerto B
+    output_c(0x00);                     // Pongo a nivel bajo el puerto C
+    output_d(0x00);                     // Pongo a nivel bajo el puerto D
+    output_e(0x00);                     // Pongo a nivel bajo el puerto E
+    output_f(0x00);                     // Pongo a nivel bajo el puerto F
+    output_g(0x00);                     // Pongo a nivel bajo el puerto G
+    
+    control_DC(0,EN_5);                 // Apago alimentación 5V
+    control_DC(0,EN_5_sw);              // Apago alimentación 5V de periféricos
+    control_DC(0,EN_12);                // Apago alimentación 12 V
+    
+    I2C_1_ON=0;                         // Apagado del I2C       
+    DEBUG_UART_ON=0;                    // Apagado UART depuración
+    COM_PIC_UART_ON=0;                  // Apagado UART comunicación
+
+    
+    output_high(RST_ORCO);              // Reseteo y mantengo nivel alto en el PIC ORCO (RESET ACTIVO A NIVEL ALTO!)
+    
+    TRISC|=0xD8;                
+    TRISC&=~0x21;                       // Configuración TRISC para poder hacer uso de los pines - Si no se hace esta configuración, da problemas con el FIXED_IO/FAST/STANDARD_IO
+
+    TRISG|=0x02;                        // Configuración TRISG
+    
+    DEBUG_UART_ON=1;                    // Apagado UART Debug
+    COM_PIC_UART_ON=1;                  // Encendido UART comunicación
+    
+    MEMCON=0xFF;                        // Deshabilitamos el bus de memoria externo
+   
+    control_DC(1,EN_5);                 // Habilito alimentación de 5 V
+    delay_ms(500);                      // Delay de estabilización
+    
+    // Setup Timer 2    - Timer resto de moduladores 250 us overflow, 250 us interrupt
+    setup_timer_2(T2_DIV_BY_16,249,1);   
+    
+    // Configuracion pito
+    setup_ccp7(CCP_PWM|CCP_SHUTDOWN_AC_L|CCP_SHUTDOWN_BD_L);        // Modulador para señal acustica
+    set_pwm7_duty((int16)((i16nivel_son*4.5)));                     // Cargamos duty de trabajo [0..500]
+    
+    for(int8 i8Init=0; i8Init<3; i8Init++){         // Bucle que parpadea un led al inicio para indicar que se ha encendido el equipo
+        output_high(LED_CHG_V);
+        delay_ms(125);
+        output_low(LED_CHG_V);
+        delay_ms(125);
+    }
+    
+    control_DC(1,EN_5_sw);              // Habilitación alimentación de  5V sw
+    delay_ms(500);                      // Delay de estabilizacion
+    
+    control_DC(1,EN_12);                // Habilitación de la alimentacion de 12 V
+    delay_ms(500);                      // Delay de estabilización 
+    
+    I2C_1_ON=1;                         // Encendido I2C
+    i2c_init(true);                     // Habilitción I2C
+    SPI_2_ON=1;                         // Habilitación SPI
+    
+    // Configuración de los PWM
+    setup_ccp8(CCP_PWM);                                        // Modulador iluminacion pantalla
+    
+    setup_comparator(NC_NC_NC_NC);
+    set_pwm7_duty((int16)0);                                    // Pone el valor de señal acústica a 0
+    set_pwm8_duty((int16)i8nivel_ilum*10);                      // Cargamos duty de trabajo [0..1000] 
+
+    // Inicialización de la pantalla
+    ST7529_init();                                              // Inicialización del controlador de pantalla
+    M25AA1024_init();
+    // Pongo imagen inicial
+    //ST7529_putImageGS(imagen,9,25,iImagRow,iImagCol);           // Pongo logo EPTE en pantalla              
+    sprintf(mystring,"CARGA DE DATOS");  
+    ST7529_printf(mystring,0,0,L_,0);
+    sprintf(mystring,"EN MEMORIA");
+    ST7529_printf(mystring,0,20,L_,0);
+    delay_ms(1000);                                             // Delay de muestra por pantalla
+
+    ST7529_clear();                                             // Limpio la pantalla                                                  
+
+    // --------------------------------------- BUCLE PRINCIPAL ----------------------------------
+    /* Copia de datos a memoria SPI */
+    // Las primeras 500 posiciones (0..499) de la memoria son para la FAT
+    // a partir de ahi hasta donde alcanza la vista son fuentes
+    
+    int32 iAddress=TAM_FAT_TOTAL;
+    char *cString;
+    int32 iConv;
+    int32 iCont=0;
+    
+    // Fuente pequeña ---------------------------------------------------------------------
+    sprintf(mystring,"FUENTE S %lu %u",(int32)FAT_S,sizeof(textoCastellano)/sizeof(textoCastellano[0]));  
+    ST7529_printf(mystring,0,0,L_,0);
+    
+    M25AA1024_write(FAT_S,make8(iAddress,2));
+    M25AA1024_write(FAT_S+1,make8(iAddress,1));
+    M25AA1024_write(FAT_S+2,make8(iAddress,0));
+    
+    for(iCont=0; iCont<(sizeof(smallFont)/sizeof(smallFont[0])); iCont++, iAddress++){
+        M25AA1024_write(iAddress,smallFont[iCont]);
+        showMem(iAddress);
+    }
+    sprintf(mystring,"OK");  
+    ST7529_printf(mystring,50,0,L_,0);
+    
+    // Fuente mediana ---------------------------------------------------------------------
+    sprintf(mystring,"FUENTE M %lu",(int32)FAT_M);  
+    ST7529_printf(mystring,0,20,L_,0);
+    
+    M25AA1024_write(FAT_M,make8(iAddress,2));
+    M25AA1024_write(FAT_M+1,make8(iAddress,1));
+    M25AA1024_write(FAT_M+2,make8(iAddress,0));
+
+    for(iCont=0; iCont<(sizeof(mediumFont)/sizeof(mediumFont[0])); iCont++, iAddress++){
+        M25AA1024_write(iAddress,mediumFont[iCont]);
+        showMem(iAddress);
+    }
+    sprintf(mystring,"OK");  
+    ST7529_printf(mystring,50,20,L_,0);
+
+    // Fuente grande ---------------------------------------------------------------------
+    sprintf(mystring,"FUENTE L %lu",(int32)FAT_L);  
+    ST7529_printf(mystring,0,40,L_,0);
+    
+    M25AA1024_write(FAT_L,make8(iAddress,2));
+    M25AA1024_write(FAT_L+1,make8(iAddress,1));
+    M25AA1024_write(FAT_L+2,make8(iAddress,0));
+    
+    for(iCont=0; iCont<(sizeof(largeFont)/sizeof(largeFont[0])); iCont++, iAddress++){
+        M25AA1024_write(iAddress,largeFont[iCont]);
+        showMem(iAddress);
+    }
+    sprintf(mystring,"OK");  
+    ST7529_printf(mystring,50,40,L_,0);
+    
+    // Fuente mu grande ---------------------------------------------------------------------
+    sprintf(mystring,"FUENTE XL %lu",(int32)FAT_XL);  
+    ST7529_printf(mystring,0,60,L_,0);
+    
+    M25AA1024_write(FAT_XL,make8(iAddress,2));
+    M25AA1024_write(FAT_XL+1,make8(iAddress,1));
+    M25AA1024_write(FAT_XL+2,make8(iAddress,0));
+   
+    for(iCont=0; iCont<(sizeof(xlargeFont)/sizeof(xlargeFont[0])); iCont++,iAddress++){
+        M25AA1024_write(iAddress,xlargeFont[iCont]);
+        showMem(iAddress);
+    }
+    sprintf(mystring,"OK");  
+    ST7529_printf(mystring,50,60,L_,0);
+    
+    // Iconos ---------------------------------------------------------------------
+    sprintf(mystring,"ICONOS %lu",(int32)FAT_ICON);   
+    ST7529_printf(mystring,0,80,L_,0);
+    
+    M25AA1024_write(FAT_ICON,make8(iAddress,2));
+    M25AA1024_write(FAT_ICON+1,make8(iAddress,1));
+    M25AA1024_write(FAT_ICON+2,make8(iAddress,0));
+    
+    for(iCont=0; iCont<(sizeof(ICON_16X16)/sizeof(ICON_16X16[0])); iCont++, iAddress++){
+        M25AA1024_write(iAddress,ICON_16X16[iCont]);
+        showMem(iAddress);
+    }
+    sprintf(mystring,"OK");  
+    ST7529_printf(mystring,50,80,L_,0);
+    
+    // Imagen ---------------------------------------------------------------------
+    sprintf(mystring,"IMAGEN %lu",(int32)FAT_IMAGEN);  
+    ST7529_printf(mystring,0,100,L_,0);
+    
+    M25AA1024_write(FAT_IMAGEN,make8(iAddress,2));
+    M25AA1024_write(FAT_IMAGEN+1,make8(iAddress,1));
+    M25AA1024_write(FAT_IMAGEN+2,make8(iAddress,0));
+    
+    for(iCont=0; iCont<(sizeof(imagen)/sizeof(imagen[0])); iCont++, iAddress++){
+        M25AA1024_write(iAddress,imagen[iCont]);
+        showMem(iAddress);
+    }
+    sprintf(mystring,"OK");  
+    ST7529_printf(mystring,50,100,L_,0);
+    
+    ST7529_clear();
+    
+    // Idioma Castellano ---------------------------------------------------------------------
+    sprintf(mystring,"IDIOMA CASTELLANO %lu",(int32)PRIMERA_POS_FAT);  
+    ST7529_printf(mystring,0,0,L_,0);
+    
+    for(int32 i32Cont=PRIMERA_POS_FAT,i32Indice=0;i32Cont<=FAT_FINAL; i32Cont+=TAM_DIR_BYTES, i32Indice++){
+        M25AA1024_write(i32Cont,make8(iAddress,2));
+        M25AA1024_write(i32Cont+1,make8(iAddress,1));
+        M25AA1024_write(i32Cont+2,make8(iAddress,0));
+        
+        for(iCont=0; iCont<strlen(textoCastellano[i32Indice]) ;iCont++, iAddress++){
+            M25AA1024_write(iAddress,textoCastellano[i32Indice][iCont]);
+            showMem(iAddress);
+        }
+        sprintf(mystring,"%03lu/150",i32Indice+1);  
+        ST7529_printf(mystring,0,20,L_,0);
+        if(i32Indice+1==150){
+            sprintf(mystring,"OK %lu",(int32)i32Cont);  
+            ST7529_printf(mystring,55,0,L_,0);
+        }
+    }
+    
+    
+    
+    // Idioma Ingles ---------------------------------------------------------------------
+    sprintf(mystring,"IDIOMA INGLES %lu",(int32)(OFFSET_DIR_ENGLISH+FAT_Co_ELECTRICA));  
+    ST7529_printf(mystring,0,40,L_,0);
+    
+    for(int32 i32Cont=(OFFSET_DIR_ENGLISH+FAT_Co_ELECTRICA),i32Indice=0;i32Cont<=(OFFSET_DIR_ENGLISH+FAT_FINAL); i32Cont+=TAM_DIR_BYTES, i32Indice++){
+        M25AA1024_write(i32Cont,make8(iAddress,2));
+        M25AA1024_write(i32Cont+1,make8(iAddress,1));
+        M25AA1024_write(i32Cont+2,make8(iAddress,0));
+        
+        for(iCont=0; iCont<strlen(textoIngles[i32Indice]) ;iCont++, iAddress++){
+            M25AA1024_write(iAddress,textoIngles[i32Indice][iCont]);
+            showMem(iAddress);
+        }
+        sprintf(mystring,"%03lu/150",i32Indice+1);  
+        ST7529_printf(mystring,0,60,L_,0);
+        if(i32Indice+1==150){
+            sprintf(mystring,"OK %lu",(int32)i32Cont);  
+            ST7529_printf(mystring,55,40,L_,0);
+        }
+    }
+
+    while(TRUE){                                    // Bucle de programa principal
+        sprintf(mystring,"Transferencia completada");                        
+        ST7529_printf(mystring,0,120,S_,0);
+    }   // Cierre bucle while principal
+}   // Cierre main
+
+void  control_DC(int1 control,int8 DC){                                                                                     // Control 0--> Apagar 1--> Encender  
+
+    output_bit(DC,control);                                                                                                 // Pone a "control" el pin "DC"
+    if(DC==EN_12){                                                                                                          // TODO - Revisar para ver para que vale
+        bDebug=control;
+    }
+}
+
+void showMem(int32 iAddress){
+    if(i8PercentMem < (int8) (100*iAddress/MAX_MEM_BYTES)){
+        i8PercentMem=100*iAddress/MAX_MEM_BYTES;
+        sprintf(mystring,"%u %%", i8PercentMem);                        
+        ST7529_printf(mystring,50,120,S_,0); 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

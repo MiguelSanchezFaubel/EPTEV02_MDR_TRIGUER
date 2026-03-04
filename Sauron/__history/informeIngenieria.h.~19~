@@ -1,0 +1,181 @@
+/*
+*   File: regErrores.h
+*   
+*   DescripciÃ³n: Header file para el control de registro de errores
+*   
+*   VersiÃ³n: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+#define GENERAL     0                   // Selección bloque general
+#define PARCIAL     1                   // Selección bloque parcial 
+
+#define DELAY_ESCRITURA_EEPROM  100     // Delay escritura EEPROM - Tiempo en us
+
+// Def. Funciones
+
+/*
+*   Función: initRegError(int1 bSeleccion)
+*   Descripción: Inicializa el estado de los registros de error,
+*                   ya sea el registro parcial o general
+*
+*   Input:
+*         - int1 bSeleccion - 0 - General
+*                           - 1 - Parcial
+*   Output:
+*         - 
+*/
+void initRegError(int1);     
+
+/*
+*   Función: initRegCont(int1 bSeleccion)
+*   Descripción: Inicializa el estado de los registros de contadores,
+*                   ya sea el registro parcial o general
+*
+*   Input:
+*         - int1 bSeleccion - 0 - General
+*                           - 1 - Parcial
+*   Output:
+*         - 
+*/
+void initRegCont(int1);    
+
+ /*
+*   Función: initRegistros()
+*   Descripción: Inicializa el estado de los registros de contadores y errores
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/            
+void initRegistros();                   
+                
+/*
+*   Función: incRegError(int8 i8Registro)
+*   Descripción: Incrementa el registor de error correspondiente al registro seleccionado para incrementar
+*
+*   Input: 
+*         - int8 i8Registro - Indica el registro en el que se quiere incrementar el registor de error
+*   Output:
+*         - 
+*/       
+void incRegError(int8);  
+
+/*
+*   Función: incRegCont(int8 i8Registro)
+*   Descripción: Incrementa el registor de contadores correspondiente al registro seleccionado para incrementar
+*
+*   Input: 
+*         - int8 i8Registro - Indica el registro en el que se quiere incrementar el registor de contadores
+*   Output:
+*         - 
+*/     
+void incRegCont(int8);    
+
+/*
+*   Función: incRegTiempo(int8 i8Registro)
+*   Descripción: Incrementa el registor de tiempo correspondiente al registro seleccionado para incrementar
+*
+*   Input: 
+*         - int8 i8Registro - Indica el registro en el que se quiere incrementar el registor de tiempo
+*   Output:
+*         - 
+*/ 
+void incRegTiempo(int8);                
+             
+/*
+*   Función: muestraRegError()
+*   Descripción: Representa por UART el registro de errores
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void muestraRegError();    
+
+/*
+*   Función: muestraRegCont()
+*   Descripción: Representa por UART el registro de contadores
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/          
+void muestraRegCont();                  
+                   
+/*
+*   Función: refreshRegError()
+*   Descripción: Refresca los registros de error de la memoria. 
+*                   Se recomienda en el datasheet que cada cierto tiempo 
+*                   se refresquen los datos para evitar que se borren
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void refreshRegError();  
+
+/*
+*   Función: refreshRegCont()
+*   Descripción: Refresca los registros de contadores de la memoria. 
+*                   Se recomienda en el datasheet que cada cierto tiempo 
+*                   se refresquen los datos para evitar que se borren
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void refreshRegCont();                  
+                     
+/*
+*   Función: informeIngenieria()
+*   Descripción: Muestra por UART el registro completo de ingeniería
+*
+*   Input:
+*         - 
+*   Output:
+*         - 
+*/
+void informeIngenieria();               
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

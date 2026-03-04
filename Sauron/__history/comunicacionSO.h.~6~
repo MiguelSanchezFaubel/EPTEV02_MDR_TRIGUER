@@ -1,0 +1,348 @@
+/*
+*   File: comunicacionSO.h
+*   
+*   Descripción: Header file que describe los parámetros 
+*      necesarios para la comunicación Sauron->Orco
+*   
+*   Proyecto:EPTE V2
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+
+/******************************** Definicion de constantes/enum/struct *****************************************/
+// enum eModos: Identifica el tipo de dato que se va a enviar de Sauron a Orco
+enum eMODOS{
+   M_CHECK_ALIVE=0,         // 0: Comprueba que se encuentra correctamente la comunicación entre los dos microcontroladores
+   M_START,                 // 1: Empieza el tratamiento
+   M_STOP,                  // 2: Para el tratamiento activo
+   M_CONFIG_TRAT,           // 3: Configura el tratamiento
+   M_CONFIG_TRAT_ACT,       // 4: Configura el tratamiento activo TODO : ES NECESARIO? PUEDE QUE CON EL COMANDO ANTERIOR VALGA
+   M_TEST,                  // 5: Selecciona el menú de test
+   M_CONFIGURACION,         // 6: Selecciona el menú de configuración  
+   M_ACK,                   // 7: Selecciona el modo de envío del ACK
+   M_ERRORES,               // 8: Selecciona el modo de envío de errores
+   M_CHECKSUM,              // 9: Selecciona el modo de envío de checksum
+};   // 4 bits
+#define LENGTH_MODES 4   // Indica el tamaño en bits que ocupa
+
+// enum eCHANNEL: Identifica el canal/es elegidos
+enum eCANAL{
+   CH_A=0,              // 0: Canal A              
+   CH_B,                // 1: Canal B  
+   CH_C,                // 2: Canal C 
+   CH_AB,               // 3: Canal A + Canal B  
+   CH_AC,               // 4: Canal A + Canal C 
+   CH_BC,               // 5: Canal B + Canal C
+   CH_ABC,              // 6: Canal A + Canal B + Canal C
+   CH_GALVANICA,        // 7: Galvanica
+   CH_MICROCORRIENTES,  // 8: Microcorrientes
+   CH_POINTER=8,        // 8: Pointer ++
+};   // 4 bits
+#define LENGTH_CHANNEL 4      // Indica el tamaño en bits que ocupa
+
+/* ++ El Pointer comparte el mismo valor que microcorrientes debido a que de esta manera 
+   podemos usarlo como indicador para saber cuando se ha elegido el pointer junto con los
+   canales elegidos realizando la operación OR.
+   Ej:
+      envioCanales(POINTER | CH_AB); 
+   En la función anterior se indica que se va a utilizar el canal A y B, siendo uno de ellos el pointer
+*/
+
+// enum: ---- DUDA: GASTEM ENUM PER A LA CORRENT?
+enum eCORRIENTE{
+
+};
+
+// enum: ----Idem
+enum eFRECUENCIA{
+
+};
+
+// enum: ePOLARIDAD
+enum ePOLARIDAD{
+   eMONOPOLAR=0,                // 0: Monopolar         
+   eBIPOLAR,                    // 1: Bipolar
+};   // 1 bit
+#define LENGTH_POLARIDAD 1      // Indica el tamaño en bits que ocupa 
+
+// enum eSIMETRIA:  
+enum eSIMETRIA{
+   eASIMETRICA=0,               // 0: Asimetrica
+   eSIMETRICA,                  // 1: Simétrica
+};  // 1 bit
+#define LENGTH_SIMETRIA 1       // Indica el tamaño en bits que ocupa 
+
+// enum eSIMETRIA_CANALES:  
+enum eSIMETRIA_CANALES{
+   CANAL_ASIMETRICO=0,          // 0: Asimetrica
+   CANAL_SIMETRICO,             // 1: Simétrica
+};   // 1 bit
+#define LENGTH_SIMETRIA_CANALES 1   // Indica el tamaño en bits que ocupa 
+
+// enum eERRORES: Indica el tipo de error que hay en ese momento
+enum eERRORES{            
+   NO_ERROR=0,              // 0: Sin error
+   ERROR_ELECTRODO,         // 1: Error de electrodo
+   ERROR_SIMETRIA,          // 2: Error de simetrÃ­a
+   ERROR_CALIBRADO,         // 3: Error de calibrado
+   ERROR_ACELEROMETRO,      // 4: Error de acelerómetro / caida libre
+   ERROR_NOACK,             // 5: Error de no recepción del ACK
+   ERROR_DESCONOCIDO,       // 6: Error desconocido, usado en casos que no tienen que ocurrir, pero para eliminar futuros problemas
+};   // 3 bits
+#define LENGTH_ERRORES 3    // Indica el tamaño en bits que ocupa 
+
+// enum eMENU_TEST: Indica las diferentes opciones del menú de test que existen
+enum eMENU_TEST{
+    T_LEDS=0,             // 0: Test de los LEDs  
+    T_SONIDO,             // 1: Test de sonido
+    T_PULSADORES,         // 2: Test de pulsadores
+    T_PANTALLA,           // 3: Test de pantalla
+    T_ACELEROMETRO,       // 4: Test de acelerómetro
+    T_ALIM_EXT,           // 5: Test de alimentación externa
+    T_STATUS_CARGADOR,    // 6: Test de cargador
+    T_DC12V,              // 7: Test del DC/DC de 12 V
+    T_DC30V,              // 8: Test del DC/DC de 30 V 
+    T_RELES,              // 9: Test de los relés
+    T_BQ34Z100,           // 10: Test del BQ34Z100     
+    T_COMUN_PIC,          // 11: Test de comunicación entre Sauron y Orco    
+};  // 4 bits
+#define LENGTH_MENU_TEST 4  // Indica el tanaño en bytes que ocupa
+
+// enum eMENU_CONFIG: Indica las diferentes opciones del menú de congiguración que existen
+enum eMENU_CONFIG{
+    VOLUMEN=0,          // 0: Modifica el nivel de volumen del equipo
+    BRILLO,             // 1: Modifica el brillo de la pantalla
+    VERSION,            // 2: Muestra la version de hardware/firmware
+};  // 2 bits
+#define LENGTH_MENU_CONFIG 2    // Indica el tamaño en bytes que ocupa
+
+// Definición de máscaras
+#define DESP_SIMETRIA_CANALES   7           // Desplazamiento utilizado para seleccionar el bit de simetrÃ­a de canales
+#define DESP_SIMETRIA           6           // Desplazamiento utilizado para seleccionar el bit de simetrÃ­a
+#define DESP_POLARIDAD          5           // Desplazamiento utilizado para seleccionar el bit de polaridad
+#define MSB                     0xFF00      // Máscara utilizada para seleccionar el MSB de un int16
+#define LSB                     0x00FF      // Máscara utilizada para seleccionar el LSB de un int16
+
+// Listado de comandos
+#define COMANDO_CONFIG_TRAT         0x55        // Comando de configuración de tratamiento
+#define COMANDO_CONFIG_TRAT_ACT     0x56        // Comando de configuración de tratamiento en activo
+#define COMANDO_START               0xAA        // Comando de START
+#define COMANDO_STOP                0xBB        // Comando de STOP
+#define COMANDO_CHECK_ALIVE         0xCA        // Comando Check Alive
+#define COMANDO_CHECKSUM            0xC5        // Comando CHECKSUM
+#define COMANDO_ACK                 0xCC        // Comando identificador del ACK
+#define COMANDO_ERRORES             0xEE        // Comando identificador de que se va a recibir un error
+#define COMANDO_CONFIGURACION       0x11        // Conando para acceder al menú de configuración
+#define COMANDO_TEST                0x12        // Comando para acceder al menú de test 
+
+// Definiciones Buffer entrada datos
+#define BUFFER_SIZE 32                          // Se define un buffer de 32 bytes
+int8 gi8BufferData[BUFFER_SIZE];                // Crea un buffer de BUFFER_SIZE bytes de tipo int8
+int8 gi8BufferIndex=0;                          // Indice de los datos del buffer, indica el número de bytes a leer
+int1 bDatoRecibido=0;                           // Indica si los datos ya están disponibles para leer (1) o no (0)
+
+// Otras definiciones
+//#define CHECKSUM                     // Si está descomentado, se hace uso del checksum
+
+#ifdef CHECKSUM                         // Si se ha definido el uso de CHECKSUM
+int8 gi8CheckSum;                       // Crea la variable para el checksum
+#endif
+int8 gi8NumeroBytesLeer;                // Indica el número de bytes a leer de la trama recibida
+
+/********************************* Prototipo de funciones ***********************************************/
+
+/*
+*   Función: enviaComando (Simple)
+*
+*   Descripción: Envia el modo de funcionamiento al PIC orco
+*
+*   IMPORTANTE: Usar esta función solo en los siguientes modos:
+*       - M_CHECK_ALIVE
+*       - M_START         
+*       - M_STOP      
+*       - M_CONFIG_TRAT
+*       - M_ACK
+*       - M_CHECKSUM  
+*
+*   Parámetros de entrada:
+*       - i8Mode    - Indica el modo que se envia elegido de eMODES
+*
+*   Parámetros de salida:
+*       - int8      - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaComando(int8 i8Mode);
+
+/*
+*   Función: enviaComando (Doble)
+*
+*   Descripción: Envia el modo de funcionamiento al PIC orco.
+*   
+*   IMPORTANTE: Usar esta función solo en los siguientes modos:
+*       - M_CONFIG_TRAT   
+*       - M_TEST          
+*       - M_CONFIGURACION                     
+*       - M_ERRORES
+*
+*   Parámetros de entrada:
+*       - i8Mode        - Indica el modo que se envia elegido de eMODES
+*       - i8Comando     - Indica el modo del enum seleccionado dependiendo del modo elegido.
+*               Por ejemplo, si se quiere enviar la selección del menú de test del BQ34Z100
+*                   enviaComando(M_TEST,T_BQ34Z100);
+*
+*   Parámetros de salida:
+*       - int8          - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaComando(int8 i8Mode,int8 i8Comando);
+
+/*
+*   Función: enviaConfiguracionCanal
+*
+*   Descripción: Envia la configuración del tratamiento al PIC orco 
+*
+*   Parámetros de entrada:
+*       - i8Canal           - Indica el canal a configurar mediante los valores de eCANAL
+*       - i16TiempoActivo   - Indica el valor de tiempo activo en segundos         
+*       - i8TiempoReposo    - Indica el valor de tiempo de reposo en segundos         
+*       - i8TiempoRampa     - Indica el valor de tiempo de rampa en segundos         
+*       - i8Repeticiones    - Indica el nÃºmero de repeticiones a realizar   
+*       - i16Corriente      - Indica la corriente a fijar en uA
+*       - i16Frecuencia     - Indica la frecuencia a fijar en Hz   
+*       - bSimetria         - Indica si la señal es asimétrica o simétrica mediante los valores de eSIMETRIA
+*       - bPolaridad        - Indica si la señal es bipolar o monopolar mediante los valores de ePOLARIDAD
+*       - i16PWP            - Indica el ancho de pulso positivo
+*       - i16PWN            - Indica el ancho de pulso negativo
+*       - bSimetriaCanales  - Indica si tiene simetrÃ­a entre canales mediante los valores de la variable eSIMETRIA_CANALES
+*
+*   Parámetros de salida:
+*       - int8              - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaConfiguracionCanal(   int8 i8Canal, int16 i16TiempoActivo, int8 i8TiempoReposo, int8 i8TiempoRampa, 
+                        int8 i8Repeticiones, int16 i16Corriente, int16 i16Frecuencia, int1 bSimetria, 
+                        int1 bPolaridad, int16 i16PWP, int16 i16PWN, int1 bSimetriaCanales);
+
+/*
+*   Función: enviaConfiguracionCanalActivo
+*
+*   Descripción: Envia la configuración del tratamiento al PIC orco en tratamiento activo 
+*
+*   Parámetros de entrada:
+*       - i8Canal           - Indica el canal a configurar mediante los valores de eCANAL
+*       - i16Corriente      - Indica la corriente a fijar en uA
+*
+*   Parámetros de salida:
+*       - int8              - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaConfiguracionCanalActivo(int8 i8Canal, int16 i16Corriente);
+
+/*
+*   Función: enviaAsignacionCanales
+*
+*   Descripción: Envia los canales que se van a utilizar
+*
+*   Parámetros de entrada:
+*       - i8Canal       - Indica el canal a configurar mediante los valores de eCANAL
+*
+*   Parámetros de salida:
+*       - int8          - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaAsignacionCanales(int8 i8Canal);
+
+/*
+*   Función: enviaStart
+*   
+*   Descripción: Envia el comando start tratamiento al PIC orco 
+*
+*   Parámetros de entrada:
+*      - 
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaStart();
+
+/*
+*   Función: enviaStop
+*
+*   Descripción: Envia el comando start tratamiento al PIC orco
+*
+*   Parámetros de entrada:
+*      - 
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaStop();
+
+/*
+*   Función: enviaCheckAlive
+*
+*   Descripción: Envia un comando para comprobar que la comunicación sigue activa
+*
+*   Parámetros de entrada:
+*      - 
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaCheckAlive();
+
+/*
+*   Función: enviaErrorOcurrido
+*
+*   Descripción: Envia un comando para comprobar que la comunicación sigue activa
+*
+*   Parámetros de entrada:
+*      - i8Error: Indica el error ocurrido mediante el valor del enum eERRORES
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaErrorOcurrido(int8 i8Error);
+
+/*
+*   Función: enviaMenuConfiguracion
+*
+*   Descripción: Envia un comando para indicar que opción del menú de 
+*       configuración se quiere cambiar
+*
+*   Parámetros de entrada:
+*      - i8MenuConfiguracion: Indica la opción elegida del menu de eMENU_CONFIG
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaMenuConfiguracion(int8 i8MenuConfiguracion);
+
+/*
+*   Función: enviaMenuTest
+*
+*   Descripción: Envia un comando para indicar que opción del menú de 
+*       test se quiere testear
+*
+*   Parámetros de entrada:
+*      - i8MenuTest: Indica la opción elegida del menu de eMENU_CONFIG
+*
+*   Parámetros de salida:
+*      - int8      - Devuelve un valor a comparar con la enum eERRORES
+*/
+int8 enviaMenuTest(int8 i8MenuTest);
+
+
+#ifdef CHECKSUM
+/*
+*   Función: calculaChecksum
+*
+*   Descripción: Calcula el chekcsum del valor introducido
+*
+*   Parámetros de entrada:
+*      - gi8CheckSum: Valor a calcular del checksum
+*
+*   Parámetros de salida:
+*      - int8      - Valor calculado del checksum
+*/
+int8 calculaChecksum(int8 gi8CheckSum);
+#endif
+
+

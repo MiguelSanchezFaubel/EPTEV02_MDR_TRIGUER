@@ -1,0 +1,1 @@
+Para esta versión, hayq ue activar el Low Voltage Erase, y desactivar que borre la data EEPROM (DATA ERASE).

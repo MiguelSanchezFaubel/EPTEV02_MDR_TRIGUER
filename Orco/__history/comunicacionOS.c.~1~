@@ -1,0 +1,71 @@
+/*
+*	File: comunicacionOS.c
+*	
+*	Descripción: Program file que describe los parámetros 
+*		necesarios para la comunicación Orco->Sauron
+*	
+*	Proyecto:EPTE V2
+*	Versión: 1.0
+*
+*	Ionclinics & Deionics SL
+*/
+
+int8 procesaComando(int8 i8Received){ // -> Enviar codigo a configuracion OS
+
+	int8 i8Return;
+
+	switch(i8Received){
+		case COMANDO_CONFIG_TRAT:		
+			// TODO: Recibe el comando de asignación de canales
+			#ifdef CHECKSUM
+			gi8NumeroBytesLeer=4;	// Canal (1 byte) + Corriente (2 bytes)	+ Checksum (1 byte)
+			#elif
+			gi8NumeroBytesLeer=3;	// Canal (1 byte) + Corriente (2 bytes)
+			#endif
+			i8Return=NO_ERROR;
+			break;
+		case COMANDO_CONFIG_TRAT_ACT: 
+			// TODO: Recibe el comando de asignación de canales
+			#ifdef CHECKSUM
+			gi8NumeroBytesLeer=15;	// Canal,Sim.Can,Sim,Pol (1 byte) + TiempoActivo (2 bytes) + TiempoReposo (1 byte) + TiempoRampa (1 byte) + Repeticiones (1 byte) +
+			#elif						// Corriente (2 bytes) + Frecuencia (2 bytes) + PWp (2 bytes) + PWn (2 bytes) + Checksum (1 byte)
+			gi8NumeroBytesLeer=14;	// Canal,Sim.Can,Sim,Pol (1 byte) + TiempoActivo (2 bytes) + TiempoReposo (1 byte) + TiempoRampa (1 byte) + Repeticiones (1 byte) 
+			#endif						// Corriente (2 bytes) + Frecuencia (2 bytes) + PWp (2 bytes) + PWn (2 bytes)
+			i8Return=NO_ERROR;
+			break;
+		case COMANDO_START:			
+			// Empieza el tratamiento
+			i8Return=NO_ERROR;
+			break;
+		case COMANDO_STOP:			
+			// Para el tratamiento
+			i8Return=NO_ERROR;
+			break;
+		case COMANDO_CHECK_ALIVE:		
+			i8Return=NO_ERROR;
+			break;
+		case COMANDO_ACK:				
+			i8Return=NO_ERROR;
+			break;
+		case COMANDO_ERRORES:
+			gi8NumeroBytesLeer=1;	// Valor enum identificativo del error
+			// TODO: Leer aqui el error?
+			break;
+		default:	
+			i8Return=ERROR_DESCONOCIDO;		
+	}
+
+	#ifdef CHECKSUM
+	putc(i8Received);			// Envia como checksum el valor recibido
+	#elif
+	putc(COMANDO_ACK);			// Envia 
+	#endif
+	
+	return i8Return;
+}
+
+int8 procesaConfiguracionCanal(){
+
+
+	
+}

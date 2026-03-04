@@ -1,0 +1,45 @@
+/*
+*   File: regErrores.h
+*   
+*   Descripción: Header file para el control de registro de errores
+*   
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+// Definiciones
+enum{
+    REG_ERROR_COMMS_S_O=0,        // Error de comunicaciones Sauron -> Orco        
+    REG_ERROR_COMMS_O_S,        // Error de comunicaciones Orco -> Sauron        
+    REG_ERROR_ALIM_5V,            // Error alimentación 5V
+    REG_ERROR_ALIM_12V,            // Error alimentación 12V    
+    REG_ERROR_ALIM_48V,            // Error alimentación 48V    
+    REG_ERROR_BQ34Z100,            // Error BQ34Z100-G1 - Inicialización    
+    REG_ERROR_ACC_INIT,            // Error acelerómetro - Inicialización    
+    REG_ERROR_ACC_MOV,            // Error acelerómetro - Movimiento brusco    
+    REG_ERROR_CARGADOR,            // Error cargador - Alimentación incorrecta    
+    REG_ERROR_WDT_SW,            // Error watchdog software    
+    REG_ERROR_WDT_HW,            // Error watchdog hardware    
+    REG_ERROR_SIM_A,            // Error simetría A
+    REG_ERROR_SIM_B,            // Error simetría B
+    REG_ERROR_SIM_C,            // Error simetría C
+    REG_ERROR_CAL_A,            // Error calibrado A
+    REG_ERROR_CAL_B,            // Error calibrado B
+    REG_ERROR_CAL_C,            // Error calibrado C
+    REG_ERROR_TRAN_A,            // Error transistores A
+    REG_ERROR_TRAN_B,            // Error transistores B
+    REG_ERROR_TRAN_C,            // Error transistores C
+    REG_ERROR_VREF_ORCO,        // Error tensión referencia Orco    
+    REG_ERROR_MAX,
+} REG_ERRORES;
+int8 i8OffsetParcial=REG_ERROR_MAX+1;    // Offset donde empieza el bloque de parcial
+
+#define GENERAL    0             // Selección bloque general
+#define PARCIAL 1            // Selección bloque parcial 
+
+// Def. Funciones
+void initRegError(int1);
+void incRegError(int8);
+void muestraRegError();
+void refreshRegError();

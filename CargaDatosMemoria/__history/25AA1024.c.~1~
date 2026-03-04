@@ -1,0 +1,113 @@
+/*     
+*   Code: Driver for 25AA1024 SPI Memory
+*
+*   Developed by: Ionclinics & Deionics SL
+*   Rev: 1.0
+*
+*/
+#include "25AA1024.h"
+
+/*
+*   Función: Inicialización
+*   Descripción: Inicializa el SPI y la memoria
+*
+*   Input:
+*         - 
+*   Output:
+*         -
+*/
+void M25AA1024_init()
+{
+   //SSP1CON1=0xB0;                     // Configuramos la máxima velocidad para el SPI (FOSC/4)
+   output_high(HOLD_MEM);
+}
+
+/*
+*   Función: Envio de dirección de memoria
+*   Descripción: Envía por SPI la dirección de memoria seleccionada.
+*      Se hace uso de esta función debido a que la dirección tiene 
+*      un tamaño de 24 bits y la función spi_write solo permite 8bits
+*   
+*   Dirección 
+*
+*   31                 23                  15                    7                  0   
+*    _______________________________________________________________________________
+*   |   NO USADO        |      MSB          |      MidSB         |      LSB         |
+*   |___________________|___________________|____________________|__________________|
+*
+*   Input:
+*         - iAddress
+*   Output:
+*         -
+*/
+void M25AA1024_sendAddress(int32 iAddress)
+{              
+   spi_write2((iAddress>>16)&0xFF);          // Se desplaza hacia la derecha 16 bits los 8 bits más significativos de la dirección
+                                             // de memoria de 24 bits (MSB)
+   spi_write2((iAddress>>8)&0xFF);           // Mismo procedimiento pero desplazando solo 8 bits (MidSB)
+   spi_write2((iAddress)&0xFF);              // (LSB)
+}
+
+/*
+*   Función: Lectura datos
+*   Descripción: Lee el dato guardado en la dirección seleccionada
+*
+*   Input:
+*         - iAddress - Dirección de memoria
+*   Output:
+*         - iData    - Dato leido
+*/
+int8 M25AA1024_read(int32 iAddress)
+{
+
+   int8 iData;                         // Variable para guardar el dato leido
+   SSP2CON1=0xA0;
+   SSP2STAT|=0x40;                     // Input data is sampled at the middle of data output time
+                                       // Transmit occurs on the transition from active to Idle clock state
+   output_low(CS_MEM);                 // Activa la memoria
+   spi_write2(READ);                   // Envía comando de lectura
+   M25AA1024_sendAddress(iAddress);    // Envía dirección de memoria a leer
+   iData=spi_read2(0);                 // Lee el dato
+   output_high(CS_MEM);                // Desactiva la memoria
+   return iData;                     // Retorna el dato leido
+}
+
+/*
+*   Función: Envio datos
+*   Descripción: Envía el dato seleccionado a la dirección seleccionada
+*
+*   Input:
+*       - iAddress   - Dirección de memoria
+*         - iData      - Dato a enviar
+*   Output:
+*         -
+*/
+void M25AA1024_write(int32 iAddress,int8 iData)
+{
+   SSP2CON1=0xA0;
+   SSP2STAT|=0x40;                 // Input data is sampled at the middle of data output time
+                                   // Transmit occurs on the transition from active to Idle clock state
+
+   output_low(CS_MEM);                    // Activa la memoria
+   spi_write2(WREN);                       // Habilita escritura
+   output_high(CS_MEM);                   // Desactiva la memoria       
+   output_low(CS_MEM);                    // Activa la memoria
+   spi_write2(WRITE);                      // Envia comando de escritura
+   M25AA1024_sendAddress(iAddress);       // Envia dirección de memoria a escribir
+   spi_write2(iData);                      // Escribe el dato
+   output_high(CS_MEM);                   // Desactiva la memoria
+   //while(M25AA1024_status() & 0x01);
+   delay_ms(8);
+   //SSP2CON1=0xB2;
+   //SSP2STAT&=~0x40;
+}
+
+int8 M25AA1024_status(){
+
+   int8 iResult;
+   output_low(CS_MEM);               // Activa la memoria
+   iResult=spi_read2(RDSR);            // Lee estado
+   output_high(CS_MEM);            // Desactiva la memoria
+       
+   return iResult;
+}

@@ -1,0 +1,132 @@
+/*
+*   File: comunicacion_struct.c
+*   
+*   Descripción: Program file que describe los parámetros 
+*      necesarios para la comunicación Sauron->Orco con structs
+*   
+*   Proyecto:EPTE V2.1
+*   Versión: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+#include "comunicacion_struct.h"
+    
+/********************************* Funciones *****************************************/
+  
+int8 enviaPaquete(int8 i8ModoStruct){
+
+    fputc(i8ModoStruct,COM_PIC_UART);
+
+    switch (i8ModoStruct){
+        case MODO_CHECK_ALIVE:
+            fputc(COMANDO_CHECK_ALIVE,COM_PIC_UART);
+            break;
+        case MODO_TRAT_ELECT:
+            memcpy(acBufferTratamientoElectro,&structTratamientoElectro,sizeof(structTratamientoElectro));
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoElectro); i8Cont++){
+                fputc(acBufferTratamientoElectro[i8Cont],COM_PIC_UART);
+            }
+            break;
+        case MODO_TRAT_ELECT_ACTIVO:
+            memcpy(acBufferTratamientoElectroActivo,&structTratamientoElectroActivo,sizeof(structTratamientoElectroActivo));
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoElectroActivo); i8Cont++){
+                fputc(acBufferTratamientoElectroActivo[i8Cont],COM_PIC_UART);
+            }
+            break;
+        case MODO_MEDIDAS_OBTENIDAS:
+            memcpy(acBufferMedidasElectro,&structMedidasElectro,sizeof(structMedidasElectro));
+            for(int8 i8Cont=0; i8Cont<sizeof(structMedidasElectro); i8Cont++){
+                fputc(acBufferMedidasElectro[i8Cont],COM_PIC_UART);
+            }
+            break;
+        case MODO_ACK:
+            fputc(COMANDO_ACK,COM_PIC_UART);
+            break;
+    }
+    fputc('\r',COM_PIC_UART);                       // Envía la secuencia de fin de trama \r\n
+    fputc('\n',COM_PIC_UART);
+
+    return 0;
+}
+
+int8 enviaPaquete(int8 i8ModoStruct,int16 i8InputData){
+    
+    fputc(i8ModoStruct,COM_PIC_UART);
+
+    switch (i8ModoStruct){
+        case MODO_START_STOP:
+            fputc(i8InputData,COM_PIC_UART);
+            break;
+        case MODO_ERRORES:
+            fputc(make8(i8InputData,1),COM_PIC_UART);   // MSB
+            fputc(make8(i8InputData,0),COM_PIC_UART);   // LSB
+            break;
+    }
+    fputc('\r',COM_PIC_UART);                       // Envía la secuencia de fin de trama \r\n
+    fputc('\n',COM_PIC_UART);
+
+    return 0;
+}
+
+int8 lecturaPaquete(){
+
+    int8 i8ModoStruct=i8BufferEntrada[0];          // Lee la primera posición del buffer, la cual almacena el tipo de paquete
+
+    switch(i8ModoStruct){
+        case MODO_CHECK_ALIVE:
+            if(i8BufferEntrada[1]==COMANDO_CHECK_ALIVE){
+                enviaPaquete(MODO_ACK);
+            }
+            break;
+        case MODO_START_STOP:
+            switch(i8BufferEntrada){
+                case COMANDO_START:
+                    // TODO - Informar de START
+                    break;
+                case COMANDO_STOP:
+                    // TODO - Informar de STOP
+                    break;
+            }
+            enviaPaquete(MODO_ACK);
+            break;
+        case MODO_TRAT_ELECT:
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoElectro); i8Cont++){
+                    acBufferTratamientoElectro[i8Cont]=i8BufferEntrada[i8Cont+1];
+            }
+            memcpy(&structTratamientoElectro,acBufferTratamientoElectro,sizeof(structTratamientoElectro));
+            enviaPaquete(MODO_ACK);
+            break;
+        case MODO_TRAT_ELECT_ACTIVO:
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoElectroActivo); i8Cont++){
+                    acBufferTratamientoElectroActivo[i8Cont]=i8BufferEntrada[i8Cont+1];
+            }
+            memcpy(&structTratamientoElectroActivo,acBufferTratamientoElectroActivo,sizeof(structTratamientoElectroActivo));
+            enviaPaquete(MODO_ACK);
+            break;
+        case MODO_MEDIDAS_OBTENIDAS:
+            for(int8 i8Cont=0; i8Cont<sizeof(structMedidasElectro); i8Cont++){
+                    acBufferMedidasElectro[i8Cont]=i8BufferEntrada[i8Cont+1];
+            }
+            memcpy(&structMedidasElectro,acBufferMedidasElectro,sizeof(structMedidasElectro));
+            enviaPaquete(MODO_ACK);
+            break;
+        case MODO_ERRORES:
+            i16ErroresOcurridos=make16(i8BufferEntrada[1],i8BufferEntrada[2]);
+            enviaPaquete(MODO_ACK);
+            break;
+        case MODO_ACK:
+            if(i8BufferEntrada[1]==COMANDO_ACK){
+                // TODO - Cuando recibo ACK,, que hacemos?
+            }
+            break;
+        }
+    }
+}
+
+#ifdef CHECKSUM                                     // Si se ha definido el uso del checksum
+int8 calculaChecksum(){
+    return (0xFF - gi8CheckSum + 1);                // Devuelve el checksum
+}
+#endif
+

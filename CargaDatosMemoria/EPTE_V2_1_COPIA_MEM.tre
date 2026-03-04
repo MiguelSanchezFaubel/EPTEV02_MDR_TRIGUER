@@ -1,0 +1,638 @@
+ÀÄEPTE_V2_1_COPIA_MEM
+   ÀÄMAIN  0/4494  Ram=159
+      ÃÄ@cinit1  (Inline)  Ram=0
+      ÃÄcontrol_DC  0/56  Ram=2
+      ³  ÃÄ@WRITEBITA  0/62  Ram=6
+      ³  ÀÄ@WRITEBITA  0/62  Ram=6
+      ÃÄcontrol_DC  0/56  Ram=2
+      ³  ÀÄ*
+      ÃÄcontrol_DC  0/56  Ram=2
+      ³  ÀÄ*
+      ÃÄcontrol_DC  0/56  Ram=2
+      ³  ÀÄ*
+      ÃÄ@delay_ms1  0/40  Ram=1
+      ÃÄ@ITOF  0/56  Ram=2
+      ÃÄ@MULFF  0/244  Ram=11
+      ÃÄ@SFTOI  0/58  Ram=4
+      ÃÄ@delay_ms1  0/40  Ram=1
+      ÃÄ@delay_ms1  0/40  Ram=1
+      ÃÄcontrol_DC  0/56  Ram=2
+      ³  ÀÄ*
+      ÃÄ@delay_ms1  0/40  Ram=1
+      ÃÄcontrol_DC  0/56  Ram=2
+      ³  ÀÄ*
+      ÃÄ@delay_ms1  0/40  Ram=1
+      ÃÄ@MUL1616  0/30  Ram=5
+      ÃÄST7529_init  0/730  Ram=2
+      ³  ÃÄST7529_reset  0/36  Ram=1
+      ³  ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ³  ÀÄ@delay_ms1  0/40  Ram=1
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÃÄST7529_cs  0/28  Ram=1
+      ³  ³  ÃÄST7529_a0  0/30  Ram=1
+      ³  ³  ÀÄST7529_cs  0/28  Ram=1
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÀÄST7529_displayOn  0/34  Ram=1
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÀÄ@delay_ms1  0/40  Ram=1
+      ÃÄM25AA1024_init  0/18  Ram=0
+      ÃÄ@PSTRINGC_1555  0/40  Ram=3
+      ³  ÀÄ@SPRINTF  0/28  Ram=1
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄST7529_putChar  0/336  Ram=13
+      ³     ÃÄST7529_selectFont  0/146  Ram=1
+      ³     ÃÄ@MUL1616  0/30  Ram=5
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄ@READ_PROGRAM_MEMORY  0/30  Ram=7
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÃÄST7529_send  0/30  Ram=2
+      ³     ³  ÀÄ*
+      ³     ÀÄST7529_send  0/30  Ram=2
+      ³        ÀÄ*
+      ÃÄ@PSTRINGC_1555  0/40  Ram=3
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@delay_ms1  0/40  Ram=1
+      ÃÄST7529_clear  0/134  Ram=2
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÃÄST7529_send  0/30  Ram=2
+      ³  ³  ÀÄ*
+      ³  ÀÄST7529_send  0/30  Ram=2
+      ³     ÀÄ*
+      ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ÀÄ@delay_ms1  0/40  Ram=1
+      ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ÀÄ*
+      ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ÀÄ*
+      ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ÀÄ@delay_ms1  0/40  Ram=1
+      ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÃÄ@DIV3232  0/142  Ram=13
+      ³  ÃÄ@SPRINTF  0/28  Ram=1
+      ³  ÀÄ@DIV3232  0/142  Ram=13
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÃÄM25AA1024_sendAddress  0/68  Ram=9
+      ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ÀÄM25AA1024_read  0/66  Ram=5
+      ³     ÀÄM25AA1024_sendAddress  0/68  Ram=9
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄ@READ_PROGRAM_MEMORY  0/30  Ram=7
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄshowMem  0/164  Ram=8
+      ³  ÃÄ@MUL3232  0/84  Ram=14
+      ³  ÃÄ@MUL3232  0/84  Ram=14
+      ³  ÃÄ@PRINTF_U_1555  0/104  Ram=2
+      ³  ³  ÃÄ@DIV88  0/40  Ram=3
+      ³  ³  ÃÄ@SPRINTF  0/28  Ram=1
+      ³  ³  ÃÄ@DIV88  0/40  Ram=3
+      ³  ³  ÃÄ@SPRINTF  0/28  Ram=1
+      ³  ³  ÀÄ@SPRINTF  0/28  Ram=1
+      ³  ÃÄ@SPRINTF  0/28  Ram=1
+      ³  ÃÄ@SPRINTF  0/28  Ram=1
+      ³  ÀÄST7529_printf  0/84  Ram=8
+      ³     ÀÄ*
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄ@READ_PROGRAM_MEMORY  0/30  Ram=7
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄshowMem  0/164  Ram=8
+      ³  ÀÄ*
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄ@READ_PROGRAM_MEMORY  0/30  Ram=7
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄshowMem  0/164  Ram=8
+      ³  ÀÄ*
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄ@READ_PROGRAM_MEMORY  0/30  Ram=7
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄshowMem  0/164  Ram=8
+      ³  ÀÄ*
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄ@READ_PROGRAM_MEMORY  0/30  Ram=7
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄshowMem  0/164  Ram=8
+      ³  ÀÄ*
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄ@READ_PROGRAM_MEMORY  0/30  Ram=7
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄshowMem  0/164  Ram=8
+      ³  ÀÄ*
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄST7529_clear  0/134  Ram=2
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄ@const1478  0/4756  Ram=0
+      ÃÄstrlen  0/52  Ram=5
+      ÃÄ@const1478  0/4756  Ram=0
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄshowMem  0/164  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@PRINTF_LU_1555  0/188  Ram=9
+      ³  ÀÄ@SPRINTF  0/28  Ram=1
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄ@const1482  0/4736  Ram=0
+      ÃÄstrlen  0/52  Ram=5
+      ÃÄ@const1482  0/4736  Ram=0
+      ÃÄM25AA1024_write  0/110  Ram=6
+      ³  ÀÄ*
+      ÃÄshowMem  0/164  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄ@SPRINTF  0/28  Ram=1
+      ÃÄ@PRINTF_LU_1555  0/188  Ram=9
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@PSTRINGCN_1555  0/38  Ram=4
+      ³  ÀÄ*
+      ÃÄ@PRINTF_L32U_1555  0/164  Ram=12
+      ³  ÀÄ*
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄ@const1596  0/42  Ram=0
+      ÃÄST7529_printf  0/84  Ram=8
+      ³  ÀÄ*
+      ÃÄinitPresetsPredefinidos  0/4634  Ram=4
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ³  ÃÄ@delay_ms1  0/40  Ram=1
+      ³  ³  ÀÄ@delay_ms1  0/40  Ram=1
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_16bits  0/140  Ram=8
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_32bits  0/284  Ram=10
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÃÄwriteEEPROM_8bits  0/64  Ram=4
+      ³  ³  ÀÄ*
+      ³  ÀÄwriteEEPROM_8bits  0/64  Ram=4
+      ³     ÀÄ*
+      ÃÄ@PSTRINGC_1555  0/40  Ram=3
+      ³  ÀÄ*
+      ÀÄST7529_printf  0/84  Ram=8
+         ÀÄ*

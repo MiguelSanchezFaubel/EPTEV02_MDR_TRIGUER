@@ -1,0 +1,1449 @@
+/*
+*   File: comunicacion_struct.c
+*   
+*   Descripci�n: Program file que describe los par�metros 
+*      necesarios para la comunicaci�n Sauron->Orco con structs
+*   
+*   Proyecto: EPTE 2
+*   Versi�n: 1.0
+*
+*   Ionclinics & Deionics SL
+*/
+
+#include "comunicacion_struct.h"
+    
+/********************************* Funciones *****************************************/
+  
+int8 enviaPaquete(int8 i8ModoStruct){
+
+    int8 i8Return=RETURN_ERROR;                             // Variable de retorno que se inicializa como error en caso de que ocurra alg�n error
+
+    fputc(i8ModoStruct,COM_PIC_UART);                       // Envia el identificador de paquete
+    
+    i8TipoPaqueteACK=i8ModoStruct;                          // Asigno que tipo de ack tienen que hacer/comprobar dependiendo del paquete recibido
+
+    calculoChecksum(ENVIO, i8ModoStruct);
+    
+    int8 i8Debug=0;
+    
+    switch (i8ModoStruct){                                                                                                      // Dependiendo del tipo de paquete enviado...
+        case MODO_CHECK_ALIVE:                                                                                                  // MODO_CHECK_ALIVE
+            fputc(COMANDO_CHECK_ALIVE,COM_PIC_UART);                                                                            // Envia el comando de check alive
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_TRAT_ELECT:                                                                                                   // MODO_TRAT_ELECT    
+            memcpy(acBufferTratamientoElectro,&structTratamientoElectro,sizeof(structTratamientoElectro));                      // Copia los datos del strcut en el buffer de salida
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoElectro); i8Cont++){                                              // Bucle de env�o
+                fputc(acBufferTratamientoElectro[i8Cont],COM_PIC_UART);                                                         // Envio los datos del buffer
+            }
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_TRAT_ELECT_ACTIVO:                                                                                            // MODO_TRAT_ELECT_ACTIVO
+            memcpy(acBufferTratamientoElectroActivo,&structTratamientoElectroActivo,sizeof(structTratamientoElectroActivo));    // Copia los datos del strcut en el buffer de salida                                                    
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoElectroActivo); i8Cont++){                                        // Bucle de env�o            
+                fputc(acBufferTratamientoElectroActivo[i8Cont],COM_PIC_UART);                                                   // Envio los datos del buffer
+            }
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_TRAT_TB:                                                                                                     // MODO_TRAT_TB    
+            memcpy(acBufferTratamientoThetaBurst,&structTratamientoThetaBurst,sizeof(structTratamientoThetaBurst));          // Copia los datos del strcut en el buffer de salida
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoThetaBurst); i8Cont++){                                          // Bucle de env�o
+                fputc(acBufferTratamientoThetaBurst[i8Cont],COM_PIC_UART);                                                     // Envio los datos del buffer
+            }
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_TRAT_TB_ACTIVO:                                                                                              // MODO_TRAT_TB_ACTIVO
+            memcpy(acBufferTratamientoThetaBurstActivo,&structTratamientoThetaBurstActivo,sizeof(structTratamientoThetaBurstActivo));// Copia los datos del strcut en el buffer de salida                                                    
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoThetaBurstActivo); i8Cont++){                                    // Bucle de env�o            
+                fputc(acBufferTratamientoThetaBurstActivo[i8Cont],COM_PIC_UART);                                               // Envio los datos del buffer
+            }
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_TRAT_GALV:                                                                                                   // MODO_TRAT_ELECT    
+            memcpy(acBufferTratamientoGalvanica,&structTratamientoGalvanica,sizeof(structTratamientoGalvanica));                      // Copia los datos del strcut en el buffer de salida
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoGalvanica); i8Cont++){                                              // Bucle de env�o
+                fputc(acBufferTratamientoGalvanica[i8Cont],COM_PIC_UART);                                                         // Envio los datos del buffer
+            }
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_TRAT_GALV_ACTIVO:                                                                                            // MODO_TRAT_ELECT_ACTIVO
+            memcpy(acBufferTratamientoGalvanicaActivo,&structTratamientoGalvanicaActivo,sizeof(structTratamientoGalvanicaActivo));    // Copia los datos del strcut en el buffer de salida                                                    
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoGalvanicaActivo); i8Cont++){                                        // Bucle de env�o            
+                fputc(acBufferTratamientoGalvanicaActivo[i8Cont],COM_PIC_UART);                                                   // Envio los datos del buffer
+            }
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_MEDIDAS_OBTENIDAS:                                                                                            // MODO_MEDIDAS_OBTENIDAS
+            memcpy(acBufferMedidasElectro,&structMedidasElectro,sizeof(structMedidasElectro));                                  // Copia los datos del strcut en el buffer de salida                                                                                              
+            for(int8 i8Cont=0; i8Cont<sizeof(structMedidasElectro); i8Cont++){                                                  // Bucle de env�o            
+                fputc(acBufferMedidasElectro[i8Cont],COM_PIC_UART);                                                             // Envio los datos del buffer
+                //fprintf(DEBUG_UART,"0x%X\r\n",acBufferMedidasElectro[i8Cont]);
+                
+                if(i8Cont<sizeof(structMedidasElectro)-1){
+                    i8Debug+=acBufferMedidasElectro[i8Cont];
+                }
+            }       
+            //fprintf(DEBUG_UART,"CHK_E_SUM: 0x%X 0x%X\r\n\r\n",i8Debug,obtencionChecksum(i8Debug));
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_MEDIDAS_THETABURST:                                                                                            // MODO_MEDIDAS_OBTENIDAS
+            memcpy(acBufferMedidasThetaBurst,&structMedidasThetaBurst,sizeof(structMedidasThetaBurst));                                  // Copia los datos del strcut en el buffer de salida                                                                                              
+            for(int8 i8Cont=0; i8Cont<sizeof(structMedidasThetaBurst); i8Cont++){                                                  // Bucle de env�o            
+                fputc(acBufferMedidasThetaBurst[i8Cont],COM_PIC_UART);                                                             // Envio los datos del buffer
+            }                                                               
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_MEDIDAS_GALVANICA:                                                                                            // MODO_MEDIDAS_OBTENIDAS
+            memcpy(acBufferMedidasGalvanica,&structMedidasGalvanica,sizeof(structMedidasGalvanica));                                  // Copia los datos del strcut en el buffer de salida                                                                                              
+            for(int8 i8Cont=0; i8Cont<sizeof(structMedidasGalvanica); i8Cont++){                                                  // Bucle de env�o            
+                fputc(acBufferMedidasGalvanica[i8Cont],COM_PIC_UART);                                                             // Envio los datos del buffer
+            }                                                               
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_ERRORES:                                                                                                      // MODO_ERRORES
+            fputc(make8(i16ErroresOcurridos,1),COM_PIC_UART);                                                                   // Envia el MSB del int16 de errores
+            fputc(make8(i16ErroresOcurridos,0),COM_PIC_UART);                                                                   // Envia el LSB del int16 de errores
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_CONTROL_TIEMPO:                                                                                           // MODO_CONTROL_TIEMPO
+            memcpy(acBufferControlTiempo,&structControlTiempo,sizeof(structControlTiempo));                                  // Copia los datos del strcut en el buffer de salida                                                                                              
+            for(int8 i8Cont=0; i8Cont<sizeof(structControlTiempo); i8Cont++){                                                  // Bucle de env�o            
+                fputc(acBufferControlTiempo[i8Cont],COM_PIC_UART);                                                             // Envio los datos del buffer
+            } 
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_CHECK_INICIAL:                                                                                           // MODO_CHECK_INICIAL
+            memcpy(acBufferCheckInicial,&structCheckInicial,sizeof(structCheckInicial));                                  // Copia los datos del strcut en el buffer de salida                                                                                              
+            for(int8 i8Cont=0; i8Cont<sizeof(structCheckInicial); i8Cont++){                                                  // Bucle de env�o            
+                fputc(acBufferCheckInicial[i8Cont],COM_PIC_UART);                                                             // Envio los datos del buffer
+            } 
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_PROTOCOLO_TEST:                                                                                             // MODO_PROTOCOLO_TEST_CANAL
+            memcpy(acBufferProtocoloTest,&structProtocoloTest,sizeof(structProtocoloTest));                    // Copia los datos del strcut en el buffer de salida                                                                                              
+            for(int8 i8Cont=0; i8Cont<sizeof(structProtocoloTest); i8Cont++){                                                // Bucle de env�o            
+                fputc(acBufferProtocoloTest[i8Cont],COM_PIC_UART);                                                           // Envio los datos del buffer
+            }
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+    }
+    
+    if(RETURN_OK == i8Return){                  // Si se ha enviado correctamente
+        fputc('\r',COM_PIC_UART);               // Env�a la secuencia de fin de trama \r\n
+        fputc('\n',COM_PIC_UART);
+    }
+    
+    return i8Return;                            // Devuelve el estado de la funci�n
+}
+
+int8 enviaPaquete(int8 i8ModoStruct,int8 i8InputData){
+    
+    int8 i8Return=RETURN_ERROR;                         // Variable de retorno que se inicializa como error en caso de que ocurra alg�n error
+    
+    if(MODO_ACK != i8ModoStruct){                       // Si se trata de un paquete distinto a ACK
+
+    }                                                   // No quiero que el control de flujo se bloqueee por estar esperando un ACK respondiendo a Sauron
+    
+    fputc(i8ModoStruct,COM_PIC_UART);                   // Envia el identificador de paquete
+    
+    switch (i8ModoStruct){                              // Dependiendo del tipo de paquete enviado...
+        case MODO_START_STOP:                           // MODO_START_STOP
+
+            fputc(i8InputData,COM_PIC_UART);            // Env�a el dato que acompa�a al comando
+            fputc(i8CanalesActivados,COM_PIC_UART);     // Envia el numero de canales activados (utilizado en electroestimulacion)
+            fputc(i8ReposoActivados,COM_PIC_UART);      // Envia el numero de canales en reposo (utilizado en electroestimulacion)
+            fputc(i8ConfigCanal,COM_PIC_UART);
+            fputc(bCableBipolarConectado,COM_PIC_UART);
+            i8TipoPaqueteACK=i8ModoStruct;
+            i8Return=RETURN_OK;                         // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_FUNCION:                              // MODO_FUNCION
+            fputc(i8InputData,COM_PIC_UART);            // Env�a el dato que acompa�a al comando
+            i8TipoPaqueteACK=i8ModoStruct;
+            i8Return=RETURN_OK;                         // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_INFORME:
+            fputc(i8InputData,COM_PIC_UART);            // Env�a el dato que acompa�a al comando
+            i8TipoPaqueteACK=i8ModoStruct;
+            i8Return=RETURN_OK;                         // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_CONEXION_POINTER:
+            fputc(i8InputData,COM_PIC_UART);
+            i8TipoPaqueteACK=i8ModoStruct;
+            i8Return=RETURN_OK;                         // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_ACK:                                  // MODO_ACK
+            fputc(i8InputData,COM_PIC_UART);            // Env�a el dato que acompa�a al comando
+            #ifdef ORCO
+            if(i8InputData==MODO_CHECK_ALIVE){
+                bTensionReferenciaOK=isVrefOK();
+                fputc(bTensionReferenciaOK,COM_PIC_UART);            // Envia el comando de ACK
+                fputc(make8(gi16BuildCounter,1),COM_PIC_UART);
+                fputc(make8(gi16BuildCounter,0),COM_PIC_UART);
+            }else{
+            #endif
+                fputc(COMANDO_ACK,COM_PIC_UART);            // Envia el comando de ACK
+            #ifdef ORCO
+            }
+            #endif
+            i8Return=RETURN_OK;                         // Devuelve que el envio se ha hecho correctamente
+            break;
+    }
+    
+    if(RETURN_OK == i8Return){                          // Si se ha enviado correctamente
+        
+        fputc('\r',COM_PIC_UART);                       // Env�a la secuencia de fin de trama \r\n
+        fputc('\n',COM_PIC_UART);
+    }
+          
+    return i8Return;                                    // Devuelve el estado de la funci�n
+}
+
+int8 lecturaPaquete(){
+    //output_high(SINC_RDA);
+    int8 i8Return=RETURN_ERROR;                             // Variable de retorno que se inicializa como error en caso de que ocurra alg�n error
+    int8 i8Checksum=0;
+    int8 i8ChecksumPaquete=0;
+    
+    i8TipoPaquete=i8BufferEntrada[0];                       // Lectura del primer paquete
+    
+    if(i8TipoPaquete!=MODO_ACK){                            // Si el tipo de paquete es distinto del ACk
+        i8TipoPaqueteACK=i8TipoPaquete;                     // Guardamos este para comparativa
+    }
+    
+    //int8 i8Debug=0;
+    
+    switch(i8TipoPaquete){                                                              // Lee el primer byte correspondiente al identificador del paquete
+        case MODO_CHECK_ALIVE:                                                          // MODO_CHECK_ALIVE
+            if(i8BufferEntrada[1]==COMANDO_CHECK_ALIVE){                                // SI se ha recibido un check alive                                            
+                enviaPaquete(MODO_ACK,MODO_CHECK_ALIVE);                                // Envio el paquete ACK                        
+            }
+            i8Return=RETURN_OK;                                                         // Devuelve que el envio se ha hecho correctamente              
+            break;                                                                                                                
+        case MODO_START_STOP:                                                           // MODO_START_STOP  
+            i8CanalesActivados=i8BufferEntrada[2];
+            i8ReposoActivados=i8BufferEntrada[3];
+            i8ConfigCanal=i8BufferEntrada[4];
+            bCableBipolarConectado=i8BufferEntrada[5];
+            structTratamientoGalvanica.sbCableBipolarConectado=bCableBipolarConectado;
+            structTratamientoGalvanicaActivo.sbCableBipolarConectado=bCableBipolarConectado;
+            
+            switch(i8BufferEntrada[1]){                                                 // Comprueba el buffer de entrada                     
+                case COMANDO_START:                                                     // COMANDO_START
+                    switch(i8TratamientoSeleccionado){                                  // Dependiendo del tratamiento seleccionado
+                        case TRATAMIENTO_ELECTRO:                                       // TRATAMIENTO_ELECTRO
+                            /*#ifdef ORCO
+                            if(i8ConfigCanal!=3){
+                                bTransistoresComprobados[i8ConfigCanal]=0;   
+                            }else if(i8ConfigCanal==3){
+                                bTransistoresComprobados[CHA_C]=0; 
+                            }
+                            #endif*/
+                            bActivoTratamientoElectro=1;                                     // Activo flag tratamiento activo electroestimulador
+                            break;                                                                                        
+                        case TRATAMIENTO_TB:                                           // TRATAMIENTO_TB                                            
+                            bTratamientoTBActivado=1;                                  // Activo flag tratamiento activo TB        
+                            bPausaTratamiento=0;
+                            break;                                                                                     
+                        case TRATAMIENTO_GALVANICA:                                     // TRATAMIENTO_GALVANICA   
+                            bTratamientoGalvanicaActivado=1;                            // Activo flag tratamiento activo galv�nica 
+                            bMicrocorrientesEncendido=0;
+                            if(bPausaTratamiento){
+                                bEliminaRampa=1;
+                                bPausaTratamiento=0;
+                            }
+                            break;
+                        case TRATAMIENTO_MICROCORRIENTES:
+                            bTratamientoGalvanicaActivado=0;                            // Activo flag tratamiento activo galv�nica 
+                            bMicrocorrientesEncendido=1;
+                            bPausaTratamiento=0;
+                            break;
+                        case TRATAMIENTO_TRANSCRANEAL:                                     // TRATAMIENTO_GALVANICA   
+                            bTratamientoTranscranealActivado=1;                            // Activo flag tratamiento activo galv�nica 
+                            if(bPausaTratamiento){
+                                bEliminaRampa=1;
+                                bPausaTratamiento=0;
+                            }
+                            break;
+                    }
+                    i8Return=RETURN_OK;                                                 // Devuelve que el envio se ha hecho correctamente 
+                    break;                                                                                                               
+                case COMANDO_STOP:                                                      // COMANDO_STOP       
+                    //output_high(SINCRONIZACION);
+                    
+                    switch(i8TratamientoSeleccionado){                                  // Dependiendo del tratamiento seleccionado         
+                        case TRATAMIENTO_ELECTRO:                                       // TRATAMIENTO_ELECTRO                              
+                            bActivoTratamientoElectro=0;                                     // Inicializo flag tratamiento activo electroestimulador
+                            break;                                                                                                          
+                        case TRATAMIENTO_TB:                                           // TRATAMIENTO_TB                                  
+                            bTratamientoTBActivado=0;                                  // Inicializo flag tratamiento activo TB               
+                            break;                                                                                                          
+                        case TRATAMIENTO_GALVANICA:                                     // TRATAMIENTO_GALVANICA 
+                        case TRATAMIENTO_MICROCORRIENTES:
+                            bTratamientoGalvanicaActivado=0;                            // Inicializo flag tratamiento activo galv�nica   
+                            bMicrocorrientesEncendido=0;
+                            break;
+                        case TRATAMIENTO_TRANSCRANEAL:
+                            bTratamientoTranscranealActivado=0;
+                            break;
+                    }
+                    i8Return=RETURN_OK;                                                 // Devuelve que el envio se ha hecho correctamente 
+                    break;     
+                case COMANDO_START_REPOSO:                                              // COMANDO_START_REPOSO
+                    bReposoActivado=1;                                                  // Activo flag reposo
+                    i8Return=RETURN_OK;                                                 // Devuelve que el envio se ha hecho correctamente 
+                    break;
+                case COMANDO_STOP_REPOSO:                                               // COMANDO_STOP_REPOSO
+                    bReposoActivado=0;                                                  // Inicializo flag reposo
+                    #ifdef ORCO
+                    i8IndicaCanalVuelveReposo=potencia(2,i8ConfigCanal);
+                    #endif
+                    bActivoTratamientoElectro=1;
+                    i8Return=RETURN_OK;                                                 // Devuelve que el envio se ha hecho correctamente
+                    break;
+                case COMANDO_START_PAUSA:
+                    bPausaTratamiento=1;
+                    i8Return=RETURN_OK;                                                 // Devuelve que el envio se ha hecho correctamente 
+                    break;
+                case COMANDO_STOP_PAUSA:
+                    switch(i8TratamientoSeleccionado){
+                        case TRATAMIENTO_ELECTRO:
+                            // TODO
+                            break;
+                        case TRATAMIENTO_TB:
+                            bTratamientoTBActivado=1;
+                            break;
+                        case TRATAMIENTO_GALVANICA:                                     // TRATAMIENTO_GALVANICA 
+                        case TRATAMIENTO_MICROCORRIENTES:
+                            if(i8SeleccionGalvMicro==SEL_MICRO){
+                                bTerapia=1;
+                            }
+                            if(!bTerapia){
+                                bTratamientoGalvanicaActivado=1;
+                           
+                            }else{
+                                bMicrocorrientesEncendido=1;
+                            }
+                            if(bPausaTratamiento){
+                                bPausaTratamiento=0;
+                                bEliminaRampa=1;
+                            }
+                            break;
+                        case TRATAMIENTO_TRANSCRANEAL:
+                            bTratamientoTranscranealActivado=1;
+                            if(bPausaTratamiento){
+                                bPausaTratamiento=0;
+                                bEliminaRampa=1;
+                            }
+                            break;
+                    }
+                    i8Return=RETURN_OK;                                                 // Devuelve que el envio se ha hecho correctamente
+                    break;
+                default:
+                    i8Return=RETURN_ERROR;                                              // Devuelve que ha ocurrido un error 
+            } 
+            //fprintf(DEBUG_UART,"%u %u %u %u\r\n",i8ConfigCanal,i8BufferEntrada[1],bReposoActivado,i8IndicaCanalVuelveReposo);
+            if(RETURN_OK == i8Return){                                                  // Si ha devuelto OK las instrucciones anteriores
+                enviaPaquete(MODO_ACK,MODO_START_STOP);                                 // Env�o ACK
+            }
+                                                                                        // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_TRAT_ELECT:                                                                                                   // MODO_TRAT_ELECT
+            //fprintf(DEBUG_UART,"\r\n");
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoElectro); i8Cont++){                                              // Recorro todo el buffer de entrada
+                acBufferTratamientoElectro[i8Cont]=i8BufferEntrada[i8Cont+1];                                               // Copio el buffer de entrada en el correspondiente
+                if(i8Cont!=sizeof(structTratamientoElectro)-1){
+                    i8Checksum+=acBufferTratamientoElectro[i8Cont];
+                    //fprintf(DEBUG_UART,"0x%X\r\n",acBufferTratamientoElectro[i8Cont]);
+                }else{
+                    i8ChecksumPaquete=acBufferTratamientoElectro[i8Cont];
+                    //fprintf(DEBUG_UART,"%u %u %u\r\n",acBufferTratamientoElectro[i8Cont],i8Checksum,i8ChecksumPaquete);
+                } 
+            }                                                                                                                   //
+            
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                     // Si el checksum es correcto, continua
+                memcpy(&structTratamientoElectro,acBufferTratamientoElectro,sizeof(structTratamientoElectro));                      // Paso de buffer a struct
+                enviaPaquete(MODO_ACK,MODO_TRAT_ELECT);                                                                             // Env�o ACK
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_TRAT_ELECT_ACTIVO:                                                                                            // MODO_TRAT_ELECT_ACTIVO
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoElectroActivo); i8Cont++){                                        // Recorro todo el buffer de entrada                                                                                                                    
+                acBufferTratamientoElectroActivo[i8Cont]=i8BufferEntrada[i8Cont+1];                                         // Copio el buffer de entrada en el correspondiente                                                                        
+                if(i8Cont!=sizeof(structTratamientoElectroActivo)-1){
+                    i8Checksum+=acBufferTratamientoElectroActivo[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferTratamientoElectroActivo[i8Cont];
+                } 
+            }                                                                                                                   
+                 
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                      // Si el checksum es correcto, continua
+                memcpy(&structTratamientoElectroActivo,acBufferTratamientoElectroActivo,sizeof(structTratamientoElectroActivo));    // Paso de buffer a struct   
+                enviaPaquete(MODO_ACK,MODO_TRAT_ELECT_ACTIVO);                                                                      // Env�o ACK                    
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_TRAT_TB:                                                                                                     // MODO_TRAT_TB
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoThetaBurst); i8Cont++){                                          // Recorro todo el buffer de entrada
+                acBufferTratamientoThetaBurst[i8Cont]=i8BufferEntrada[i8Cont+1];                                           // Copio el buffer de entrada en el correspondiente
+                if(i8Cont!=sizeof(structTratamientoThetaBurst)-1){
+                    i8Checksum+=acBufferTratamientoThetaBurst[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferTratamientoThetaBurst[i8Cont];
+                } 
+            }                                                                                                                   
+            
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                     // Si el checksum es correcto, continua  
+                memcpy(&structTratamientoThetaBurst,acBufferTratamientoThetaBurst,sizeof(structTratamientoThetaBurst));          // Paso de buffer a struct    
+                enviaPaquete(MODO_ACK,MODO_TRAT_TB);                                                                               // Env�o ACK
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_TRAT_TB_ACTIVO:                                                                                              // MODO_TRAT_TB_ACTIVO
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoThetaBurstActivo); i8Cont++){                                    // Recorro todo el buffer de entrada                                                                                                                    
+                acBufferTratamientoThetaBurstActivo[i8Cont]=i8BufferEntrada[i8Cont+1];                                     // Copio el buffer de entrada en el correspondiente  
+                if(i8Cont!=sizeof(structTratamientoThetaBurstActivo)-1){
+                    i8Checksum+=acBufferTratamientoThetaBurstActivo[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferTratamientoThetaBurstActivo[i8Cont];
+                }
+            }                                                                                                                   
+                                                                                                                         
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                      // Si el checksum es correcto, continua
+                memcpy(&structTratamientoThetaBurstActivo,acBufferTratamientoThetaBurstActivo,sizeof(structTratamientoThetaBurstActivo));    // Paso de buffer a struct  
+                enviaPaquete(MODO_ACK,MODO_TRAT_TB_ACTIVO);                                                                        // Env�o ACK
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_TRAT_GALV:                                                                                                     // MODO_TRAT_TB
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoGalvanica); i8Cont++){                                          // Recorro todo el buffer de entrada
+                acBufferTratamientoGalvanica[i8Cont]=i8BufferEntrada[i8Cont+1];                                           // Copio el buffer de entrada en el correspondiente
+                if(i8Cont!=sizeof(structTratamientoGalvanica)-1){
+                    i8Checksum+=acBufferTratamientoGalvanica[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferTratamientoGalvanica[i8Cont];
+                } 
+            }                                                                                                                   
+            
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                      // Si el checksum es correcto, continua
+                memcpy(&structTratamientoGalvanica,acBufferTratamientoGalvanica,sizeof(structTratamientoGalvanica));          // Paso de buffer a struct
+                enviaPaquete(MODO_ACK,MODO_TRAT_GALV);                                                                               // Env�o ACK
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_TRAT_GALV_ACTIVO:                                                                                              // MODO_TRAT_TB_ACTIVO
+            for(int8 i8Cont=0; i8Cont<sizeof(structTratamientoGalvanicaActivo); i8Cont++){                                    // Recorro todo el buffer de entrada                                                                                                                    
+                acBufferTratamientoGalvanicaActivo[i8Cont]=i8BufferEntrada[i8Cont+1];                                     // Copio el buffer de entrada en el correspondiente                                                                        
+                if(i8Cont!=sizeof(structTratamientoGalvanicaActivo)-1){
+                    i8Checksum+=acBufferTratamientoGalvanicaActivo[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferTratamientoGalvanicaActivo[i8Cont];
+                } 
+            }                                                                                                                   
+                                                                                                                          
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                   // Si el checksum es correcto, continua
+                memcpy(&structTratamientoGalvanicaActivo,acBufferTratamientoGalvanicaActivo,sizeof(structTratamientoGalvanicaActivo));    // Paso de buffer a struct  
+                enviaPaquete(MODO_ACK,MODO_TRAT_GALV_ACTIVO);                                                                        // Env�o ACK                                                                    
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_MEDIDAS_OBTENIDAS:                                                                                            // MODO_MEDIDAS_OBTENIDAS                        
+            for(int8 i8Cont=0; i8Cont<sizeof(structMedidasElectro); i8Cont++){                                                  // Recorro todo el buffer de entrada                                                                
+                acBufferMedidasElectro[i8Cont]=i8BufferEntrada[i8Cont+1];                                                   // Copio el buffer de entrada en el correspondiente       
+                //fprintf(DEBUG_UART,"0x%X\r\n",acBufferMedidasElectro[i8Cont]);
+                if(i8Cont!=sizeof(structMedidasElectro)-1){
+                    i8Checksum+=acBufferMedidasElectro[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferMedidasElectro[i8Cont];
+                } 
+            }                                                                                                                   
+            //fprintf(DEBUG_UART,"CHK_R_SUM: 0x%X 0x%X\r\n",i8Debug,obtencionChecksum(i8Debug));  
+            //fprintf(DEBUG_UART,"CHK_R_ORI: 0x%X 0x%X %u\r\n\r\n",i8Checksum,obtencionChecksum(i8Checksum),sizeof(structMedidasElectro));  
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                   // Si el checksum es correcto, continua    
+                memcpy(&structMedidasElectro,acBufferMedidasElectro,sizeof(structMedidasElectro));                                  // Paso de buffer a struct     
+                #ifdef SAURON
+                f_avisos();
+                #endif             
+                enviaPaquete(MODO_ACK,MODO_MEDIDAS_OBTENIDAS);                                                                      // Env�o ACK    
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+       case MODO_MEDIDAS_ThetaBurst:                                                                                           // MODO_MEDIDAS_ThetaBurst                        
+            for(int8 i8Cont=0; i8Cont<sizeof(structMedidasThetaBurst); i8Cont++){                                              // Recorro todo el buffer de entrada                                                                
+                acBufferMedidasThetaBurst[i8Cont]=i8BufferEntrada[i8Cont+1];                                               // Copio el buffer de entrada en el correspondiente                                                                
+                if(i8Cont!=sizeof(structMedidasThetaBurst)-1){
+                    i8Checksum+=acBufferMedidasThetaBurst[i8Cont];
+                }else{
+                    //fprintf(DEBUG_UART,"0x%X %u %u\r\n",acBufferMedidasThetaBurst[i8Cont],i8Cont,sizeof(structMedidasThetaBurst));
+                    i8ChecksumPaquete=acBufferMedidasThetaBurst[i8Cont];
+                }
+                //fprintf(DEBUG_UART,"%u %u\r\n",acBufferMedidasThetaBurst[i8Cont],i8ChecksumPaquete);
+            }                                                                                                                   
+            //fprintf(DEBUG_UART,"0x%X 0x%X\r\n",i8Checksum,i8ChecksumPaquete);                                                                 
+
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                     // Si el checksum es correcto, continua
+                //fprintf(DEBUG_UART,"SOY CONCHA, ENTRO");
+                memcpy(&structMedidasThetaBurst,acBufferMedidasThetaBurst,sizeof(structMedidasThetaBurst));                      // Paso de buffer a struct   
+                #ifdef SAURON
+                
+                f_avisos();
+                #endif
+                enviaPaquete(MODO_ACK,MODO_MEDIDAS_ThetaBurst);                                                                    // Env�o ACK
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_MEDIDAS_GALVANICA:                                                                                           // MODO_MEDIDAS_ThetaBurst                        
+            for(int8 i8Cont=0; i8Cont<sizeof(structMedidasGalvanica); i8Cont++){                                              // Recorro todo el buffer de entrada                                                                
+                acBufferMedidasGalvanica[i8Cont]=i8BufferEntrada[i8Cont+1];                                               // Copio el buffer de entrada en el correspondiente                                                                
+                if(i8Cont!=sizeof(structMedidasGalvanica)-1){
+                    i8Checksum+=acBufferMedidasGalvanica[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferMedidasGalvanica[i8Cont];
+                } 
+            }                                                                                                                   
+                                                                                       
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                      // Si el checksum es correcto, continua   
+                memcpy(&structMedidasGalvanica,acBufferMedidasGalvanica,sizeof(structMedidasGalvanica));                      // Paso de buffer a struct     
+                #ifdef SAURON
+                f_avisos();
+                #endif             
+                enviaPaquete(MODO_ACK,MODO_MEDIDAS_GALVANICA);                                                                    // Env�o ACK    
+                i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_ERRORES:                                                                                                      // MODO_ERRORES
+            i16ErroresOcurridos=make16(i8BufferEntrada[1],i8BufferEntrada[2]);                                                  // Combino los 2 bytes recibidos para hacer un int16
+            #ifdef ORCO           
+            enviaPaquete(MODO_ACK,MODO_ERRORES);                                                                                // Env�o ACK
+            #endif
+            i8Return=RETURN_OK;                                                                                                 // Devuelve que el envio se ha hecho correctamente
+            break;
+        case MODO_ACK:                                                                                                          // MODO_ACK
+            #ifdef SAURON
+            if(bComprobacionInicial){
+                if((i8BufferEntrada[1]==i8TipoPaqueteACK) && (i8BufferEntrada[2]==1)){
+                    gi16BuildCounterOrco=make16(i8BufferEntrada[3],i8BufferEntrada[4]);
+                    i8Return=RETURN_OK;                                                                                             // Devuelve que el envio se ha hecho correctamente
+                    bTensionReferenciaOK=1;
+                    bComprobacionInicial=0;
+                }else{                                                                                                              // Sino, es que se han mezclado paquetes, hay que volver a enviar
+                    bTensionReferenciaOK=0;
+                    i8Return=RETURN_OK;                                                                                          // Devuelve error para indicarlo                                
+                }
+            }else 
+            #endif 
+                if((i8BufferEntrada[1]==i8TipoPaqueteACK) && (i8BufferEntrada[2]==COMANDO_ACK)){                                    // Si el ACK corresponde al ACK del paquete que toca
+                i8Return=RETURN_OK;                                                                                             // Devuelve que el envio se ha hecho correctamente
+            }else{                                                                                                              // Sino, es que se han mezclado paquetes, hay que volver a enviar
+                i8Return=RETURN_ERROR;                                                                                          // Devuelve error para indicarlo                                
+            }
+            break;
+        case MODO_CONEXION_POINTER:                                                                                                          // MODO_ACK
+            bPointerConectado=i8BufferEntrada[1];
+            enviaPaquete(MODO_ACK,MODO_CONEXION_POINTER);                    // Envio paquete
+            i8Return=RETURN_OK;
+            break;
+        case MODO_FUNCION:                                          // MODO_FUNCION
+            #ifdef SAURON                                           // Solo si se est� programando SAURON compilar� esta parte, si es ORCO pasa de ella                         
+            switch(i8BufferEntrada[1]){                             // Dpeendiendo del segundo dato del buffer de entrada en el caso de MODO_DUNCION                                       
+                case FUNCION_ENABLE_30V:                            // FUNCION_ENABLE_30V                                        
+                    control_DC(1,EN_30);                            // Habilita DC/DC 30V  
+                    break;                                                                  
+                case FUNCION_ENABLE_RELE_A:                         // FUNCION_ENABLE_RELE_A                                           
+                    control_rele(1,rele_CHA);                       // Habilita Rel� CHA                                            
+                    break;                                                                
+                case FUNCION_ENABLE_RELE_B:                         // FUNCION_ENABLE_RELE_B                                           
+                    control_rele(1,rele_CHB);                       // Habilita Rel� CHB                                              
+                    break;                                                                     
+                case FUNCION_ENABLE_RELE_C:                         // FUNCION_ENABLE_RELE_C                                           
+                    control_rele(1,rele_CHC);                       // Habilita Rel� CHC                                              
+                    break;                                                                    
+                case FUNCION_LED_A_APAGADO:                         // FUNCION_LED_A_APAGADO                                            
+                    control_led(0,led_CHA,rojo);                    // Apago LED rojo                                                        
+                    control_led(0,led_CHA,verde);                   // Apago LED verde                                                            
+                    break;                                                                    
+                case FUNCION_LED_A_VERDE:                           // FUNCION_LED_A_VERDE                                          
+                    control_led(0,led_CHA,rojo);                    // Apago LED rojo                                                         
+                    control_led(1,led_CHA,verde);                   // Enciendo LED verde                                                  
+                    break;                                                                    
+                case FUNCION_LED_A_ROJO:                            // FUNCION_LED_A_ROJO                                        
+                    control_led(1,led_CHA,rojo);                    // Enciendo LED rojo                                                        
+                    control_led(0,led_CHA,verde);                   // Apago LED verde                                                  
+                    break;                                                                     
+                case FUNCION_LED_B_APAGADO:                         // FUNCION_LED_B_APAGADO                                           
+                    control_led(0,led_CHB,rojo);                    // Apago LED rojo                                                        
+                    control_led(0,led_CHB,verde);                   // Apago LED verde                                                  
+                    break;                                                                    
+                case FUNCION_LED_B_VERDE:                           // FUNCION_LED_B_VERDE                                         
+                    control_led(0,led_CHB,rojo);                    // Apago LED rojo                                                        
+                    control_led(1,led_CHB,verde);                   // Enciendo LED verde                                                  
+                    break;                                                                  
+                case FUNCION_LED_B_ROJO:                            // FUNCION_LED_B_ROJO                                        
+                    control_led(1,led_CHB,rojo);                    // Enciendo LED rojo                                                        
+                    control_led(0,led_CHB,verde);                   // Apago LED verde                                                  
+                    break;                                                                 
+                case FUNCION_LED_C_APAGADO:                         // FUNCION_LED_C_APAGADO                                           
+                    control_led(0,led_CHC,rojo);                    // Apago LED rojo                                                        
+                    control_led(0,led_CHC,verde);                   // Apago LED verde                                                  
+                    break;                                                                  
+                case FUNCION_LED_C_VERDE:                           // FUNCION_LED_C_VERDE                                          
+                    control_led(0,led_CHC,rojo);                    // Apago LED rojo                                                        
+                    control_led(1,led_CHC,verde);                   // Enciendo LED verde                                                  
+                    break;                                                                   
+                case FUNCION_LED_C_ROJO:                            // FUNCION_LED_C_ROJO                                        
+                    control_led(1,led_CHC,rojo);                    // Enciendo LED rojo                                                        
+                    control_led(0,led_CHC,verde);                   // Apago LED verde                                                  
+                    break;                                                                  
+                case FUNCION_ENABLE_RELE_GALV:                      // FUNCION_ENABLE_RELE_GALV                                              
+                    control_rele(1,rele_GALV);                      // Habilito rel� galv�nica                                              
+                    break;                                                                  
+                case FUNCION_DISABLE_RELE_A:                         // FUNCION_DISABLE_RELE_A                                           
+                    control_rele(0,rele_CHA);                       // Deshabilita Rel� CHA                                            
+                    break;                                                                
+                case FUNCION_DISABLE_RELE_B:                         // FUNCION_DISABLE_RELE_B     
+                    control_rele(0,rele_CHB);                       // Deshabilita Rel� CHB                                              
+                    break;                                                                     
+                case FUNCION_DISABLE_RELE_C:                         // FUNCION_DISABLE_RELE_C                                           
+                    control_rele(0,rele_CHC);                       // Deshabilita Rel� CHC                                              
+                    break;                     
+                case FUNCION_DISABLE_RELE_GALV:                      // FUNCION_DISABLE_RELE_GALV                                              
+                    control_rele(0,rele_GALV);                      // Deshabilito rel� galv�nica   
+                    break; 
+            }                    
+            #else
+            //output_toggle(LED_ALPP);
+            switch(i8BufferEntrada[1]){                             // Dpeendiendo del segundo dato del buffer de entrada en el caso de MODO_DUNCION                                                                                              
+                case FUNCION_ENABLE_RELE_SEL_B:                         // FUNCION_ENABLE_RELE_MAIN_B   
+                    control_releB(1);                       // Habilita Rel? CHB                                        
+                    break;   
+                case FUNCION_DISABLE_RELE_SEL_B:                         // FUNCION_DISABLE_RELE_MAIN_B     
+                    control_releB(0);                       // Habilita Rel? CHB         
+                    break;      
+            }
+            #endif                                                                 
+            enviaPaquete(MODO_ACK,MODO_FUNCION);                    // Envio paquete
+            i8Return=RETURN_OK;
+            break;
+        case MODO_CONTROL_TIEMPO:                                                               // MODO_CONTROL_TIEMPO
+            for(int8 i8Cont=0; i8Cont<sizeof(structControlTiempo); i8Cont++){                   // Recorro todo el buffer de entrada                                                                
+                acBufferControlTiempo[i8Cont]=i8BufferEntrada[i8Cont+1];                    // Copio el buffer de entrada en el correspondiente                                                                
+                if(i8Cont!=sizeof(structControlTiempo)-1){
+                    i8Checksum+=acBufferControlTiempo[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferControlTiempo[i8Cont];
+                } 
+            }                                                                                                                   
+                                                                                          
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                     // Si el checksum es correcto, continua
+                memcpy(&structControlTiempo,acBufferControlTiempo,sizeof(structControlTiempo));     // Paso de buffer a struct  
+                enviaPaquete(MODO_ACK,MODO_CONTROL_TIEMPO);                                         // Env�o ACK
+                i8Return=RETURN_OK;                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_CHECK_INICIAL:                                                                // MODO_CHECK_INICIAL
+            for(int8 i8Cont=0; i8Cont<sizeof(structCheckInicial); i8Cont++){                    // Recorro todo el buffer de entrada                                                                
+                acBufferCheckInicial[i8Cont]=i8BufferEntrada[i8Cont+1];                     // Copio el buffer de entrada en el correspondiente                                                                
+                if(i8Cont!=sizeof(structCheckInicial)-1){
+                    i8Checksum+=acBufferCheckInicial[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferCheckInicial[i8Cont];
+                } 
+            }                                                                                                                   
+                                                                                         
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                    // Si el checksum es correcto, continua
+                memcpy(&structCheckInicial,acBufferCheckInicial,sizeof(structCheckInicial));        // Paso de buffer a struct   
+                enviaPaquete(MODO_ACK,MODO_CHECK_INICIAL);                                          // Env�o ACK
+                i8Return=RETURN_OK;                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_PROTOCOLO_TEST:
+            for(int8 i8Cont=0; i8Cont<sizeof(structProtocoloTest); i8Cont++){                    // Recorro todo el buffer de entrada                                                                
+                acBufferProtocoloTest[i8Cont]=i8BufferEntrada[i8Cont+1];                     // Copio el buffer de entrada en el correspondiente                                                                
+                if(i8Cont!=sizeof(structProtocoloTest)-1){
+                    i8Checksum+=acBufferProtocoloTest[i8Cont];
+                }else{
+                    i8ChecksumPaquete=acBufferProtocoloTest[i8Cont];
+                } 
+            }                                                                                                                   
+                                                                                         
+            if(i8ChecksumPaquete==obtencionChecksum(i8Checksum)){                                                                    // Si el checksum es correcto, continua
+                memcpy(&structProtocoloTest,acBufferProtocoloTest,sizeof(structProtocoloTest));        // Paso de buffer a struct   
+                enviaPaquete(MODO_ACK,MODO_PROTOCOLO_TEST);                                          // Env�o ACK
+                i8Return=RETURN_OK;                                                                 // Devuelve que el envio se ha hecho correctamente
+            }
+            break;
+        case MODO_INFORME:
+            #ifdef ORCO
+            if(i8BufferEntrada[1]==INFORME_ACTIVADO){
+                output_high(PULSO_2p_CHB);
+            }else if(i8BufferEntrada[1]==INFORME_DESACTIVADO){
+                output_low(PULSO_2p_CHB);
+            }
+            enviaPaquete(MODO_ACK,MODO_INFORME);                    // Envio paquete
+            i8Return=RETURN_OK;
+            #endif
+            break;
+    }
+                       
+     //output_low(SINC_RDA);
+    return i8Return;                                                                            // Devuelve el estado de la funci�n
+}
+
+#ifdef SAURON
+int8 lecturaPaqueteACK(){
+    // OJO: esta funci�on SOLO debe de usarse en SAURON
+    int8 i8Return;
+    
+    i8TipoPaquete=i8BufferEntrada[0];                       // Lectura del primer paquete
+    
+    if(i8TipoPaquete!=MODO_ACK){                            // Si el tipo de paquete es distinto del ACk
+        i8Return=RETURN_ERROR;                              // Devuelve error
+    }else{                                                  // Si no
+        i8Return=lecturaPaquete();                          // Lee paquete recibido
+    }
+    
+    return i8Return;
+}
+#endif
+
+#ifdef CHECKSUM_DEF                                 // Si se ha definido el uso del checksum
+int8 obtencionChecksum(int8 i8Checksum){
+    return (~i8CheckSum + 1);                // Devuelve el checksum
+}
+            
+int1 calculoChecksum(int1 bRecepcion, int8 i8TipoPaquete){    
+    
+    int1 bReturn=0;                     // Inicializo el valor a 0
+    int8 i8Checksum=0;                  // Inicializo checksum a 0
+
+    switch(i8TipoPaquete){                                                              // Lee el primer byte correspondiente al identificador del paquete
+        case MODO_CHECK_ALIVE:          // MODO_CHECK_ALIVE
+            bReturn=1;
+            break;                                                                                                                
+        case MODO_START_STOP:           // MODO_START_STOP  
+            bReturn=1;
+            break;
+        case MODO_TRAT_ELECT:           // MODO_TRAT_ELECT
+            i8Checksum+=structTratamientoElectro.si8CanalesConfigurados;
+            i8Checksum+=structTratamientoElectro.si8ConfigCanal;        
+            i8Checksum+=structTratamientoElectro.sbSimetriaElec;        
+            i8Checksum+=structTratamientoElectro.sbPolaridadElec;       
+            i8Checksum+=make8(structTratamientoElectro.si16TacElec,0); 
+            i8Checksum+=make8(structTratamientoElectro.si16TacElec,1); 
+            i8Checksum+=make8(structTratamientoElectro.si16TdElec,0); 
+            i8Checksum+=make8(structTratamientoElectro.si16TdElec,1); 
+            // i8Checksum+=structTratamientoElectro.si8TrElec;             
+            i8Checksum+=structTratamientoElectro.si8Nrep;               
+            i8Checksum+=make8(structTratamientoElectro.si16IElec,0); 
+            i8Checksum+=make8(structTratamientoElectro.si16IElec,1); 
+            i8Checksum+=make8(structTratamientoElectro.si16FrecElec,0); 
+            i8Checksum+=make8(structTratamientoElectro.si16FrecElec,1); 
+            i8Checksum+=make8(structTratamientoElectro.si16PW_plusElec,0);  
+            i8Checksum+=make8(structTratamientoElectro.si16PW_plusElec,1); 
+            i8Checksum+=make8(structTratamientoElectro.si16PW_plusElec,2);
+            i8Checksum+=make8(structTratamientoElectro.si16PW_plusElec,3);
+            i8Checksum+=make8(structTratamientoElectro.si16PW_minusElec,0); 
+            i8Checksum+=make8(structTratamientoElectro.si16PW_minusElec,1);
+            i8Checksum+=make8(structTratamientoElectro.si16PW_minusElec,2);
+            i8Checksum+=make8(structTratamientoElectro.si16PW_minusElec,3);
+            i8Checksum+=make8(structTratamientoElectro.si16FrecInicialMod,0);
+            i8Checksum+=make8(structTratamientoElectro.si16FrecInicialMod,1);
+            i8Checksum+=make8(structTratamientoElectro.si16FrecFinalMod,0);
+            i8Checksum+=make8(structTratamientoElectro.si16FrecFinalMod,1);
+            i8Checksum+=structTratamientoElectro.si8ModulacionAM;
+            i8Checksum+=make8(structTratamientoElectro.si32PWInicialMod,0); 
+            i8Checksum+=make8(structTratamientoElectro.si32PWInicialMod,1);
+            i8Checksum+=make8(structTratamientoElectro.si32PWInicialMod,2);
+            i8Checksum+=make8(structTratamientoElectro.si32PWInicialMod,3);
+            i8Checksum+=make8(structTratamientoElectro.si32PWFinalMod,0); 
+            i8Checksum+=make8(structTratamientoElectro.si32PWFinalMod,1);
+            i8Checksum+=make8(structTratamientoElectro.si32PWFinalMod,2);
+            i8Checksum+=make8(structTratamientoElectro.si32PWFinalMod,3);
+            i8Checksum+=structTratamientoElectro.si8Tmodulacion;
+            i8Checksum+=structTratamientoElectro.si8SeleccionMod;
+            // i8Checksum+=structTratamientoElectro.sbFMDesactivado; 
+            // i8Checksum+=structTratamientoElectro.sbAMDesactivado; 
+            // i8Checksum+=structTratamientoElectro.sbPWMDesactivado; 
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structTratamientoElectro.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structTratamientoElectro.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value  
+                //fprintf(DEBUG_UART,"CHF 0x%X 0x%X \r\n",i8Checksum,structTratamientoElectro.si8Checksum);
+                bReturn=1;                                                                             
+            }
+            break;
+        case MODO_TRAT_ELECT_ACTIVO:    // MODO_TRAT_ELECT_ACTIVO
+            i8Checksum+=structTratamientoElectroActivo.si8CanalesActivados;   
+            i8Checksum+=structTratamientoElectroActivo.si8ConfigCanal;        
+            i8Checksum+=make8(structTratamientoElectroActivo.si16IElec,0);
+            i8Checksum+=make8(structTratamientoElectroActivo.si16IElec,1);            
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structTratamientoElectroActivo.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structTratamientoElectroActivo.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value   
+                bReturn=1;                                                                               
+            }
+            break;
+        case MODO_TRAT_TB:             // MODO_TRAT_TB
+            i8Checksum+=make8(structTratamientoThetaBurst.si16PWBurstTB,0); 
+            i8Checksum+=make8(structTratamientoThetaBurst.si16PWBurstTB,1); 
+            i8Checksum+=make8(structTratamientoThetaBurst.si16NPulsosBurstTB,0); 
+            i8Checksum+=make8(structTratamientoThetaBurst.si16NPulsosBurstTB,1); 
+            i8Checksum+=structTratamientoThetaBurst.si8SepPulsosTB; 
+            i8Checksum+=make8(structTratamientoThetaBurst.si16SepBurstTB,0);  
+            i8Checksum+=make8(structTratamientoThetaBurst.si16SepBurstTB,1);  
+            i8Checksum+=structTratamientoThetaBurst.si8NBurstTrenTB; 
+            i8Checksum+=structTratamientoThetaBurst.si8SepTrenesTB; 
+            i8Checksum+=structTratamientoThetaBurst.si8NTrenesTB;
+            i8Checksum+=structTratamientoThetaBurst.sbPolaridadTB;
+            i8Checksum+=make8(structTratamientoThetaBurst.si16CorrienteTB,0); 
+            i8Checksum+=make8(structTratamientoThetaBurst.si16CorrienteTB,1);
+            // i8Checksum+=structTratamientoThetaBurst.si8PulsosRampaTB;
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structTratamientoThetaBurst.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structTratamientoThetaBurst.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value      
+                bReturn=1;                                                                            
+            }
+            break;
+        case MODO_TRAT_TB_ACTIVO:      // MODO_TRAT_TB_ACTIVO
+            i8Checksum+=make8(structTratamientoThetaBurstActivo.si16CorrienteTB,0);  
+            i8Checksum+=make8(structTratamientoThetaBurstActivo.si16CorrienteTB,1);               
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structTratamientoThetaBurstActivo.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structTratamientoThetaBurstActivo.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value 
+                bReturn=1;                                                                                
+            }
+            break; 
+        case MODO_TRAT_GALV:            // MODO_TRAT_TB
+            i8Checksum+=structTratamientoGalvanica.sbSeleccionGalvanica;       
+            i8Checksum+=make8(structTratamientoGalvanica.si32CGalv,0);
+            i8Checksum+=make8(structTratamientoGalvanica.si32CGalv,1);
+            i8Checksum+=make8(structTratamientoGalvanica.si32CGalv,2);
+            i8Checksum+=make8(structTratamientoGalvanica.si32CGalv,3);
+            i8Checksum+=make8(structTratamientoGalvanica.si16IGalv,0);
+            i8Checksum+=make8(structTratamientoGalvanica.si16IGalv,1);
+            i8Checksum+=make8(structTratamientoGalvanica.si8TrampaGalv,0);            
+            i8Checksum+=make8(structTratamientoGalvanica.si8TrampaGalv,1);              
+            i8Checksum+=structTratamientoGalvanica.si8TrampaTransBajada;              
+            i8Checksum+=make8(structTratamientoGalvanica.si16Imicro,0);
+            i8Checksum+=make8(structTratamientoGalvanica.si16Imicro,1);
+            i8Checksum+=make8(structTratamientoGalvanica.si16PWmicro,0);
+            i8Checksum+=make8(structTratamientoGalvanica.si16PWmicro,1);
+            i8Checksum+=structTratamientoGalvanica.si8Trampamicro;             
+            i8Checksum+=make8(structTratamientoGalvanica.si16frecmicro,0);
+            i8Checksum+=make8(structTratamientoGalvanica.si16frecmicro,1);             
+            i8Checksum+=structTratamientoGalvanica.sbPolaridadMicro;     
+            i8Checksum+=structTratamientoGalvanica.sbSeleccionTranscraneal;
+            i8Checksum+=structTratamientoGalvanica.sbMonopolarPosNeg;
+            i8Checksum+=structTratamientoGalvanica.sbCableBipolarConectado;
+            i8Checksum+=structTratamientoGalvanica.si8SeleccionGalvMicro;
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structTratamientoGalvanica.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structTratamientoGalvanica.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value     
+                bReturn=1;                                                                             
+            }
+            break;
+        case MODO_TRAT_GALV_ACTIVO:     // MODO_TRAT_TB_ACTIVO
+            i8Checksum+=make8(structTratamientoGalvanicaActivo.si16IGalv,0);  
+            i8Checksum+=make8(structTratamientoGalvanicaActivo.si16IGalv,1); 
+            i8Checksum+=make8(structTratamientoGalvanicaActivo.si16Imicro,0);
+            i8Checksum+=make8(structTratamientoGalvanicaActivo.si16Imicro,1);
+            i8Checksum+=structTratamientoGalvanicaActivo.sbTerapia; 
+            i8Checksum+=structTratamientoGalvanicaActivo.sbRampaBajadaTranscraneal; 
+            i8Checksum+=structTratamientoGalvanicaActivo.sbCableBipolarConectado;
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structTratamientoGalvanicaActivo.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structTratamientoGalvanicaActivo.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value   
+                bReturn=1;                                                                               
+            }              
+            break; 
+        case MODO_MEDIDAS_OBTENIDAS:    // MODO_MEDIDAS_OBTENIDAS                        
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[0][0],0);
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[0][0],1); 
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[0][1],0);
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[0][1],1); 
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[1][0],0);
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[1][0],1); 
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[1][1],0);
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[1][1],1); 
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[2][0],0);
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[2][0],1); 
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[2][1],0);
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[2][1],1); 
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[3][0],0);
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[3][0],1); 
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[3][1],0);
+            i8Checksum+=make8(structMedidasElectro.si16IMedElec[3][1],1); 
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[0][0],0);
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[0][0],1); 
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[0][1],0);
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[0][1],1); 
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[1][0],0);
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[1][0],1); 
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[1][1],0);
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[1][1],1); 
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[2][0],0);
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[2][0],1); 
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[2][1],0);
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[2][1],1); 
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[3][0],0);
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[3][0],1); 
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[3][1],0);
+            i8Checksum+=make8(structMedidasElectro.si16VMedElec[3][1],1); 
+            i8Checksum+=structMedidasElectro.sbMAX[0][0];
+            i8Checksum+=structMedidasElectro.sbMAX[0][1];
+            i8Checksum+=structMedidasElectro.sbMAX[1][0];
+            i8Checksum+=structMedidasElectro.sbMAX[1][1];
+            i8Checksum+=structMedidasElectro.sbMAX[2][0];
+            i8Checksum+=structMedidasElectro.sbMAX[2][1];
+            i8Checksum+=structMedidasElectro.sbMAX[3][0];
+            i8Checksum+=structMedidasElectro.sbMAX[3][1];     
+            i8Checksum+=structMedidasElectro.sbCC[0];
+            i8Checksum+=structMedidasElectro.sbCC[1];
+            i8Checksum+=structMedidasElectro.sbCC[2];
+            i8Checksum+=structMedidasElectro.sbCC[3];
+            
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structMedidasElectro.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structMedidasElectro.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value 
+                //fprintf(DEBUG_UART,"\r\nCHK_E_ORIG: 0x%X 0x%X %u\r\n",i8Checksum,obtencionChecksum(i8Checksum),sizeof(structMedidasElectro));
+                bReturn=1;                                                                           
+            }
+            break;
+        case MODO_MEDIDAS_ThetaBurst:  // MODO_MEDIDAS_ThetaBurst    
+            i8Checksum+=make8(structMedidasThetaBurst.si16VMedTB,0);
+            i8Checksum+=make8(structMedidasThetaBurst.si16VMedTB,1);
+            i8Checksum+=make8(structMedidasThetaBurst.si16IMedTB,0);
+            i8Checksum+=make8(structMedidasThetaBurst.si16IMedTB,1);
+            i8Checksum+=make8(structMedidasThetaBurst.si16ResTB,0);
+            i8Checksum+=make8(structMedidasThetaBurst.si16ResTB,1);
+            i8Checksum+=make8(structMedidasThetaBurst.si16NPulsosBurstRestanteTB,0);
+            i8Checksum+=make8(structMedidasThetaBurst.si16NPulsosBurstRestanteTB,1);
+            i8Checksum+=structMedidasThetaBurst.si8NBurstTrenRestanteTB;
+            i8Checksum+=structMedidasThetaBurst.si8NTrenesRestanteTB;            
+            i8Checksum+=structMedidasThetaBurst.sbMAX[0];
+            i8Checksum+=structMedidasThetaBurst.sbMAX[1];     
+            i8Checksum+=structMedidasThetaBurst.sbCC;
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structMedidasThetaBurst.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structMedidasThetaBurst.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value     
+                bReturn=1;                                                                             
+            }
+            break;
+        case MODO_MEDIDAS_GALVANICA:    // MODO_MEDIDAS_ThetaBurst                        
+            i8Checksum+=make8(structMedidasGalvanica.si16IMedGalv,0);
+            i8Checksum+=make8(structMedidasGalvanica.si16IMedGalv,1);       
+            i8Checksum+=make8(structMedidasGalvanica.si16VMedGalv,0);
+            i8Checksum+=make8(structMedidasGalvanica.si16VMedGalv,1);     
+            i8Checksum+=make8(structMedidasGalvanica.si16ResGalv,0); 
+            i8Checksum+=make8(structMedidasGalvanica.si16ResGalv,1);      
+            i8Checksum+=structMedidasGalvanica.sbMAX[0];  
+            i8Checksum+=structMedidasGalvanica.sbMAX[1];          
+            i8Checksum+=structMedidasGalvanica.sbCC;         
+            i8Checksum+=structMedidasGalvanica.sbTerapiaLeida;
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structMedidasGalvanica.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structMedidasGalvanica.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value         
+                bReturn=1;                                                                         
+            }
+            break;
+        case MODO_ERRORES:              // MODO_ERRORES
+            bReturn=1;
+            break;
+        case MODO_ACK:                  // MODO_ACK
+            bReturn=1;
+            break;
+        case MODO_CONEXION_POINTER:     // MODO_CONEXION_POINTER
+            bReturn=1;
+            break;
+        case MODO_FUNCION:              // MODO_FUNCION
+            bReturn=1;
+            break;
+        case MODO_INFORME:              // MODO_INFORME
+            bReturn=1;
+            break;
+        case MODO_CONTROL_TIEMPO:       // MODO_CONTROL_TIEMPO
+            i8Checksum+=structControlTiempo.sbValorAlcanzado[0];
+            i8Checksum+=structControlTiempo.sbValorAlcanzado[1];  
+            i8Checksum+=structControlTiempo.sbValorAlcanzado[2];  
+            i8Checksum+=structControlTiempo.sbValorAlcanzado[3];  
+            i8Checksum+=structControlTiempo.sbValorAlcanzado[4];  
+            i8Checksum+=structControlTiempo.sbValorAlcanzado[5];  
+            i8Checksum+=structControlTiempo.sbValorAlcanzado[6];              
+            i8Checksum+=structControlTiempo.sbEmpiezaContadorTiempo;        
+            i8Checksum+=structControlTiempo.si8CanalTiempo;                 
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structControlTiempo.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structControlTiempo.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value    
+                bReturn=1;                                                                              
+            } 
+            break;
+        case MODO_CHECK_INICIAL:        // MODO_CHECK_INICIAL
+            i8Checksum+=make8(structCheckInicial.sfMedidaVref,0);
+            i8Checksum+=make8(structCheckInicial.sfMedidaVref,1);
+            i8Checksum+=make8(structCheckInicial.sfMedidaVref,2);
+            i8Checksum+=make8(structCheckInicial.sfMedidaVref,3);           
+            i8Checksum+=structCheckInicial.sbMedidaOK;              
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structCheckInicial.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structCheckInicial.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value      
+                bReturn=1;                                                                           
+            }
+            break;
+        case MODO_PROTOCOLO_TEST:
+            i8Checksum+=structProtocoloTest.si8ProtocoloSeleccionado;
+            i8Checksum+=structProtocoloTest.si8PasoSeleccionado;
+            i8Checksum+=structProtocoloTest.si8RamaSeleccionada;
+            i8Checksum+=make8(structProtocoloTest.si16DutySeleccionado,0);
+            i8Checksum+=make8(structProtocoloTest.si16DutySeleccionado,1);
+            if(bRecepcion){                                             // Si estoy recibiendo los datos...
+                if(obtencionChecksum(i8Checksum)!=structProtocoloTest.si8Checksum){   // Si el checksum no es correcto
+                    bReturn=0;                                          // Indicamos que vuelva recibir el dato
+                }else{                                                  // Si el checksum es correcto
+                    bReturn=1;                                          // Indicamos que continue con la lectura de datos
+                }
+            }else{                                                      // Si estoy enviando los datos...
+                structProtocoloTest.si8Checksum=obtencionChecksum(i8Checksum);       // Guardo el checksum value      
+                bReturn=1;                                                                           
+            }
+            break;
+    }
+
+    return bReturn;             // Devuelve si es valido o no el checksum
+}
+
+
+#endif
+
+int1 busquedaFIFO(int8 i8Valor){
+    int1 bReturn=0;
+    
+    if(structFIFO.sti8Size>1){
+        for(int8 i8Cont=0; i8Cont<structFIFO.sti8Size; i8Cont++){
+            if(structFIFO.sti8FIFO[i8Cont]==i8Valor){
+                bReturn=1;
+            }           
+        }                         
+    }   
+    return bReturn;
+}
+
+
+void configuraDatos(int8 i8Paquete1){
+    if(!busquedaFIFO(i8Paquete1)){
+        structFIFO.sti8FIFO[structFIFO.sti8Size]=i8Paquete1;                                // Envia el comando   
+        structFIFO.sti8FIFO2[structFIFO.sti8Size++]=0;                                       // Envia el comando   
+        structFIFO.sti8Final++;
+    }
+}
+
+void configuraDatos(int8 i8Paquete1, int8 i8Paquete2){
+    if(i8Paquete1==MODO_START_STOP){                                // Si es el paquete de apagado
+        structFIFO.sti8FIFO[structFIFO.sti8Size]=i8Paquete1;                                // Envia el comando   
+        structFIFO.sti8FIFO2[structFIFO.sti8Size++]=i8Paquete2;                              // Envia el comando   
+        structFIFO.sti8Final++;
+    }else{
+        if(!busquedaFIFO(i8Paquete1)){
+            structFIFO.sti8FIFO[structFIFO.sti8Size]=i8Paquete1;                                // Envia el comando   
+            structFIFO.sti8FIFO2[structFIFO.sti8Size++]=i8Paquete2;                              // Envia el comando   
+            structFIFO.sti8Final++;
+        }
+    }
+    
+}
+
+void envioDatos(int8 i8Paquete1){
+    #ifdef SAURON
+    i32TiempoComunicaciones=0;
+    #endif
+    i8ErrorCom=0;                                                                       // Inicializa el valor del contador de errores
+
+    do{
+        enviaPaquete(i8Paquete1);                                                       // Envia comando
+    
+        i32Timeout=0;                                                                   // Inicializa variable timeout   
+      
+        while(!bDatoRecibido && i32Timeout<=MAX_TIMEOUT){                               // Mientras no se haya recibido un dato o el timeout no haya desbordado...       
+            i32Timeout++;                                                               // Incrementa variable timeout      
+            #ifdef SAURON
+            restart_wdt_hw();
+            restart_wdt();
+            #endif
+        }
+        
+        
+        bDatoRecibido=0;                                                                // Inicializo variable de dato recibido                                          
+        if(i32Timeout>=MAX_TIMEOUT){                                                    // Si ha salido del bucle porque ha desbordado el timeout      
+            i8ErrorCom++;                                                               // Incroemnto el contador de errores
+            if(i8ErrorCom>=MAX_NUM_ERR){                                                // Si se ha superado el n�mero m�ximo de intentos para enviar
+            #ifdef SAURON
+                incRegError(REG_ERROR_COMMS_S_O);
+                i8ErrorCom=0;     
+                
+                // Reinicio el valor del contador de errores
+                //fprintf(DEBUG_UART,"Entra al timeout\r\n");
+                
+                if(bComprobacionInicial){
+                    bErrorComunicaciones=1;    
+                }else{
+                    iMenuActual=205;                                                        // Selecciono el men� de error de comunicaciones
+                    result=(*funcArr_menu[iMenuActual])();                                  // Me voy al men�   
+                    iMenuActual=0;                                                          // Voy al men� principal
+                    iMenuAnterior=255;
+                    giPos=0;                                                                // Inicializo variable
+                    result=(*funcArr_menu[iMenuActual])();                                  // Me voy al men�   
+                }
+                bDatoProcesado=1;                                                       // Indico que tiene que salir del bucle
+                i8BufferIndex=0;
+            #else
+                bDatoProcesado=0;
+                reset_cpu();
+            #endif
+            }else{
+                bDatoProcesado=0;                                                       // Indica que NO se ha obtenido el dato, para volver a enviar de nuevo el paquete
+            }
+        }else{                                                                          // Si ha recibido el paquete
+        #ifdef SAURON
+            (RETURN_OK == lecturaPaquete()) ? (bDatoProcesado=1) : (bDatoProcesado=0);   // Lee el paquete recibido y indica ACK si es correcto    
+            if(bDatoProcesado){
+                if(bModoTestActivado){
+                   bRealizaPasosProtocolo=1;
+                }
+            }
+        #else
+            (RETURN_OK == lecturaPaquete()) ? (bDatoProcesado=1) : (bDatoProcesado=0);   // Lee el paquete recibido y indica ACK si es correcto    
+        #endif
+        }
+    }while(!bDatoProcesado);
+    
+    bDatoProcesado=0;
+    
+
+
+    #ifdef SAURON
+    bErrorComunicaciones=0;
+    if(bModoTestActivado){
+        bNoSeHaEnviado=0;
+    }
+    //fprintf(DEBUG_UART,"Procesado\r\n");
+    #endif
+}
+
+void envioDatos(int8 i8Paquete1, int8 i8Paquete2){
+    #ifdef SAURON
+    i32TiempoComunicaciones=0;
+    #endif
+    i8ErrorCom=0;                                                                       // Inicializa el valor del contador de errores
+
+    do{
+        enviaPaquete(i8Paquete1,i8Paquete2);                                            // Envia comando
+    
+        i32Timeout=0;                                                                   // Inicializa variable timeout                                                   
+        while(!bDatoRecibido && i32Timeout<=MAX_TIMEOUT){                               // Mientras no se haya recibido un dato o el timeout no haya desbordado...       
+            i32Timeout++;                                                               // Incrementa variable timeout            
+            #ifdef SAURON
+            restart_wdt_hw();
+            #endif
+        }                                                                                                                                                                
+        bDatoRecibido=0;                                                                // Inicializo variable de dato recibido                                          
+        if(i32Timeout>=MAX_TIMEOUT){                                                    // Si ha salido del bucle porque ha desbordado el timeout      
+            i8ErrorCom++;                                                               // Incroemnto el contador de errores
+            if(i8ErrorCom>=MAX_NUM_ERR){                                                // Si se ha superado el n�mero m�ximo de intentos para enviar
+            #ifdef SAURON
+                incRegError(REG_ERROR_COMMS_S_O);
+                i8ErrorCom=0;                                                           // Reinicio el valor del contador de errores
+                iMenuActual=205;                                                        // Selecciono el men� de error de comunicaciones
+                result=(*funcArr_menu[iMenuActual])();                                  // Me voy al men�   
+                iMenuAnterior=255;
+                iMenuActual=0;                                                          // Voy al men� principal
+                giPos=0;                                                                // Inicializo variable
+                result=(*funcArr_menu[iMenuActual])();                                  // Me voy al men�   
+                bDatoProcesado=1;   // Indico que tiene que salir del bucle
+                i8BufferIndex=0;
+            #else
+                reset_cpu();
+                bDatoProcesado=0;
+            #endif
+            }else{
+                bDatoProcesado=0;                                                       // Indica que NO se ha obtenido el dato, para volver a enviar de nuevo el paquete
+            }
+        }else{                                                                          // Si ha recibido el paquete
+
+        #ifdef SAURON
+            (RETURN_OK == lecturaPaquete()) ? (bDatoProcesado=1) : (bDatoProcesado=0);   // Lee el paquete recibido y indica ACK si es correcto    
+        #else
+            (RETURN_OK == lecturaPaquete()) ? (bDatoProcesado=1) : (bDatoProcesado=0);   // Lee el paquete recibido y indica ACK si es correcto    
+        #endif             
+        }
+    }while(!bDatoProcesado);
+}
+
+void initFIFO(){
+    for(int8 i8Cont=0; i8Cont<FIFO_SIZE; i8Cont++){         // Recorro todoel buffer de la FIFO
+        structFIFO.sti8FIFO[i8Cont]=0;                      // Inicializo valor del paquete 1
+        structFIFO.sti8FIFO2[i8Cont]=0;                     // Inicializo valor del paquete 2
+    }
+    structFIFO.sti8Inicio=0;                                // Inicializo valor de inicio del buffer
+    structFIFO.sti8Final=0;                                 // Inicializo valor de final del buffer
+    structFIFO.sti8Size=0;                                  // Inicializo valor del tama�o dle buffer utilizado
+}
+
+int1 checkSize(int8 i8IDPaquete){                           // Funci�n que comprueba el tama�o del paquete para ver que ha llegado correctamente
+
+    int1 bReturn=0;                                         // Variable de retorno
+    
+    if(i8BufferIndex > i8ArrayBufferSize[i8IDPaquete]){    // Si el paquete recibido no corresponde en tama�o a lo esperado
+        if(MODO_ACK==i8BufferEntrada[0] && (MODO_CHECK_ALIVE==i8BufferEntrada[1])){
+            if(i8BufferIndex == i8ArrayBufferSize[i8IDPaquete]+2){
+                bReturn=1;
+            }else{
+                bReturn=0;
+            }
+            bNoEsFinDeTrama=0;
+        }else{
+            bNoEsFinDeTrama=0;
+            bReturn=0;                                          // Devuelvo false
+        }
+        //fprintf(DEBUG_UART,"%u %u %u\r\n",i8IDPaquete,i8BufferIndex,i8ArrayBufferSize[i8IDPaquete]);
+    }else if(i8BufferIndex < i8ArrayBufferSize[i8IDPaquete]){    // Si el paquete recibido no corresponde en tama�o a lo esperado (es menor)
+        bNoEsFinDeTrama=1;
+        //putc(0xEE,DEBUG_UART);        // DEBUG para ver si ha fallado o no
+        bReturn=0;   
+    }else{                                                  // Si es correcto
+        bReturn=1;                                          // Devuelvo true
+    }
+    
+    return bReturn;                                         // Devuelvo el valor, true si es correcto, false si es erroneo
+}
+
+void initArrayComms(){
+
+    i8ArrayBufferSize[MODO_CHECK_ALIVE]=4;                                                      // 1 byte Datos + 1 byte ID + CR + LF
+    i8ArrayBufferSize[MODO_FUNCION]=4;                                                          // 1 byte Datos + 1 byte ID + CR + LF
+    i8ArrayBufferSize[MODO_CONEXION_POINTER]=4;                                                 // 1 byte Datos + 1 byte ID + CR + LF   
+    i8ArrayBufferSize[MODO_START_STOP]=8;                                                       // 5 bytes Datos + 1 byte ID + CR + LF       
+    i8ArrayBufferSize[MODO_ACK]=5;                                                              // 2 bytes Datos + 1 byte ID + CR + LF
+    i8ArrayBufferSize[MODO_TRAT_GALV]=sizeof(structTratamientoGalvanica)+3;                     // X bytes Datos + 1 byte ID + CR + LF       
+    i8ArrayBufferSize[MODO_TRAT_GALV_ACTIVO]=sizeof(structTratamientoGalvanicaActivo)+3;        // X bytes Datos + 1 byte ID + CR + LF                        
+    i8ArrayBufferSize[MODO_TRAT_ELECT]=sizeof(structTratamientoElectro)+3;                      // X bytes Datos + 1 byte ID + CR + LF        
+    i8ArrayBufferSize[MODO_TRAT_ELECT_ACTIVO]=sizeof(structTratamientoElectroActivo)+3;         // X bytes Datos + 1 byte ID + CR + LF                    
+    i8ArrayBufferSize[MODO_TRAT_TB]=sizeof(structTratamientoThetaBurst)+3;                    // X bytes Datos + 1 byte ID + CR + LF            
+    i8ArrayBufferSize[MODO_TRAT_TB_ACTIVO]=sizeof(structTratamientoThetaBurstActivo)+3;       // X bytes Datos + 1 byte ID + CR + LF                        
+    i8ArrayBufferSize[MODO_MEDIDAS_OBTENIDAS]=sizeof(structMedidasElectro)+3;                   // X bytes Datos + 1 byte ID + CR + LF            
+    i8ArrayBufferSize[MODO_MEDIDAS_ThetaBurst]=sizeof(structMedidasThetaBurst)+3;             // X bytes Datos + 1 byte ID + CR + LF                
+    i8ArrayBufferSize[MODO_MEDIDAS_GALVANICA]=sizeof(structMedidasGalvanica)+3;                 // X bytes Datos + 1 byte ID + CR + LF            
+    i8ArrayBufferSize[MODO_ERRORES]=5;                                                          // 2 bytes Datos + 1 byte ID + CR + LF                        
+    i8ArrayBufferSize[MODO_CONTROL_TIEMPO]=sizeof(structControlTiempo)+3;                       // X bytes Datos + 1 byte ID + CR + LF 
+    i8ArrayBufferSize[MODO_CHECK_INICIAL]=sizeof(structCheckInicial)+3;                         // X bytes Datos + 1 byte ID + CR + LF 
+    i8ArrayBufferSize[MODO_PROTOCOLO_TEST]=sizeof(structProtocoloTest)+3;                       // X bytes Datos + 1 byte ID + CR + LF 
+    i8ArrayBufferSize[MODO_INFORME]=4;                                                          // 1 byte Datos + 1 byte ID + CR + LF
+}
+
+void initMedidasCHA(){
+    structMedidasElectro.si16IMedElec[CHA_C][PULSO_POS]=0;
+    structMedidasElectro.si16IMedElec[CHA_C][PULSO_NEG]=0;
+    structMedidasElectro.si16VMedElec[CHA_C][PULSO_POS]=0;
+    structMedidasElectro.si16VMedElec[CHA_C][PULSO_NEG]=0;
+    structMedidasElectro.sbMAX[CHA_C][PULSO_POS]=0;
+    structMedidasElectro.sbMAX[CHA_C][PULSO_NEG]=0;
+    structMedidasElectro.sbCC[CHA_C]=0;
+    bMAX[CHA_C][PULSO_POS]=0;
+    bMAX[CHA_C][PULSO_NEG]=0;
+    bCC[CHA_C]=0;
+    #ifdef SAURON
+    bMAXRulancha[CHA_C]=0;
+    #endif
+}
+
+void initMedidasCHB(){
+    structMedidasElectro.si16IMedElec[CHB_C][PULSO_POS]=0;
+    structMedidasElectro.si16IMedElec[CHB_C][PULSO_NEG]=0;
+    structMedidasElectro.si16VMedElec[CHB_C][PULSO_POS]=0;
+    structMedidasElectro.si16VMedElec[CHB_C][PULSO_NEG]=0;
+    structMedidasElectro.sbMAX[CHB_C][PULSO_POS]=0;
+    structMedidasElectro.sbMAX[CHB_C][PULSO_NEG]=0;
+    structMedidasElectro.sbCC[CHB_C]=0;
+    bMAX[CHB_C][PULSO_POS]=0;
+    bMAX[CHB_C][PULSO_NEG]=0;
+    bCC[CHB_C]=0;
+    #ifdef SAURON
+    bMAXRulancha[CHB_C]=0;
+    #endif
+}
+
+void initMedidasCHC(){
+    structMedidasElectro.si16IMedElec[CHC_C][PULSO_POS]=0;
+    structMedidasElectro.si16IMedElec[CHC_C][PULSO_NEG]=0;
+    structMedidasElectro.si16VMedElec[CHC_C][PULSO_POS]=0;
+    structMedidasElectro.si16VMedElec[CHC_C][PULSO_NEG]=0;
+    structMedidasElectro.sbMAX[CHC_C][PULSO_POS]=0;
+    structMedidasElectro.sbMAX[CHC_C][PULSO_NEG]=0;
+    structMedidasElectro.sbCC[CHC_C]=0;
+    bMAX[CHC_C][PULSO_POS]=0;
+    bMAX[CHC_C][PULSO_NEG]=0;
+    bCC[CHC_C]=0;
+    #ifdef SAURON
+    bMAXRulancha[CHC_C]=0;
+    #endif
+}    
+
+void initMedidasPoi(){
+    structMedidasElectro.si16IMedElec[POINTER_C][PULSO_POS]=0;
+    structMedidasElectro.si16IMedElec[POINTER_C][PULSO_NEG]=0;
+    structMedidasElectro.si16VMedElec[POINTER_C][PULSO_POS]=0;
+    structMedidasElectro.si16VMedElec[POINTER_C][PULSO_NEG]=0;
+    structMedidasElectro.sbMAX[POINTER_C][PULSO_POS]=0;
+    structMedidasElectro.sbMAX[POINTER_C][PULSO_NEG]=0;
+    structMedidasElectro.sbCC[POINTER_C]=0;
+    bMAX[POINTER_C][PULSO_POS]=0;
+    bMAX[POINTER_C][PULSO_NEG]=0;
+    bCC[POINTER_C]=0;
+    #ifdef SAURON
+    bMAXRulancha[POINTER_C]=0;
+    #endif
+}
+
+void initMedidasGal(){
+    structMedidasGalvanica.si16IMedGalv=0;          
+    structMedidasGalvanica.si16VMedGalv=0;          
+    structMedidasGalvanica.si16ResGalv=0;   
+    structMedidasGalvanica.sbMAX[0]=0; 
+    structMedidasGalvanica.sbMAX[1]=0;              
+    structMedidasGalvanica.sbCC=0;    
+    structMedidasGalvanica.sbTerapiaLeida=0;
+    bMAX[CHB_C][PULSO_POS]=0;
+    bMAX[CHB_C][PULSO_NEG]=0;
+    bCC[CHB_C]=0;
+    #ifdef SAURON
+    i16IMedGalv=0;          
+    i16VMedGalv=0;          
+    i16ResGalv=0; 
+    if(!bPausaTratamiento){
+        if(!bVeniaDePausa){
+            i32JuliosGalv=0;
+            bVeniaDePausa=0;
+        }
+    }
+    bMAXRulancha[CHB_C]=0;
+    #endif
+    //fprintf(DEBUG_UART,"Limpia\r\n");
+}
+
+void initMedidasTrans(){
+    structMedidasGalvanica.si16IMedGalv=0;          
+    structMedidasGalvanica.si16VMedGalv=0;          
+    structMedidasGalvanica.si16ResGalv=0;          
+    structMedidasGalvanica.sbMAX[0]=0; 
+    structMedidasGalvanica.sbMAX[1]=0;              
+    structMedidasGalvanica.sbCC=0;    
+    bMAX[CHB_C][PULSO_POS]=0;
+    bMAX[CHB_C][PULSO_NEG]=0;
+    bCC[CHB_C]=0;
+    #ifdef SAURON
+    i16IMedGalv=0;          
+    i16VMedGalv=0;          
+    i16ResGalv=0;  
+    bMAXRulancha[CHB_C]=0;
+    #endif
+}
+
+void initMedidasTB(){
+
+
+
+    if(!bPausaTratamiento){
+
+        i16NPulsosBurstRestanteTB=i16NPulsosBurstTB;
+        i8NBurstTrenRestanteTB=i8NBurstTrenTB;
+        i8NTrenesRestanteTB=i8NTrenesTB;
+    }
+
+    structMedidasThetaBurst.si16NPulsosBurstRestanteTB=i16NPulsosBurstRestanteTB;
+    structMedidasThetaBurst.si8NBurstTrenRestanteTB=i8NBurstTrenRestanteTB;
+    structMedidasThetaBurst.si8NTrenesRestanteTB=i8NTrenesRestanteTB;
+    structMedidasThetaBurst.si16VMedTB=0;
+    structMedidasThetaBurst.si16IMedTB=0;
+    structMedidasThetaBurst.si16ResTB=0;
+    structMedidasThetaBurst.sbMAX[0]=0;
+    structMedidasThetaBurst.sbMAX[1]=0;
+    structMedidasThetaBurst.sbCC=0; 
+    bMAX[CHC_C][PULSO_POS]=0;
+    bMAX[CHC_C][PULSO_NEG]=0;
+    bCC[CHC_C]=0;
+    
+    bDeboApagarTratamientoTB=0;
+
+    #ifdef SAURON
+
+    //POLLA
+
+
+    i8NTrenesAnteriorTB=i8NTrenesRestanteTB;//Almacenamos el valor de los anterior nuemro de trenes al inicio del tratamiento
+    i16VMedTB=0;
+    i16IMedTB=0;
+    i16ResTB=0;
+    bMAXRulancha[CHC_C]=0;
+    bErrorElectrodo[CHC_C]=0;                                               // Limpio el flag de error de electrodo    
+    i16ErroresOcurridos=0;
+    #endif
+}
+
+void initMedidasElectro(){
+    initMedidasCHA();
+    initMedidasCHB();
+    initMedidasCHC();
+    initMedidasPoi();
+}

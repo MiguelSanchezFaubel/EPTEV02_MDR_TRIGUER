@@ -1,0 +1,118 @@
+
+ROM used:   41836/131072 (32%)
+            84558/131072 (65%) including unused fragments
+
+            3.1 Average locations per line
+            33.9 Average locations per statement
+
+RAM used:   226/3862 (6%) at main() level
+            250/3862 (6%) worst case
+
+Stack used: 4 worst case (4 in main + 0 for interrupts)
+Stack size: 31
+
+Lines Stmts  %   Files
+----- ----- ---  -----
+  502   276  22  EPTE_V2_1_COPIA_MEM.c
+  392     0   0  EPTE_V2_1_COPIA_MEM.h
+ 1226     0   0  ..\..\..\..\..\..\Program Files (x86)\PICC\Devices\18F67K22.h
+ 2227   258  21  ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\math.h
+ 1352   359  29  ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\stdlib.h
+   32     0   0  ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\stddef.h
+  435     0   0  ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\string.h
+   28     0   0  ..\..\..\..\..\..\Program Files (x86)\PICC\Drivers\ctype.h
+   91    36   3  ..\Drivers\M25AA1024.c
+  104     0   0  ..\Drivers\M25AA1024.h
+  755   284  23  ..\Drivers\ST7529.c
+  517     0   0  ..\Drivers\ST7529.h
+  569     0   0  ..\Drivers\fat.c
+  454     0   0  ..\Drivers\glcd_fonts.h
+ 2574     0   0  ..\Drivers\xlargeFont.c
+  841     0   0  ..\Drivers\icon.h
+   81     0   0  ..\Drivers\Pictures\main_logo.c
+  278     0   0  ..\Idiomas\castellano_mem.c
+  278     0   0  ..\Idiomas\ingles_mem.c
+  690    20   2  ..\Sauron\preset_registers.h
+   90     0   0  ..\Sauron\internal_eeprom_registers.h
+----- -----
+13516  1233 Total
+
+Page ROM  %  RAM    Vol Diff  Functions:
+---- --- --- ---    --- ----  ----------
+0     30   0    7             @READ_PROGRAM_MEMORY
+0     40   0    1             @delay_ms1
+0     58   0    4    290  6.0  @SFTOI
+0     56   0    2    367  7.8  @ITOF
+0    244   0   11    369  8.0  @MULFF
+0     52   0    5    140  5.0  strlen
+0     84   0   14    603  5.9  @MUL3232
+0     30   0    5     30  1.5  @MUL1616
+0     18   0    0     48  1.1  M25AA1024_init
+0     68   0    9    125  2.2  M25AA1024_sendAddress
+0     66   0    5    192  2.7  M25AA1024_read
+0    110   0    6    325  4.2  M25AA1024_write
+0     28   0    1     53  1.9  ST7529_cs
+0     30   0    1     53  1.9  ST7529_a0
+0     34   0    1     69  1.6  ST7529_displayOn
+0     36   0    1     67  1.2  ST7529_reset
+0    730   1    2   4038  5.0  ST7529_init
+0     30   0    2    169  3.1  ST7529_send
+0    134   0    2    595  3.9  ST7529_clear
+0    336   0   13   1483 10.0  ST7529_putChar
+0     84   0    8    392  8.0  ST7529_printf
+0    146   0    1    765  5.3  ST7529_selectFont
+0   4756   6    0    242  4.1  @const1478
+0   4736   6    0     98  2.9  @const1482
+0     64   0    4    108  2.8  writeEEPROM_8bits
+0    140   0    8    223  3.4  writeEEPROM_16bits
+0    284   0   10    430  3.3  writeEEPROM_32bits
+0   4494   5  159  26995 11.1  MAIN
+0     16   0    0   1850  6.4  @const1553
+0     28   0    1    129  3.5  @SPRINTF
+0     40   0    3   1700 11.5  @PSTRINGC_1555
+0     12   0    0   1516  6.2  @const1558
+0     14   0    0             @const1563
+0     38   0    4    108  2.8  @PSTRINGCN_1555
+0    142   0   13    223  3.4  @DIV3232
+0    164   0   12    430  3.3  @PRINTF_L32U_1555
+0     14   0    0     68  2.4  @const1572
+0     14   0    0   9534  8.5  @const1574
+0     14   0    0             @const1576
+0     12   0    0  13318 11.5  @const1578
+0     12   0    0             @const1580
+0     22   0    0             @const1582
+0    188   0    9    282  5.1  @PRINTF_LU_1555
+0      8   0    0    168  4.4  @const1590
+0     18   0    0    180  4.5  @const1591
+0      8   0    0     32  1.0  @const1595
+0     42   0    0    167  2.3  @const1596
+0     26   0    0    652  3.4  @const1598
+0     56   0    2     99  3.0  control_DC
+0     62   0    6    150  3.7  @WRITEBITA
+0    164   0    8    227  3.9  showMem
+0     40   0    3             @DIV88
+0    104   0    2   1066  5.2  @PRINTF_U_1555
+0   4634   6    4  13944  3.5  initPresetsPredefinidos
+ Inline         0             @cinit1
+
+Program metrics:
+    Functions               47
+    Statements              1233
+    Comments                5645
+    Volume (V)              121279
+    Difficulty (D)          221.9
+    Effort to implement (E) 26915261
+    Time to implement (T)   415 hours, 22 minutes
+    Est Delivered Bugs (B)  30
+    Cyclomatic Complexity   112
+    Maintainability (MI)    29
+
+ Segment     Used  Free
+-----------  ----  ----
+00000-00002     4  0  
+00004-0FFFE  22810  42722  
+10000-1B5B0     0  46514  
+1B5B2-1FFFE  19022  0  
+
+
+
