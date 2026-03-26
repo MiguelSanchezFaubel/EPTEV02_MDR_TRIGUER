@@ -23,7 +23,7 @@ Type=4
 1=EPTE_V2_1_SAURON.c
 
 [ProjectLog]
-Days=480
+Days=482
 D1=21-02-2018
 D1_L=8
 D1_L1=[57104]Project Opened.
@@ -33,7 +33,7 @@ D1_L4=[57361]Project Closed.
 D1_L5=[60925]Project Opened.
 D1_L6=[60955]Started Editing.
 D1_L7=[61309]Stopped Editing.
-TotalEdit=18082
+TotalEdit=18083
 TotalDebug=0
 D1_E=6
 D1_D=0
@@ -11245,11 +11245,25 @@ D479_L1=[41194]Project Opened.
 D480=27-02-2026
 D480_L=1
 D480_L1=[31738]Project Closed.
+D481=04-03-2026
+D481_L=6
+D481_L1=[41570]Project Opened.
+D481_L2=[43109]Started Editing.
+D481_L3=[43409]Stopped Editing.
+D481_L4=[44158]Started Editing.
+D481_L5=[44462]Stopped Editing.
+D481_E=1
+D481_D=0
+D481_L6=[48722]Project Closed.
+D482=25-03-2026
+D482_L=2
+D482_L1=[44226]Project Opened.
+D482_L2=[44321]Project Closed.
 
 [Opened Files]
 1=EPTE_V2_1_SAURON.c
 t1=1
-Count=14
+Count=15
 2=menus_epte2.c
 t2=1
 3=..\ComLib\comunicacion_struct.c
@@ -11276,8 +11290,8 @@ t12=1
 t13=1
 14=..\Drivers\Pictures\output.c
 t14=1
-15=EPTE_V2_1_SAURON.sta
-t15=-1
+15=..\..\..\..\..\..\Program Files\PICC\Drivers\stdlib.h
+t15=1
 16=..\Drivers\ST7529_MEM.h
 t16=156
 17=EPTE_V2_1_SAURON.sta
@@ -11299,7 +11313,7 @@ OptionString=
 AdditionalOptionString=
 
 [defines]
-buildcount=4724
+buildcount=4736
 enabled=1
 chip=1
 D1=

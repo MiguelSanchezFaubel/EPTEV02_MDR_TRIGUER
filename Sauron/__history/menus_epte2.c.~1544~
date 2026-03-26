@@ -412,9 +412,9 @@ int8 menu_0(){
         // Versión triguer
         ST7529_printf(sMENU_PRESETS,COLUMNA_1_MENU,FILA_INIT_MENU,S_,giPos==0);         // Muestro menú Presets (se pone en texto porque queda mejor que la antigua en memoria)
         ST7529_printfg(sMENU_GALVMICRO,COLUMNA_1_MENU,FILA_1_MENU,S_,ai8EscalaGrises[1],giPos==1);          // Muestro menú Galvánica + Micro
-        ST7529_printfg(sMENU_TRANSCRANEAL,COLUMNA_1_MENU,FILA_2_MENU,S_,ai8EscalaGrises[1],giPos==2);       // Muestro menú Transcraneal
-        ST7529_printf(sMENU_ELECTRO,COLUMNA_1_MENU,FILA_3_MENU,S_,giPos==3);            // Muestro menú Electroestimulación
-        ST7529_printf(sMENU_SMP,COLUMNA_1_MENU,FILA_4_MENU,S_,giPos==4);                // Muestro menú TB
+        ST7529_printf(sMENU_TRANSCRANEAL,COLUMNA_1_MENU,FILA_2_MENU,S_,ai8EscalaGrises[1],giPos==2);       // Muestro menú Transcraneal
+        ST7529_printfg(sMENU_ELECTRO,COLUMNA_1_MENU,FILA_3_MENU,S_,giPos==3);            // Muestro menú Electroestimulación
+        ST7529_printfg(sMENU_SMP,COLUMNA_1_MENU,FILA_4_MENU,S_,giPos==4);                // Muestro menú TB
         ST7529_printf(sMENU_CONFIG,COLUMNA_1_MENU,FILA_5_MENU,S_,giPos==5);             // Muestro menú Configuración
         
 
@@ -2143,10 +2143,16 @@ int8 menu_90(){
 
         poner_cargar();                                     // Pone el simbolo de cargar en pantalla
         
-        // TRIGUER
-        if(i8SeleccionTerapia <2){
-            i8SeleccionTerapia = 2;
+        #ifdef SOLO_TDCS
+        i8SeleccionTerapia=1;
+        if(giPos<=1){                                       // Si el valor de selección es menor o igual a 0
+            giPos=1;                                        // Inicializo giPos
         }
+        #else
+        if(giPos<=0){                                       // Si el valor de selección es menor o igual a 0
+            giPos=0;                                        // Inicializo giPos
+        }
+        #endif
         
         if(giPos>6){                                        // Si el valor de selección es mayor que 5
             giPos=6;                                        // Inicializo giPos al máximo

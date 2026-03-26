@@ -17,7 +17,7 @@
 //#define INIT_PRESETS                  // Defino que se están inicializando los presets
 #define APAGAR_EQUIPO                   // Se usa para reprogramar orco sin que se apague el equipo
 #define SMP_CAPADA 1                    // Si esta definida se capa la terapia SMP, unicamente permite configurar corriente y cargar  los presets HIB y TB 
-#define SMP_INCREMENTOS_CAPADOS         // Si esta definida se limitan los incrementos entre los trenes de SMP a 500µA por tren.PARA CAMBIAR LIMITACION DE 500µ CAMBIAR; MAX_INVREMENTO_CORREINTE_ENTRETRENES
+#define SMP_INCREMENTOS_CAPADOS *        // Si esta definida se limitan los incrementos entre los trenes de SMP a 500µA por tren.PARA CAMBIAR LIMITACION DE 500µ CAMBIAR; MAX_INVREMENTO_CORREINTE_ENTRETRENES
 //#define VERSION_PIRATA                // Si está definida se muestra una version pirata de sauron y orco en la configuracion
 
 /************************************ Libreria de Programa ***********************************/
@@ -520,7 +520,7 @@ void main() {
     //funcArr_menu[15] = &menu_13;                            // Versiones (Configuracion general)
     
     // GALV�NICA + MICROCORRIENTES
-    funcArr_menu[20] = &menu_20;                            // Configuracion tratamiento galvanica
+    // funcArr_menu[20] = &menu_20;                            // Configuracion tratamiento galvanica
     //funcArr_menu[21] = &menu_22;                            // Configuracion corriente electrica galvanica
     //funcArr_menu[22] = &menu_42;                            // Configuracion tiempo galvanica
     //funcArr_menu[23] = &menu_23;                            // Configuracion Tiempo de rampa galvanica
@@ -531,7 +531,7 @@ void main() {
     //funcArr_menu[28] = &menu_28;                            // Configuracion frecuencia microcorrientes  
 
     // TRANSCRANEAL
-    funcArr_menu[30] = &menu_30;                            // Configuracion tratamiento transcraneal        
+    // funcArr_menu[30] = &menu_30;                            // Configuracion tratamiento transcraneal        
     //funcArr_menu[31] = &menu_22;                            // Configuracion corriente electrica transcraneal
     //funcArr_menu[32] = &menu_42;                            // Configuracion tiempo transcraneal             
     //funcArr_menu[33] = &menu_23;                            // Configuracion tiempo de rampa transcraneal
@@ -555,10 +555,10 @@ void main() {
     
     // THETABURST
     funcArr_menu[80] = &menu_80;                            // Sistema ThetaBurst TB
-    //funcArr_menu[81] = &menu_42;                            // Tiempo activo TB
-    //funcArr_menu[82] = &menu_42;                            // Tiempo desfase TB
-    //funcArr_menu[83] = &menu_28;                            // Frecuencia TB
-    //funcArr_menu[84] = &menu_27;                            // Ancho de pulso TB
+    //funcArr_menu[81] = &menu_42;                          // Tiempo activo TB
+    //funcArr_menu[82] = &menu_42;                          // Tiempo desfase TB
+    //funcArr_menu[83] = &menu_28;                          // Frecuencia TB
+    //funcArr_menu[84] = &menu_27;                          // Ancho de pulso TB
     
     // PRESETS
     funcArr_menu[90] = &menu_90;                            // Presets
@@ -566,14 +566,14 @@ void main() {
     funcArr_menu[92] = &menu_92;                            // Men� de guardado de presets
     
     // TRATAMIENTO GALV�NICA
-    funcArr_menu[120] = &menu_120;                          // Pantalla de inicio de tratamiento galvanica
-    funcArr_menu[121] = &menu_120;                          // Pantalla de tratamiento galvanica
-    funcArr_menu[123] = &menu_120;                          // Pantalla de eror de electrodo tratamiento galvanica
+    // funcArr_menu[120] = &menu_120;                          // Pantalla de inicio de tratamiento galvanica
+    // funcArr_menu[121] = &menu_120;                          // Pantalla de tratamiento galvanica
+    // funcArr_menu[123] = &menu_120;                          // Pantalla de eror de electrodo tratamiento galvanica
     
     // TRATAMIENTO TRANSCRANEAL
-    funcArr_menu[130] = &menu_130;                          // Pantalla de inicio de tratamiento transcraneal
-    funcArr_menu[131] = &menu_130;                          // Pantalla de tratamiento transcraneal
-    funcArr_menu[133] = &menu_130;                          // Pantalla de eror de electrodo tratamiento transcraneal
+    // funcArr_menu[130] = &menu_130;                          // Pantalla de inicio de tratamiento transcraneal
+    // funcArr_menu[131] = &menu_130;                          // Pantalla de tratamiento transcraneal
+    // funcArr_menu[133] = &menu_130;                          // Pantalla de eror de electrodo tratamiento transcraneal
     
     // TRATAMIENTO ELECTROESTIMULACI�N
     funcArr_menu[140] = &menu_140;                          // Pantalla de inicio de electroestimulacion
@@ -1121,7 +1121,7 @@ cargador:                                           // goto cargador
     bEvitaRebotePausa=0;                            // Inicializa flag rebotes tecla pausa
     
     output_low(LED_ALPP);                           // Pongo a nivel bajo LED ALPP (Debug)
-
+  
     // ------------------------------------------------------------------------------------------
     // --------------------------------------- BUCLE PRINCIPAL ----------------------------------
     while(TRUE){                        // Bucle de programa principal
@@ -5141,18 +5141,13 @@ void teclaArribaPulsada(){
                     if (giPos==0){                                                      // Si giPos es igual a 0...
                         giPos=0;                                                        // No bajes de ahi
                     }else{                                                              // ...si no es igual a cero
-                        #ifdef SOLO_TDCS                // Versión solo tDCS
+                        // Versión TRIGUER
                         giPos--;                                                        // Decrementa giPos
                         if(iMenuActual==0){
-                            if(giPos<2){
+                            if(giPos==2){
                                 giPos=0;
-                            }else if(giPos<5){
-                                giPos=2;
                             }
                         }
-                        #else                           // Versión completa
-                        giPos--;                                                        // Decrementa giPos
-                        #endif
                         switch (iMenuActual){                                           // Dependiendo del men� actual
                             case 10:                                        // Configuracion
                                 switch(giPos){                              // Dependiendo del menu sobre el que estemos
@@ -5722,18 +5717,14 @@ void teclaAbajoPulsada(){
                         }
                     }
                 }else{                                                              // En caso de que no se haya movido la rulancha
-                    #ifdef SOLO_TDCS                // Versión solo tDCS
+                    // Versión TRIGUER
                     giPos++;                                                        // Incrementa giPos
                     if(iMenuActual==0){
-                        if(giPos>2){
-                            giPos=5;
-                        }else if(giPos>0){
-                            giPos=2;
+                        if(giPos==1 || giPos==2){
+                            giPos=3;
                         }
                     }
-                    #else                           // Versión completa
-                    giPos++;                                                        // Incrementa giPos
-                    #endif
+
                     switch (iMenuActual){                                           // Dependidendo del men� en el que estemos
                         case 10:                                                // Configuracion
                             switch(giPos){                                  // Dependiendo del menu en el que estemos

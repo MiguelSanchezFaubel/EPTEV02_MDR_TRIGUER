@@ -696,14 +696,13 @@ float fDutyFinalTren=0;               //AM MIGUEL
 int16 i16FrecuenciaInicioFM=0;                       //MF MIGUEL
 int16 i16FrecuenciaFinalFM=0;                        //MF MIGUEL
 int8 i8ModAM=0;                                      //Va de 0 a 80 representa el pordentaje de modulacion de la AM sobre el nuvel maximo de corriente  
-int16 i16TiempoVariacionAMyFM=0;                       //FM MIGUEL
+int16 i16TiempoVariacionAMyFM=0;                     //FM MIGUEL
 int32 i32PWInicialMod=50;
 int32 i32PWFinalMod=1000;
-
 float fNumeroIncrementosDecimalesFM=0;
 int16 i16NumeroIncrementosEnteros=0;
 int8 i8ContadorIncrementosDecimales=0;
- 
+
 float fFrecuenciaOffsetTMR1;              
 
 int1 bAMActivada=0;                                 //AM MIGUEL
@@ -769,3 +768,6 @@ int1 bUltimoPWM=0;
 int1 bVengoDePausaElectro=0;
 
 int1 bFAAActivada=0;
+
+// TRIGUER MODE
+int8 i8TriggerMode=0;                                // 0-> NO ACTIVADA, 1-> SMP, 2-> ELECTRO(LTD, LTP)

@@ -1402,8 +1402,6 @@ void initMedidasTrans(){
 
 void initMedidasTB(){
 
-
-
     if(!bPausaTratamiento){
 
         i16NPulsosBurstRestanteTB=i16NPulsosBurstTB;

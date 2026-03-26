@@ -203,7 +203,9 @@ void  TIMER0_isr(void){
                 
                 if(!bErrorElectrodoC){
                     
-                  i8NTrenesRestanteTB--;  
+                    i8NTrenesRestanteTB--;     
+                    
+
                 }        
             }
 
@@ -247,6 +249,18 @@ void  TIMER0_isr(void){
                 i16IMedRaw_Cp=read_adc_chupi_piruli();                               // Leer valor del shunt
     
                 bMedidaActualizada[CHC_C]=1;                            // Indico que hay una medida actualizada del canal C
+            
+                // TRIGUER THETA -----------------------------------------------------------------------------------------------------------------------------
+                gi16Timer7=65536-(500*16)+88;
+                TIMER7_ON=0;                                                    // Detenemos timer5  
+                set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+                clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+                enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+                
+                output_low(PULSO_2p_CHA);                  
+                TIMER7_ON=1;   
+                // TRIGUSER THETA-----------------------------------------------------------------------------------------------------------------------------
+                
             }else{
                 TIMER0_ON=0;
                 //fprintf(DEBUG_UART,"%d %d %d", i16NPulsosBurstRestanteTB,i8NBurstTrenRestanteTB,i8NTrenesRestanteTB);
@@ -254,6 +268,7 @@ void  TIMER0_isr(void){
             }       
         }
     }    
+
 }
 
 // PW positivo ChA 
@@ -395,7 +410,7 @@ void TIMER5_isr(void){
             }else{
 
                 output_high(PULSO_2m_CHA);                                  // Nivel alto pulso 2 negativo canal A
-                delay_us(DELAY_PULSOS_CRITICA);                                     // Peque�o delay espera
+                delay_us(DELAY_PULSOS_CRITICA);                             // Peque�o delay espera
                 output_high(PULSO_1m_CHA);                                  // Nivel alto pulso 1 negativo canal A
                 
                 TIMER7_ON=1;                                                // Habilito Timer 7  
@@ -448,95 +463,13 @@ void TIMER5_isr(void){
 // PW negativo ChA 
 #INT_TIMER7 
 void  TIMER7_isr(void){ 
-    i8ContTimer7++;                 // Added 30/03/2022 Contador para sobrecarga de timer
 
-    if(i8DivTimer7>i8ContTimer7){   // Added 30/03/2022 Compruebo las veces que he paso por aquí
-        set_timer7(gi16Timer7);     // Added 30/03/2022 Seteo el timer con la carga correspondiente
-    }else{                        
 
-        i8ContTimer7=0;
-
-        TIMER7_ON=0;                                // Deshabilito Timer 7
-        set_timer7((int16)gi16Timer7);              // Recargo Timer 7
-        
-        if(bPolaridadElec[CHA_C]==1 && i8CanalesActivados&CANALES_A){ 
-           if(i16PW_minusElec[CHA_C]>=125){                                // Si el PW es mayor o igual de 125uS, tomo medida de tensión y de corriente y al final del pulso negativo    
-                // output_high(PULSO_2m_CHA);                                  // Nivel alto pulso 2 negativo canal A
-                // delay_us(DELAY_PULSOS);                                     // Peque�o delay espera
-                // output_high(PULSO_1m_CHA);                                  // Nivel alto pulso 1 negativo canal A
-                // TIMER7_ON=1;                                                // Habilito Timer 7  
-                
-                // delay_us(DELAY_ESPERA_MEDIDA_TENSION);                      // Delay set se�al
-                set_adc_channel(ADC_VN_CHA);                                // Selecci�n del canal medicion tension negativa canal A
-                delay_us(DELAY_INT_SIG);                                    // Delay set ADC
-                i16VMedRaw_Am=read_adc_chupi_piruli();                      // Leer valor de la tension de la carga negativa canal A    
-                delay_us(DELAY_ESPERA_MEDIDA_CORRIENTE);                    // Delay espera medida corriente
-                set_adc_channel(ADC_SHUNT_CHA);                             // Selecci�n del canal A
-                delay_us(DELAY_INT_SIG);                                    // Delay set ADC
-                i16IMedRaw_Am=read_adc_chupi_piruli();                      // Leer valor del shunt
-
-                bMedidaActualizada[CHA_C]=1;                                // Indico medida actualizada canal A
-                    
-            }
-        }
-        else if(i16PW_minusElec[POINTER_C]>=125){ // Si el PW es mayor o igual de 125uS, tomo medida de tensión y de corriente al final del pulso
-                            
-            // delay_us(DELAY_ESPERA_MEDIDA_TENSION);                      // Delay set se�al
-            
-            set_adc_channel(ADC_VN_CHA);                                // Selecci�n del canal medicion tension negativa canal A
-            delay_us(DELAY_INT_SIG);                                    // Delay set ADC
-            // 
-            i16VMedRaw_Am=read_adc_chupi_piruli();                      // Leer valor de la tension de la carga negativa canal A    
-            // 
-            
-            delay_us(DELAY_ESPERA_MEDIDA_CORRIENTE);                    // Delay espera medida corriente
-
-            set_adc_channel(ADC_SHUNT_CHA);                             // Selecci�n del canal A
-            delay_us(DELAY_INT_SIG);                                    // Delay set ADC
-            // 
-            i16IMedRaw_Am=read_adc_chupi_piruli();                      // Leer valor del shunt
-            
-            bMedidaActualizada[CHA_C]=1;                              // Indico medida actualizada canal A   
-            
-        }
-
-        output_low(PULSO_1p_CHA);                   // Nivel bajo pulso 1 positivo canal A
-        output_low(PULSO_1m_CHA);                   // Nivel bajo pulso 1 negativo canal A
-        // delay_us(DELAY_INT_SIG);                    // Delay espera
-        output_low(PULSO_2p_CHA);                   // Nivel bajo pulso 2 positivo canal A
-        output_low(PULSO_2m_CHA);                   // Nivel bajo pulso 2 negativo canal A
-        
-        bPulsoA=0;                                  // Como ya ha finalizado el pulso del canal A, dejo libre para que puedan hacer m�s pulsos
-        
-        if(bDeboResincronizarB){                    // Si debo resincronzar el canal B
-            TIMER1_ON=1;                            // Habilito timer canal B
-            bDeboResincronizarB=0;                  // Inicializo flag resincronizar CHB
-        }
-        
-        if(bDeboResincronizarC && (i8CanalesActivados==CANALES_AC)){    // Si debo resincronizar el canal C cuando estamos en canales AC (SOLO A y C)
-            TIMER3_ON=1;                            // Habilito timer canal C
-            bDeboResincronizarC=0;                  // Inicializo flag resincronizar CHC
-        }
-
-        if((i16PW_plusElec[CHA_C]>=125 && i8CanalesActivados&CANALES_A) || (i16PW_plusElec[POINTER_C]>=125 && i8CanalesActivados&CANALES_P)){
-
-            bMedidaCorrienteA=1;                        // Avisamos de que ya se puede procesar la medida 
-
-        }
-        else if((i16PW_plusElec[CHA_C]<125 && i8CanalesActivados&CANALES_A) || (i16PW_plusElec[POINTER_C]<125 && i8CanalesActivados&CANALES_P)){
-
-            if(bMedidasCriticasPlus_A){
-            } 
-            else{
-
-                bMedidaCorrienteA=1;                        // Avisamos de que ya se puede procesar la medida
-            }        
-        }
-        // bMedidaCorrienteA=1;                        // Avisamos de que ya se puede procesar la medida
-    
-    }
+    TIMER7_ON=0;                                // Deshabilito Timer 7
+    clear_interrupt(INT_TIMER7);                // Limpiamos interrupciones timer 12
+    set_timer7((int16)gi16Timer7);              // Recargo Timer 7
+    output_high(PULSO_2p_CHA);                   // TRIGUER
 }
-
 // Frecuencia del canal B
 // IMPORTANTE: Debido a que el Timer 1 solo nos permite una frecuencia m�nima de ~30 Hz, 
 // se hace uso de una variable (gi8var_Timer1) para que, configurando el timer a diferentes tiempos,
@@ -549,8 +482,7 @@ void  TIMER1_isr(void){
     if (i8DivTimer1>i8ContTimer1){              // Si el contador es inferiro al valor que debe de llegar
         set_timer1(gi16Timer1);                 // Recarga el timer 1 de nuevo   
     }
-    else
-    {                                      // ...en cambio, si ya ha llegaod al valor de la cuenta deseada
+    else{                                      // ...en cambio, si ya ha llegaod al valor de la cuenta deseada
        
         TIMER1_ON=0;
         i8ContTimer1=0;                         // Inicializo contador Timer 1
@@ -773,6 +705,7 @@ void  TIMER1_isr(void){
                     bDeboResincronizarB=1;              // 
                 }
             }else{                                      // 
+                
                 bPulsoB=1;                              // Indico que se va a pintar el pulso del canal B
                 output_low(PULSO_2m_CHB);               // Nivel bajo del pulso 2 negativo  
                 
@@ -783,7 +716,7 @@ void  TIMER1_isr(void){
                 output_high(PULSO_1p_CHB);              // Activo pulso positivo    
                          
                 TIMER4_ON=1;                            // Habilito Timer 4 (autorecarga)               
-
+                
                 if(i16PW_plusElec[CHB_C]>=125){                               // Si el PW es mayor o igual de 125uS, tomo medida de tensión y de corriente
                     // delay_us(DELAY_ESPERA_MEDIDA_TENSION);                      // Pequeño delay para estabilizar la se�al
                 
@@ -1678,17 +1611,6 @@ void TIMER8_isr(void){
                     TIMER4_ON=1;                            // Habilita Timer 4 (Pulso +)
                     TIMER10_ON=1;                           // Habilito Timer 10 (Desfase entre dos canales)
                     
-                    // delay_us(DELAY_ESPERA_MEDIDA_TENSION);                             // Banda de guarda
-                    
-                    // set_adc_channel(ADC_VP_CHB);            // Selecci�n del canal A
-                    // delay_us(DELAY_INT_SIG);                             // Delay set ADC
-                    // i16VMedRaw_Bp=read_adc_chupi_piruli();               // Leer valor tensi�n  
-                    
-                    // delay_us(DELAY_ESPERA_MEDIDA_CORRIENTE);
-                    
-                    // set_adc_channel(ADC_SHUNT_CHB);         // Selecci�n del canal A
-                    // delay_us(DELAY_INT_SIG);                             // Delay set ADC
-                    // i16IMedRaw_Bp=read_adc_chupi_piruli();               // Leer valor corriente
 
                     // Added 29/03/2022 Medida de tensión y corriente del canal B de electroestimulación
                     if(i16PW_plusElec[CHB_C]>=125){                                 // Si el PW es mayor o igual de 125uS, tomo medida de tensión y de corriente
@@ -1823,8 +1745,6 @@ void TIMER8_isr(void){
                         // bMedidaActualizada[CHC_C]=1;
                     }
                     
-                    
-
                 }else{                                    // ... si la se�al es monopolar                                         
                          
                     output_low(PULSO_2p_CHC);             //ADDED 27/07/2022                               
@@ -2246,8 +2166,20 @@ void  TIMER10_isr(void){
                 
                 bImpedirIncremento=1;
                 bMedidaActualizada[CHC_C]=1;
+                
+                // TRIGUER THETA -----------------------------------------------------------------------------------------------------------------------------
+                gi16Timer7=65536-(500*16)+88;
+                TIMER7_ON=0;                                                    // Detenemos timer5  
+                set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+                clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+                enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+                
+                output_low(PULSO_2p_CHA);                  
+                TIMER7_ON=1;   
+                // TRIGUSER THETA-----------------------------------------------------------------------------------------------------------------------------
+                
            
-           }
+            }
             bMedidaCorrienteC=1;            // Avisamos de que ya se puede procesar la medida       
         }
                                                                                                 
@@ -2602,7 +2534,8 @@ void main(){
     output_low(SINCRONIZACION);
     
     initMedidasElectro();
-    
+    output_high(PULSO_2p_CHA); // TRIGUER
+
     while(TRUE){
 
         // if(bValorAlcanzado[CHB_C]==1){
@@ -2759,115 +2692,107 @@ void main(){
                                                 bFAAActivada=0;
 
                                                 switch(i8SeleccionMod){                                                     
-                                                        case MOD_NOT:
-                                                            bFMActivada=0;
-                                                            bAMActivada=0;
-                                                            bPWMActivada=0;
-                                                            break;
-                                                        case MOD_FM:
-                                                            bFMActivada=1;
-                                                            bAMActivada=0;
-                                                            bPWMActivada=0;
-                                                            break;
-                                                        case MOD_FAA:
-                                                            bFMActivada=1;
-                                                            bAMActivada=1;
-                                                            bPWMActivada=0;
-                                                            bFAAActivada=1;
-                                                            break;
-                                                        case MOD_AM:
-                                                            bFMActivada=0;
-                                                            bAMActivada=1;
-                                                            bPWMActivada=0;
-                                                            break;
-                                                        case MOD_FM_AM:
-                                                            bFMActivada=1;
-                                                            bAMActivada=1;
-                                                            bPWMActivada=0;
-                                                            break;
-                                                        case MOD_PWM:
-                                                            bFMActivada=0;
-                                                            bAMActivada=0;
-                                                            bPWMActivada=1;
-                                                            break;
-                                                        case MOD_FM_PWM:
-                                                            bFMActivada=1;
-                                                            bAMActivada=0;
-                                                            bPWMActivada=1;
-                                                            break;
-                                                    }
+                                                    case MOD_NOT:
+                                                        bFMActivada=0;
+                                                        bAMActivada=0;
+                                                        bPWMActivada=0;
+                                                        break;
+                                                    case MOD_FM:
+                                                        bFMActivada=1;
+                                                        bAMActivada=0;
+                                                        bPWMActivada=0;
+                                                        break;
+                                                    case MOD_FAA:
+                                                        bFMActivada=1;
+                                                        bAMActivada=1;
+                                                        bPWMActivada=0;
+                                                        bFAAActivada=1;
+                                                        break;
+                                                    case MOD_AM:
+                                                        bFMActivada=0;
+                                                        bAMActivada=1;
+                                                        bPWMActivada=0;
+                                                        break;
+                                                    case MOD_FM_AM:
+                                                        bFMActivada=1;
+                                                        bAMActivada=1;
+                                                        bPWMActivada=0;
+                                                        break;
+                                                    case MOD_PWM:
+                                                        bFMActivada=0;
+                                                        bAMActivada=0;
+                                                        bPWMActivada=1;
+                                                        break;
+                                                    case MOD_FM_PWM:
+                                                        bFMActivada=1;
+                                                        bAMActivada=0;
+                                                        bPWMActivada=1;
+                                                        break;
+                                                }
 
-                                              
-
-                                                  if(bFMActivada||bAMActivada||bPWMActivada)    //SI ESTAMOS EN MODULACION AM FM O PWM
-                                                    {
-                                                       
-                                                        //i16TiempoVariacionAMyFM=i16TdElec[CHB_C];
-                                                        TiempoActualIncrementos=0;
-                                                        i16CienMilisegundos=0;
-                                                        i8CONTADOR_TIEMPO_TIMER12_FM=25;
-                                                        fTiempoDesdeAnteriorPulso=0;
-                                                        bHayRampaEnCurso=1;   
-                                                        bUltimoPWM=0;  
-                                                        bPWMHayPulsoEnCurso=0;
-
-                                                        if(bFMActivada)             //Si estamos en FM
-                                                        {         
-                                                              
-      
-                                                            // i16FrecuenciaInicioFM=2;  //MF MIGUEL
-                                                            // i16FrecuenciaFinalFM= i16FrecElec[CHB_C]; 
-                                                            ContadorVecesPrimeraFrecuencia=2;
-                                                            ContadorVecesUltimaFrecuencia=0;
-
-                                                            fFrecuenciaActualFM=i16FrecuenciaInicioFM;                                                     
-                                                            bAscensoFM=1;
-                                                            bPrimeraFrecuenciaFM=1;                                                                                                                                                                                                                                   
-                                                            bUltimaFrecuenciaFM=0;  
-
-                                                            bProduciendoseTiempoDeError=0;
-                                                            TiempoDeError=0;                                                   
-
-                                                            CalculaIncrementosFrecuencia();                                                             //MF MIGUEL 
-                                                            IncrementaFrecuencia();                                                                      //MF MIGUEl
-
-                                                        }       
-                                                                                                                                               
-                                                        if(bAMActivada)                         // Indica que estamos en multifrecuencia//MF MIGUEL
-                                                        {    
-                                                            // i8ModAM=i8TrElec[CHB_C]*10;                                                                    //ModAM es la cariacion desde el maximo=100 al minimo=20
-                                                            //i8ModAM=80;
-                                                            i16DiferenciaIminImaxAM=(i16IElec[CHB_C]*50)-(int16)(i8ModAM*100);
-                                                            ConfiguraDutyMAxyMin(); 
-                                                            //bHayRampaEnCurso=0;                                                     
-                                                            bAscenso_AM_PWM=1;                                                            
-                                                            
-                                                            CalculatiempoActual();//HACE FALTA¡¡¡¡ 
-                                                            TiempoActualIncrementos=0;
-                                                            CalculaDutyActualAM();
-                                                                                                                            
-                                                        } 
-
-                                                        if(bPWMActivada)
-                                                        {   
-                                                            bPWMHayPulsoEnCurso=0;
-                                                            bAscenso_AM_PWM=1;
-                                                            mPWM=(float)((float)(i32PWFinalMod-i32PWInicialMod)/(float)i16TiempoVariacionAMyFM);
-                                                            CalculatiempoActual();//HACE FALTA¡¡¡¡ 
-                                                            TiempoActualIncrementos=0;
-                                                            i32PWMActual=i32PWFinalMod;
-                                                            CargaPWMActual();  
-                                                        }
-
-                                                    }
-                                                //calculo_ramp();                         // C�lculo de rampa 
                                             
-                                                // set_pwm9_duty((int16)((i16IElec[CHB_C]*50)+1023.1)/18.475);       // Configura PWM pulso positivo
-                                                // if(bPolaridadElec[CHB_C]){                       // Si la se�al es bipolar
-                                                //     set_pwm8_duty((int16)((i16IElec[CHB_C]*50)+1023.1)/18.475);    // Configura PWM pulso negativo
-                                                // }
+                                                if(bFMActivada||bAMActivada||bPWMActivada)    //SI ESTAMOS EN MODULACION AM FM O PWM
+                                                {
+                                                       
+                                                    //i16TiempoVariacionAMyFM=i16TdElec[CHB_C];
+                                                    TiempoActualIncrementos=0;
+                                                    i16CienMilisegundos=0;
+                                                    i8CONTADOR_TIEMPO_TIMER12_FM=25;
+                                                    fTiempoDesdeAnteriorPulso=0;
+                                                    bHayRampaEnCurso=1;   
+                                                    bUltimoPWM=0;  
+                                                    bPWMHayPulsoEnCurso=0;
 
-                                               
+                                                    if(bFMActivada)             //Si estamos en FM
+                                                    {         
+                                                          
+      
+                                                        // i16FrecuenciaInicioFM=2;  //MF MIGUEL
+                                                        // i16FrecuenciaFinalFM= i16FrecElec[CHB_C]; 
+                                                        ContadorVecesPrimeraFrecuencia=2;
+                                                        ContadorVecesUltimaFrecuencia=0;
+
+                                                        fFrecuenciaActualFM=i16FrecuenciaInicioFM;                                                     
+                                                        bAscensoFM=1;
+                                                        bPrimeraFrecuenciaFM=1;                                                                                                                                                                                                                                   
+                                                        bUltimaFrecuenciaFM=0;  
+
+                                                        bProduciendoseTiempoDeError=0;
+                                                        TiempoDeError=0;                                                   
+
+                                                        CalculaIncrementosFrecuencia();                                                             //MF MIGUEL 
+                                                        IncrementaFrecuencia();                                                                      //MF MIGUEl
+
+                                                    }       
+                                                                                                                                           
+                                                    if(bAMActivada)                         // Indica que estamos en multifrecuencia//MF MIGUEL
+                                                    {    
+                                                        // i8ModAM=i8TrElec[CHB_C]*10;                                                                    //ModAM es la cariacion desde el maximo=100 al minimo=20
+                                                        //i8ModAM=80;
+                                                        i16DiferenciaIminImaxAM=(i16IElec[CHB_C]*50)-(int16)(i8ModAM*100);
+                                                        ConfiguraDutyMAxyMin(); 
+                                                        //bHayRampaEnCurso=0;                                                     
+                                                        bAscenso_AM_PWM=1;                                                            
+                                                        
+                                                        CalculatiempoActual();//HACE FALTA¡¡¡¡ 
+                                                        TiempoActualIncrementos=0;
+                                                        CalculaDutyActualAM();
+                                                                                                                        
+                                                    } 
+
+                                                    if(bPWMActivada)
+                                                    {   
+                                                        bPWMHayPulsoEnCurso=0;
+                                                        bAscenso_AM_PWM=1;
+                                                        mPWM=(float)((float)(i32PWFinalMod-i32PWInicialMod)/(float)i16TiempoVariacionAMyFM);
+                                                        CalculatiempoActual();//HACE FALTA¡¡¡¡ 
+                                                        TiempoActualIncrementos=0;
+                                                        i32PWMActual=i32PWFinalMod;
+                                                        CargaPWMActual();  
+                                                    }
+
+                                                }
+
 
                                                 bPulsoB=1;
                                                
@@ -2875,8 +2800,19 @@ void main(){
                                                 pausa_us(DELAY_PULSOS);
                                                 output_high(PULSO_1p_CHB);   
                                                 
-                                                
-                                                 
+                                                // TRIGUER CANAL B ------------------------------------------------------------------------------------------------------------
+                                                if(i8TriggerMode == 2){
+
+                                                    enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+                                                    TIMER7_ON=0;                                                    // Detenemos timer5  
+                                                    clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+                                                    set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+                                                    output_low(PULSO_2p_CHA);                  
+                                                    TIMER7_ON=1;                                                    // Detenemos timer5  
+                                                    i8TriggerMode = 0;
+                                                }
+                                                // TRIGUER CANAL B ------------------------------------------------------------------------------------------------------------
+                
                                                 TIMER1_ON=1;                            // Habilita Timer 0 (Frecuencia)
                                                 TIMER4_ON=1;                            // Habilita Timer 4 (Pulso +)
                                                
@@ -3258,7 +3194,15 @@ void main(){
                                                     TIMER4_ON=1;                            // Habilita Timer 4 (Pulso +)
 
                                                      
-
+                                                    // TRIGUER CANAL B  ------------------------------------------------------ ------------------------------------------------------
+                                                    enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+                                                    TIMER7_ON=0;                                                    // Detenemos timer5  
+                                                    clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+                                                    set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+                                                    output_low(PULSO_2p_CHA);                  
+                                                    TIMER7_ON=1;                                                    // Detenemos timer5  
+                                                    // TRIGUER CANAL B ------------- -----------------------------------------------------------------------------------------------
+                
 
 
 
@@ -3652,21 +3596,17 @@ void main(){
                                         TIMER3_ON=1;                            // Habilita timer sep. pulsos 
                                         TIMER8_ON=1;                            // Habilita (PW +)
                                        
-                                        /*
-                                        pausa_us(DELAY_ESPERA_MEDIDA_TENSION);                             // Banda de guarda
+                                        // TRIGUER THETA -----------------------------------------------------------------------------------------------------------------------------
+                                        gi16Timer7=65536-(500*16)+88;
+                                        TIMER7_ON=0;                                                    // Detenemos timer5  
+                                        set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+                                        clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+                                        enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
                                         
-                                        // Medir V
-                                        set_adc_channel(ADC_VP_CHC);            // Selecci�n del canal C
-                                        pausa_us(DELAY_INT_SIG);                             // Delay set ADC
-                                        i16VMedRaw_Cp=read_adc_chupi_piruli();               // Leer valor tensi�n
-                                        
-                                        pausa_us(DELAY_ESPERA_MEDIDA_CORRIENTE);
-                                        
-                                        // Medir I
-                                        set_adc_channel(ADC_SHUNT_CHC);         // Selecci�n del canal C
-                                        pausa_us(DELAY_INT_SIG);                             // Delay set ADC
-                                        i16IMedRaw_Cp=read_adc_chupi_piruli();               // Leer valor corriente
-                                        */
+                                        output_low(PULSO_2p_CHA);                  
+                                        TIMER7_ON=1;   
+                                        // TRIGUSER THETA-----------------------------------------------------------------------------------------------------------------------------
+                
                                     }
                                 }
                             }
@@ -4342,9 +4282,9 @@ void apagadoTB(){
     
     TIMER3_ON=0;                                // Para el timer 3  -   Frecuencia CHA
     TIMER8_ON=0;                                // Para el timer 8  -   PW+ CHA
-    TIMER10_ON=0;                               // Para el timer 10  -   PW- CHA          
+    TIMER10_ON=0;                               // Para el timer 10  -  PW- CHA          
     TIMER0_ON=0;                                // Para el timer 0  -   Desfase CHA
-    TIMER1_ON=0;                               // Para el timer 12 -   Base de tiempos
+    TIMER1_ON=0;                               // Para el timer 12 -    Base de tiempos
     
     set_pwm5_duty((int16)0);                    // PWM a 0                            
     set_pwm4_duty((int16)0);                    // PWM a 0                            
@@ -4391,114 +4331,125 @@ void apagadoTB(){
 }
 
 void apagadoCHA(){
-    //fprintf(DEBUG_UART,"Apagado Canal A\r\n");
-    //fprintf(DEBUG_UART,"Entra aqui %u %u %lu\r\n",bSegundo,i8CanalesActivados,i16ErroresOcurridos);
-    disable_interrupts(INT_TIMER0);             // Deshabilita interrupciones         
-    disable_interrupts(INT_TIMER5);             // Deshabilita interrupciones         
-    disable_interrupts(INT_TIMER7);             // Deshabilita interrupciones   
+    // //fprintf(DEBUG_UART,"Apagado Canal A\r\n");
+    // //fprintf(DEBUG_UART,"Entra aqui %u %u %lu\r\n",bSegundo,i8CanalesActivados,i16ErroresOcurridos);
+    // disable_interrupts(INT_TIMER0);             // Deshabilita interrupciones         
+    // disable_interrupts(INT_TIMER5);             // Deshabilita interrupciones         
+    // disable_interrupts(INT_TIMER7);             // Deshabilita interrupciones   
 
-    if(!i8CanalesActivados){                    // Si no hay canales activados
-        disable_interrupts(INT_TIMER12);        // Deshabilito interrupciones de la base de tiempos
-        clear_interrupt(INT_TIMER12);
-        bSegundo=0;
-        initFIFO();
-    }
-    clear_interrupt(INT_TIMER0);                // Limpia flags interrupciones
-    clear_interrupt(INT_TIMER5);                // Limpia flags interrupciones        
-    clear_interrupt(INT_TIMER7);                // Limpia flags interrupciones        
+    // if(!i8CanalesActivados){                    // Si no hay canales activados
+    //     disable_interrupts(INT_TIMER12);        // Deshabilito interrupciones de la base de tiempos
+    //     clear_interrupt(INT_TIMER12);
+    //     bSegundo=0;
+    //     initFIFO();
+    // }
+    // clear_interrupt(INT_TIMER0);                // Limpia flags interrupciones
+    // clear_interrupt(INT_TIMER5);                // Limpia flags interrupciones        
+    // clear_interrupt(INT_TIMER7);                // Limpia flags interrupciones        
                                                                                       
-    TIMER0_ON=0;                                // Para el timer 0  -   Frecuencia CHA                    
-    TIMER5_ON=0;                                // Para el timer 5  -   PW+ CHA
-    TIMER7_ON=0;                                // Para el timer 7  -   PW- CHA        
-    if(!i8CanalesActivados){                    // Si no hay canales activados
-        //TIMER12_ON=0;                               // Para el timer 12 -   Base de tiempos
-    }
+    // TIMER0_ON=0;                                // Para el timer 0  -   Frecuencia CHA                    
+    // TIMER5_ON=0;                                // Para el timer 5  -   PW+ CHA
+    // TIMER7_ON=0;                                // Para el timer 7  -   PW- CHA        
+    // if(!i8CanalesActivados){                    // Si no hay canales activados
+    //     //TIMER12_ON=0;                               // Para el timer 12 -   Base de tiempos
+    // }
  
-    if(!bReposoActivado && !bPausaTratamiento)
-    {
-        set_pwm7_duty((int16)0);                    // PWM a 0                            
-        set_pwm6_duty((int16)0);                    // PWM a 0                            
-        CCP7CON=0x00;                               // Apagado PWM Amplitud pulso positivo                             
-        CCP6CON=0x00;                               // Apagado PWM Amplitud pulso negativo                            
+    // if(!bReposoActivado && !bPausaTratamiento)
+    // {
+    //     set_pwm7_duty((int16)0);                    // PWM a 0                            
+    //     set_pwm6_duty((int16)0);                    // PWM a 0                            
+    //     CCP7CON=0x00;                               // Apagado PWM Amplitud pulso positivo                             
+    //     CCP6CON=0x00;                               // Apagado PWM Amplitud pulso negativo                            
                                                                                         
-        output_low(PWMp_CHA);                       // Nivel bajo de las patillas de PWM  
-        output_low(PWMm_CHA);   
-    }
+    //     output_low(PWMp_CHA);                       // Nivel bajo de las patillas de PWM  
+    //     output_low(PWMm_CHA);   
+    // }
 
-    // MOD 17/06/2019
-    if(i8CanalesActivados==0){
-        output_high(PULSO_2p_CHA);               // Todo desconectado           
-        output_high(PULSO_2m_CHA);   
-        pausa_us(1000);
-    }
+    // // MOD 17/06/2019
+    // if(i8CanalesActivados==0){
+    //     output_high(PULSO_2p_CHA);               // Todo desconectado           
+    //     output_high(PULSO_2m_CHA);   
+    //     pausa_us(1000);
+    // }
     
-    output_low(PULSO_1p_CHA);                   // Nivel bajo de las se�ales de control
-    pausa_us(1000);
-    output_low(PULSO_1m_CHA);                                                         
+    // output_low(PULSO_1p_CHA);                   // Nivel bajo de las se�ales de control
+    // pausa_us(1000);
+    // output_low(PULSO_1m_CHA);                                                         
                                                                                       
-    output_low(PULSO_2p_CHA);               // Todo desconectado           
-    pausa_us(1000);
-    output_low(PULSO_2m_CHA);                                                     
+    // output_low(PULSO_2p_CHA);               // Todo desconectado           
+    // pausa_us(1000);
+    // output_low(PULSO_2m_CHA);                                                     
                                                                                                                                                                          
-    if(!(i8ReposoActivados&CANALES_A)){                         // Si no se encuentra en reposo...    
-        control_DC(0,EN_VCC_CH_A);              // Apagado VCC CHA  
-        /*initFIFO();
-        while(input_state(SINC_COMMS)==MANDA_SAURON);
-        envioDatos(MODO_FUNCION,FUNCION_DISABLE_RELE_A);*/
-    }
+    // if(!(i8ReposoActivados&CANALES_A)){                         // Si no se encuentra en reposo...    
+    //     control_DC(0,EN_VCC_CH_A);              // Apagado VCC CHA  
+    //     /*initFIFO();
+    //     while(input_state(SINC_COMMS)==MANDA_SAURON);
+    //     envioDatos(MODO_FUNCION,FUNCION_DISABLE_RELE_A);*/
+    // }
     
-    bTratamientoInit=0;
-    bMedidaCorrienteA=0;
-    bErrorElectrodoA=0;
-    bCanalesInicializados[CHA_C]=0;
-    bMedProm[CHA_C]=0;
-    bRangoV[CHA_C]=0;
-    if(!i8CanalesActivados){
-        bEmpiezaContadorTiempo=0;
-    }
-    if(!(i8CanalesActivados&CANALES_A)){
-        if(i16IElec[CHA_C]>MAXIMA_CORRIENTE_INCIO_ELECTROESTIMULACION){// && !bPausaTratamiento){
-            i16IElec[CHA_C]=MAXIMA_CORRIENTE_INCIO_ELECTROESTIMULACION;
-        }
-        i16IMedA[PULSO_POS]=0;
-        i16IMedA[PULSO_NEG]=0;
-        i16Resist[CHA_C]=0;
-        fVMedA[PULSO_POS]=0;
-        fVMedA[PULSO_NEG]=0;
-    }
-    bCanalesInicializados[POINTER_C]=0;
-    bMedProm[POINTER_C]=0;
-    bRangoV[POINTER_C]=0;
-    if(!i8CanalesActivados){
-        bEmpiezaContadorTiempo=0;
-    }
-    if(!(i8CanalesActivados&CANALES_P)){
-        if(i16IElec[POINTER_C]>MAXIMA_CORRIENTE_INCIO_ELECTROESTIMULACION){// && !bPausaTratamiento){
-            i16IElec[POINTER_C]=MAXIMA_CORRIENTE_INCIO_ELECTROESTIMULACION;
-            //fprintf(DEBUG_UART,"Pone valor %u\r\n", bPausaTratamiento);
-        }
-        if(!bPausaTratamiento){
-            i16IElec[POINTER_C]=4;
-        }
-        i16IMedA[PULSO_POS]=0;
-        i16IMedA[PULSO_NEG]=0;
-        i16Resist[POINTER_C]=0;
-        fVMedA[PULSO_POS]=0;
-        fVMedA[PULSO_NEG]=0;
+    // bTratamientoInit=0;
+    // bMedidaCorrienteA=0;
+    // bErrorElectrodoA=0;
+    // bCanalesInicializados[CHA_C]=0;
+    // bMedProm[CHA_C]=0;
+    // bRangoV[CHA_C]=0;
+    // if(!i8CanalesActivados){
+    //     bEmpiezaContadorTiempo=0;
+    // }
+    // if(!(i8CanalesActivados&CANALES_A)){
+    //     if(i16IElec[CHA_C]>MAXIMA_CORRIENTE_INCIO_ELECTROESTIMULACION){// && !bPausaTratamiento){
+    //         i16IElec[CHA_C]=MAXIMA_CORRIENTE_INCIO_ELECTROESTIMULACION;
+    //     }
+    //     i16IMedA[PULSO_POS]=0;
+    //     i16IMedA[PULSO_NEG]=0;
+    //     i16Resist[CHA_C]=0;
+    //     fVMedA[PULSO_POS]=0;
+    //     fVMedA[PULSO_NEG]=0;
+    // }
+    // bCanalesInicializados[POINTER_C]=0;
+    // bMedProm[POINTER_C]=0;
+    // bRangoV[POINTER_C]=0;
+    // if(!i8CanalesActivados){
+    //     bEmpiezaContadorTiempo=0;
+    // }
+    // if(!(i8CanalesActivados&CANALES_P)){
+    //     if(i16IElec[POINTER_C]>MAXIMA_CORRIENTE_INCIO_ELECTROESTIMULACION){// && !bPausaTratamiento){
+    //         i16IElec[POINTER_C]=MAXIMA_CORRIENTE_INCIO_ELECTROESTIMULACION;
+    //         //fprintf(DEBUG_UART,"Pone valor %u\r\n", bPausaTratamiento);
+    //     }
+    //     if(!bPausaTratamiento){
+    //         i16IElec[POINTER_C]=4;
+    //     }
+    //     i16IMedA[PULSO_POS]=0;
+    //     i16IMedA[PULSO_NEG]=0;
+    //     i16Resist[POINTER_C]=0;
+    //     fVMedA[PULSO_POS]=0;
+    //     fVMedA[PULSO_NEG]=0;
 
-    }
-    bPulsoA=0;
-    i16ErroresOcurridos=0;
-    bValorAlcanzado[CHA_C]=0;
-    structControlTiempo.sbValorAlcanzado[CHA_C]=0;
-    initMedidasPoi();
-    initMedidasCHA();
-    //fprintf(DEBUG_UART,"Entra aqui %u %u %lu\r\n",bSegundo,i8CanalesActivados,i16ErroresOcurridos);
-    //fprintf(DEBUG_UART,"Fin apagado CHA\r\n");
+    // }
+    // bPulsoA=0;
+    // i16ErroresOcurridos=0;
+    // bValorAlcanzado[CHA_C]=0;
+    // structControlTiempo.sbValorAlcanzado[CHA_C]=0;
+    // initMedidasPoi();
+    // initMedidasCHA();
+    // //fprintf(DEBUG_UART,"Entra aqui %u %u %lu\r\n",bSegundo,i8CanalesActivados,i16ErroresOcurridos);
+    // //fprintf(DEBUG_UART,"Fin apagado CHA\r\n");
 }
 
 void apagadoCHB(){
     
+    //TRIGUER
+    
+    gi16Timer7=65536-(500*16)+88;
+    TIMER7_ON=0;                                                    // Detenemos timer5  
+    set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+    clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+    enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+    
+    output_low(PULSO_2p_CHA);                   // TRIGUER
+    TIMER7_ON=1;                                                    // Detenemos timer5  
+    //TRIGUER
 
     disable_interrupts(INT_TIMER1);             // Deshabilita interrupciones          
     disable_interrupts(INT_TIMER4);             // Deshabilita interrupciones          
@@ -5101,10 +5052,8 @@ int8 initTratamientoGalvanica(){
 
 int8 initTratamientoTB(){
 
-    
-
     int8 i8Return=RETURN_FUNC_ERROR;
-
+    i8TriggerMode = 1;                      // Activamos el triger del TB  TRIGUER
     var_tiempo=0;                           // Inicializo variable base de tiempos
     i16TiempoMedidas=0;
     enable_interrupts(INT_TIMER12);         // Habilito interrupciones de la base de tiempos
@@ -5113,11 +5062,8 @@ int8 initTratamientoTB(){
     i8ContadorPropagacion[CHC_C][PULSO_NEG]=0;
     bTiempoInactivoEntreTrenes=0; 
 
-    
     int16 i16PW_TBCargaTimer=i16PWBurstTB-64; // El PW siempre es mayor de 125µA
     
-   
-
     // Configuraci�n de los PWM
     set_pwm5_duty(0);
     set_pwm4_duty(0);
@@ -5347,7 +5293,7 @@ int8 initTratamientoElec(){
 
     //output_low(SINCRONIZACION);             // DEBUG
     int8 i8Return=RETURN_FUNC_ERROR;
-    
+    // i8TriggerMode = 2;                      // Activamos el triger deelectro  TRIGUER
     if(!bCanalesInicializados[CHA_C]){
         bMedidaCorriente[CHA_C]=0;              // Flag que indica medida para procesar CHA
         bErrorElectrodoA=0;               // Flag que indica error de electrodo CHA
@@ -5529,271 +5475,271 @@ int8 initTratamientoElec(){
 
 int8 initCHA(){
 
-    int8 i8Return=RETURN_FUNC_ERROR;
+    // int8 i8Return=RETURN_FUNC_ERROR;
     
-    bCanalesInicializados[CHA_C]=0;
-    i8ContadorPropagacion[CHA_C][PULSO_POS]=0;
-    i8ContadorPropagacion[CHA_C][PULSO_NEG]=0;
+    // bCanalesInicializados[CHA_C]=0;
+    // i8ContadorPropagacion[CHA_C][PULSO_POS]=0;
+    // i8ContadorPropagacion[CHA_C][PULSO_NEG]=0;
 
-    int32 i16PW_plusElecCargaTimer=i16PW_plusElec[CHA_C];
-    int32 i16PW_minusElecCargaTimer=i16PW_minusElec[CHA_C];
+    // int32 i16PW_plusElecCargaTimer=i16PW_plusElec[CHA_C];
+    // int32 i16PW_minusElecCargaTimer=i16PW_minusElec[CHA_C];
 
 
-    if(i16PW_plusElec[CHA_C]>=125){ // Si el PW de CHA es mayorde 125 µs, la medida de la tension y la corriente se realiza al final del pulso
+    // if(i16PW_plusElec[CHA_C]>=125){ // Si el PW de CHA es mayorde 125 µs, la medida de la tension y la corriente se realiza al final del pulso
         
-        i16PW_plusElecCargaTimer=i16PW_plusElec[CHA_C]-64;//POLLAS
-    }
-    if(bPolaridadElec[CHA_C]==1){
+    //     i16PW_plusElecCargaTimer=i16PW_plusElec[CHA_C]-64;//
+    // }
+    // if(bPolaridadElec[CHA_C]==1){
 
-        if(i16PW_minusElec[CHA_C]>=125){ 
+    //     if(i16PW_minusElec[CHA_C]>=125){ 
 
-            i16PW_minusElecCargaTimer=i16PW_minusElec[CHA_C]-64;//POLLAS
-        }
-    }
-
-
+    //         i16PW_minusElecCargaTimer=i16PW_minusElec[CHA_C]-64;//
+    //     }
+    // }
 
 
-    if(!i8IndicaCanalVuelveReposo )
-    { 
-        if(!bVengoDePausaElectro)
-        {
-        // Configuraci�n de los PWM
-        set_pwm7_duty(0);
-        setup_ccp7(CCP_PWM);                                // Configuraci�n PWM pulso positivo canal A      
+
+
+    // if(!i8IndicaCanalVuelveReposo )
+    // { 
+    //     if(!bVengoDePausaElectro)
+    //     {
+    //     // Configuraci�n de los PWM
+    //     set_pwm7_duty(0);
+    //     setup_ccp7(CCP_PWM);                                // Configuraci�n PWM pulso positivo canal A      
         
-        set_pwm6_duty(0);
-        setup_ccp6(CCP_PWM);                                // Configuraci�n PWM pulso negativo canal A 
-        }
-    }
-    // Poner a nivel bajo todos los pines de control
-    output_low(PULSO_1p_CHA);
-    output_low(PULSO_2p_CHA);
-    output_low(PULSO_1m_CHA);
-    output_low(PULSO_2m_CHA);
+    //     set_pwm6_duty(0);
+    //     setup_ccp6(CCP_PWM);                                // Configuraci�n PWM pulso negativo canal A 
+    //     }
+    // }
+    // // Poner a nivel bajo todos los pines de control
+    // output_low(PULSO_1p_CHA);
+    // output_low(PULSO_2p_CHA);
+    // output_low(PULSO_1m_CHA);
+    // output_low(PULSO_2m_CHA);
     
-    if(i8IndicaCanalVuelveReposo!=CHA_ACT){             // Si estamos arrancando el canal cuando estaba en reposo
-        // Activar alimentaci�n canal
-        control_DC(1,EN_VCC_CH_A);                          // Habilitamos alimentacion al canal A
-        //delay_ms(200);                                      // Delay para estabilizar tensi�n
+    // if(i8IndicaCanalVuelveReposo!=CHA_ACT){             // Si estamos arrancando el canal cuando estaba en reposo
+    //     // Activar alimentaci�n canal
+    //     control_DC(1,EN_VCC_CH_A);                          // Habilitamos alimentacion al canal A
+    //     //delay_ms(200);                                      // Delay para estabilizar tensi�n
     
-        while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
+    //     while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
         
-        output_high(ORCO_ENVIANDO);
-        envioDatos(MODO_FUNCION,FUNCION_ENABLE_30V);
-        output_low(ORCO_ENVIANDO);
-    }
+    //     output_high(ORCO_ENVIANDO);
+    //     envioDatos(MODO_FUNCION,FUNCION_ENABLE_30V);
+    //     output_low(ORCO_ENVIANDO);
+    // }
     
-    pausa_ms(10);
-    //fprintf(DEBUG_UART,"Entro A\r\n");
-    if(!bTransistoresComprobados[CHA_C]){
-        //fprintf(DEBUG_UART,"Test transist. A\r\n");
-        if(comprobacionTransistores(CHA_C)){
-            i16ErroresOcurridos|=ERROR_TRANSISTORES_CHA;       // Asigno error
+    // pausa_ms(10);
+    // //fprintf(DEBUG_UART,"Entro A\r\n");
+    // if(!bTransistoresComprobados[CHA_C]){
+    //     //fprintf(DEBUG_UART,"Test transist. A\r\n");
+    //     if(comprobacionTransistores(CHA_C)){
+    //         i16ErroresOcurridos|=ERROR_TRANSISTORES_CHA;       // Asigno error
             
-            while(input_state(SINC_COMMS) == MANDA_SAURON); // Si es el turno de Sauron para mandar, me espero
-            output_high(ORCO_ENVIANDO);                     // Indico que Orco va a enviar 
-            envioDatos(MODO_ERRORES);                       // Envio el registro de errores
-            output_low(ORCO_ENVIANDO);                      // Indico que orco deja de enviar
+    //         while(input_state(SINC_COMMS) == MANDA_SAURON); // Si es el turno de Sauron para mandar, me espero
+    //         output_high(ORCO_ENVIANDO);                     // Indico que Orco va a enviar 
+    //         envioDatos(MODO_ERRORES);                       // Envio el registro de errores
+    //         output_low(ORCO_ENVIANDO);                      // Indico que orco deja de enviar
     
-            apagadoCHA();                                   // Instrucci�n apagado    
-            i8Return=RETURN_FUNC_ERROR;
-        }else{
+    //         apagadoCHA();                                   // Instrucci�n apagado    
+    //         i8Return=RETURN_FUNC_ERROR;
+    //     }else{
     
-            if(i8IndicaCanalVuelveReposo!=CHA_ACT){             // Si estamos arrancando el canal cuando estaba en reposo
+    //         if(i8IndicaCanalVuelveReposo!=CHA_ACT){             // Si estamos arrancando el canal cuando estaba en reposo
         
-                while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
+    //             while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
                 
-                output_high(ORCO_ENVIANDO);
-                envioDatos(MODO_FUNCION,FUNCION_ENABLE_RELE_A); 
-                output_low(ORCO_ENVIANDO);
-            }
+    //             output_high(ORCO_ENVIANDO);
+    //             envioDatos(MODO_FUNCION,FUNCION_ENABLE_RELE_A); 
+    //             output_low(ORCO_ENVIANDO);
+    //         }
                                                                            
-            // Configuracion frecuencia ChA--> TMR0
-            setup_timer_0(RTCC_INTERNAL|RTCC_DIV_256);                          // Configuracion con 16 bits y resolucion de 16 uSg
-            gi16Timer0=65536-(62500/i16frecElec[CHA_C]);                            // Calculo del valor a cargar en el TMR0       
-            TIMER0_ON=0;                                                        // Detenemos Tmer 0
-            set_timer0(gi16Timer0);
+    //         // Configuracion frecuencia ChA--> TMR0
+    //         setup_timer_0(RTCC_INTERNAL|RTCC_DIV_256);                          // Configuracion con 16 bits y resolucion de 16 uSg
+    //         gi16Timer0=65536-(62500/i16frecElec[CHA_C]);                            // Calculo del valor a cargar en el TMR0       
+    //         TIMER0_ON=0;                                                        // Detenemos Tmer 0
+    //         set_timer0(gi16Timer0);
             
-            // Deprecated, ya que ahora tenemos tiempos
-            // Configuracion PW positivo ChA--> TMR5                
-            // setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
-            // TIMER5_ON=0;                                                        // Detenemos timer5  
-            // gi16Timer5=65536-(I16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
-            // set_timer5((int16)gi16Timer5); 
+    //         // Deprecated, ya que ahora tenemos tiempos
+    //         // Configuracion PW positivo ChA--> TMR5                
+    //         // setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //         // TIMER5_ON=0;                                                        // Detenemos timer5  
+    //         // gi16Timer5=65536-(I16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
+    //         // set_timer5((int16)gi16Timer5); 
 
-            // Configuracion PW positivo ChA--> TMR5
-            // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
-            setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
-            if(I16PW_plusElecCargaTimer<4096){          
-                gi16Timer5=65536-(I16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
-                i8DivTimer5=0;
-            }else{
-                fDivTimer5=(float)I16PW_plusElecCargaTimer/4096;          // El número de veces que sobrecargamos el timer es igual a el PW dividido entre la cuenta máxima del timer
+    //         // Configuracion PW positivo ChA--> TMR5
+    //         // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
+    //         setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //         if(I16PW_plusElecCargaTimer<4096){          
+    //             gi16Timer5=65536-(I16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
+    //             i8DivTimer5=0;
+    //         }else{
+    //             fDivTimer5=(float)I16PW_plusElecCargaTimer/4096;          // El número de veces que sobrecargamos el timer es igual a el PW dividido entre la cuenta máxima del timer
 
-                if(fDivTimer5-(int8)fDivTimer5==0){
-                    i8DivTimer5=(int8)fDivTimer5;
-                }else{
-                    i8DivTimer5=(int8)fDivTimer5+1;             // Lo redondeo en unidades hacia arriba, y lo asigno a una variable entera       
-                }
-                fCargaTimer5=fDivTimer5/i8DivTimer5;            // Calculo el porcentaje de carga entre el valor real y el valor redondeado
-                gi16Timer5=65536-(65536*fCargaTimer5);          // Calculo del valor a cargar segun el PW en uSg offset=40
-            }
-            TIMER5_ON=0;                                                        // Detenemos timer5  
-            set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
-            i8ContTimer5=0;
+    //             if(fDivTimer5-(int8)fDivTimer5==0){
+    //                 i8DivTimer5=(int8)fDivTimer5;
+    //             }else{
+    //                 i8DivTimer5=(int8)fDivTimer5+1;             // Lo redondeo en unidades hacia arriba, y lo asigno a una variable entera       
+    //             }
+    //             fCargaTimer5=fDivTimer5/i8DivTimer5;            // Calculo el porcentaje de carga entre el valor real y el valor redondeado
+    //             gi16Timer5=65536-(65536*fCargaTimer5);          // Calculo del valor a cargar segun el PW en uSg offset=40
+    //         }
+    //         TIMER5_ON=0;                                                        // Detenemos timer5  
+    //         set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
+    //         i8ContTimer5=0;
             
-            if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
-                // Configuracion PW negativo ChA--> TMR7  
-                // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
-                // TIMER7_ON=0;                                                    // Detenemos timer7 
-                // gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
-                // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
+    //         if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
+    //             // Configuracion PW negativo ChA--> TMR7  
+    //             // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
+    //             // TIMER7_ON=0;                                                    // Detenemos timer7 
+    //             // gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
+    //             // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
 
-                // Configuracion PW negativo ChA--> TMR7  
-                // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
-                setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
-                if(I16PW_minusElecCargaTimer<4096){          
-                    gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
-                    i8DivTimer7=0;
-                }else{
-                    fDivTimer7=(float)I16PW_minusElecCargaTimer/4096;          // El número de veces que sobrecargamos el timer es igual a el PW dividido entre la cuenta máxima del timer
+    //             // Configuracion PW negativo ChA--> TMR7  
+    //             // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
+    //             setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //             if(I16PW_minusElecCargaTimer<4096){          
+    //                 gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
+    //                 i8DivTimer7=0;
+    //             }else{
+    //                 fDivTimer7=(float)I16PW_minusElecCargaTimer/4096;          // El número de veces que sobrecargamos el timer es igual a el PW dividido entre la cuenta máxima del timer
 
-                    if(fDivTimer7-(int8)fDivTimer7==0){
-                        i8DivTimer7=(int8)fDivTimer7;
-                    }else{
-                        i8DivTimer7=(int8)fDivTimer7+1;             // Lo redondeo en unidades hacia arriba, y lo asigno a una variable entera       
-                    }
-                    fCargaTimer7=fDivTimer7/i8DivTimer7;            // Calculo el porcentaje de carga entre el valor real y el valor redondeado
-                    gi16Timer7=65536-(65536*fCargaTimer7);          // Calculo del valor a cargar segun el PW en uSg offset=40
-                }
-                TIMER7_ON=0;                                                        // Detenemos timer5  
-                set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
-                i8ContTimer7=0;
-            }
+    //                 if(fDivTimer7-(int8)fDivTimer7==0){
+    //                     i8DivTimer7=(int8)fDivTimer7;
+    //                 }else{
+    //                     i8DivTimer7=(int8)fDivTimer7+1;             // Lo redondeo en unidades hacia arriba, y lo asigno a una variable entera       
+    //                 }
+    //                 fCargaTimer7=fDivTimer7/i8DivTimer7;            // Calculo el porcentaje de carga entre el valor real y el valor redondeado
+    //                 gi16Timer7=65536-(65536*fCargaTimer7);          // Calculo del valor a cargar segun el PW en uSg offset=40
+    //             }
+    //             TIMER7_ON=0;                                                        // Detenemos timer5  
+    //             set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
+    //             i8ContTimer7=0;
+    //         }
             
-            // Activar timers correspondientes
-            clear_interrupt(INT_TIMER0);                                        // Limpia flags interrupciones
-            clear_interrupt(INT_TIMER5);                                        // Limpia flags interrupciones
+    //         // Activar timers correspondientes
+    //         clear_interrupt(INT_TIMER0);                                        // Limpia flags interrupciones
+    //         clear_interrupt(INT_TIMER5);                                        // Limpia flags interrupciones
             
-            if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
-                clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
-            }         
+    //         if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
+    //             clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+    //         }         
             
-            enable_interrupts(INT_TIMER0);                                      // Habilita interrupciones
-            enable_interrupts(INT_TIMER5);                                      // Habilita interrupciones
+    //         enable_interrupts(INT_TIMER0);                                      // Habilita interrupciones
+    //         enable_interrupts(INT_TIMER5);                                      // Habilita interrupciones
             
-            if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
-                enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
-            }
+    //         if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
+    //             enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+    //         }
             
-            // FIN INIT
-            i8Return=RETURN_FUNC_OK;
-            //bCanalesInicializados[CHA_C]=1;
-            structControlTiempo.sbValorAlcanzado[CHA_C]=0;
-            bValorAlcanzado[CHA_C]=0;
+    //         // FIN INIT
+    //         i8Return=RETURN_FUNC_OK;
+    //         //bCanalesInicializados[CHA_C]=1;
+    //         structControlTiempo.sbValorAlcanzado[CHA_C]=0;
+    //         bValorAlcanzado[CHA_C]=0;
         
             
-            i16TiempoPulsoA=I16PW_plusElecCargaTimer+(I16PW_minusElecCargaTimer*bPolaridadElec[CHA_C])+BG_MONOPOLAR+BG_MONOPOLAR*bPolaridadElec[CHA_C];
-            initMedidasCHA();
-        }
-    }else{
-        if(i8IndicaCanalVuelveReposo!=CHA_ACT){             // Si estamos arrancando el canal cuando estaba en reposo
+    //         i16TiempoPulsoA=I16PW_plusElecCargaTimer+(I16PW_minusElecCargaTimer*bPolaridadElec[CHA_C])+BG_MONOPOLAR+BG_MONOPOLAR*bPolaridadElec[CHA_C];
+    //         initMedidasCHA();
+    //     }
+    // }else{
+    //     if(i8IndicaCanalVuelveReposo!=CHA_ACT){             // Si estamos arrancando el canal cuando estaba en reposo
         
-            while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
+    //         while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
             
-            output_high(ORCO_ENVIANDO);
-            envioDatos(MODO_FUNCION,FUNCION_ENABLE_RELE_A); 
-            output_low(ORCO_ENVIANDO);
-        }  
+    //         output_high(ORCO_ENVIANDO);
+    //         envioDatos(MODO_FUNCION,FUNCION_ENABLE_RELE_A); 
+    //         output_low(ORCO_ENVIANDO);
+    //     }  
         
-        // Configuracion frecuencia ChA--> TMR0
-        setup_timer_0(RTCC_INTERNAL|RTCC_DIV_256);                          // Configuracion con 16 bits y resolucion de 16 uSg
-        gi16Timer0=65536-(62500/i16frecElec[CHA_C]);                            // Calculo del valor a cargar en el TMR0       
-        TIMER0_ON=0;                                                        // Detenemos Tmer 0
-        set_timer0(gi16Timer0);
+    //     // Configuracion frecuencia ChA--> TMR0
+    //     setup_timer_0(RTCC_INTERNAL|RTCC_DIV_256);                          // Configuracion con 16 bits y resolucion de 16 uSg
+    //     gi16Timer0=65536-(62500/i16frecElec[CHA_C]);                            // Calculo del valor a cargar en el TMR0       
+    //     TIMER0_ON=0;                                                        // Detenemos Tmer 0
+    //     set_timer0(gi16Timer0);
         
-        // Configuracion PW positivo ChA--> TMR5                
-        // setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
-        // TIMER5_ON=0;                                                        // Detenemos timer5  
-        // gi16Timer5=65536-(I16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
-        // set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
+    //     // Configuracion PW positivo ChA--> TMR5                
+    //     // setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //     // TIMER5_ON=0;                                                        // Detenemos timer5  
+    //     // gi16Timer5=65536-(I16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
+    //     // set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
 
-        // Configuracion PW positivo ChA--> TMR5
-        // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
-        setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
-        if(I16PW_plusElecCargaTimer<4096){          
-            gi16Timer5=65536-(I16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
-            i8DivTimer5=0;
-        }else{
-            fDivTimer5=(float)I16PW_plusElecCargaTimer/4096;          // El número de veces que sobrecargamos el timer es igual a el PW dividido entre la cuenta máxima del timer
+    //     // Configuracion PW positivo ChA--> TMR5
+    //     // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
+    //     setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //     if(I16PW_plusElecCargaTimer<4096){          
+    //         gi16Timer5=65536-(I16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
+    //         i8DivTimer5=0;
+    //     }else{
+    //         fDivTimer5=(float)I16PW_plusElecCargaTimer/4096;          // El número de veces que sobrecargamos el timer es igual a el PW dividido entre la cuenta máxima del timer
 
-            if(fDivTimer5-(int8)fDivTimer5==0){
-                i8DivTimer5=(int8)fDivTimer5;
-            }else{
-                i8DivTimer5=(int8)fDivTimer5+1;             // Lo redondeo en unidades hacia arriba, y lo asigno a una variable entera       
-            }
-            fCargaTimer5=fDivTimer5/i8DivTimer5;            // Calculo el porcentaje de carga entre el valor real y el valor redondeado
-            gi16Timer5=65536-(65536*fCargaTimer5);          // Calculo del valor a cargar segun el PW en uSg offset=40
-        }
-        TIMER5_ON=0;                                                        // Detenemos timer5  
-        set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
+    //         if(fDivTimer5-(int8)fDivTimer5==0){
+    //             i8DivTimer5=(int8)fDivTimer5;
+    //         }else{
+    //             i8DivTimer5=(int8)fDivTimer5+1;             // Lo redondeo en unidades hacia arriba, y lo asigno a una variable entera       
+    //         }
+    //         fCargaTimer5=fDivTimer5/i8DivTimer5;            // Calculo el porcentaje de carga entre el valor real y el valor redondeado
+    //         gi16Timer5=65536-(65536*fCargaTimer5);          // Calculo del valor a cargar segun el PW en uSg offset=40
+    //     }
+    //     TIMER5_ON=0;                                                        // Detenemos timer5  
+    //     set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
         
-        if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
-            // Configuracion PW negativo ChA--> TMR7  
-            // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
-            // TIMER7_ON=0;                                                    // Detenemos timer7 
-            // gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
-            // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
+    //     if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
+    //         // Configuracion PW negativo ChA--> TMR7  
+    //         // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
+    //         // TIMER7_ON=0;                                                    // Detenemos timer7 
+    //         // gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
+    //         // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
 
-            // Configuracion PW negativo ChA--> TMR7
-            // Added 31/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
-            setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
-            if(I16PW_minusElecCargaTimer<4096){          
-                gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
-                i8DivTimer7=0;
-            }else{
-                fDivTimer7=(float)I16PW_minusElecCargaTimer/4096;          // El número de veces que sobrecargamos el timer es igual a el PW dividido entre la cuenta máxima del timer
+    //         // Configuracion PW negativo ChA--> TMR7
+    //         // Added 31/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
+    //         setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //         if(I16PW_minusElecCargaTimer<4096){          
+    //             gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
+    //             i8DivTimer7=0;
+    //         }else{
+    //             fDivTimer7=(float)I16PW_minusElecCargaTimer/4096;          // El número de veces que sobrecargamos el timer es igual a el PW dividido entre la cuenta máxima del timer
 
-                if(fDivTimer7-(int8)fDivTimer7==0){
-                    i8DivTimer7=(int8)fDivTimer7;
-                }else{
-                    i8DivTimer7=(int8)fDivTimer7+1;             // Lo redondeo en unidades hacia arriba, y lo asigno a una variable entera       
-                }
-                fCargaTimer7=fDivTimer7/i8DivTimer7;            // Calculo el porcentaje de carga entre el valor real y el valor redondeado
-                gi16Timer7=65536-(65536*fCargaTimer7);          // Calculo del valor a cargar segun el PW en uSg offset=40
-            }
-            TIMER7_ON=0;                                                        // Detenemos timer5  
-            set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
-        }
+    //             if(fDivTimer7-(int8)fDivTimer7==0){
+    //                 i8DivTimer7=(int8)fDivTimer7;
+    //             }else{
+    //                 i8DivTimer7=(int8)fDivTimer7+1;             // Lo redondeo en unidades hacia arriba, y lo asigno a una variable entera       
+    //             }
+    //             fCargaTimer7=fDivTimer7/i8DivTimer7;            // Calculo el porcentaje de carga entre el valor real y el valor redondeado
+    //             gi16Timer7=65536-(65536*fCargaTimer7);          // Calculo del valor a cargar segun el PW en uSg offset=40
+    //         }
+    //         TIMER7_ON=0;                                                        // Detenemos timer5  
+    //         set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
+    //     }
         
-        // Activar timers correspondientes
-        clear_interrupt(INT_TIMER0);                                        // Limpia flags interrupciones
-        clear_interrupt(INT_TIMER5);                                        // Limpia flags interrupciones
+    //     // Activar timers correspondientes
+    //     clear_interrupt(INT_TIMER0);                                        // Limpia flags interrupciones
+    //     clear_interrupt(INT_TIMER5);                                        // Limpia flags interrupciones
         
-        if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
-            clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
-        }         
+    //     if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
+    //         clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+    //     }         
         
-        enable_interrupts(INT_TIMER0);                                      // Habilita interrupciones
-        enable_interrupts(INT_TIMER5);                                      // Habilita interrupciones
+    //     enable_interrupts(INT_TIMER0);                                      // Habilita interrupciones
+    //     enable_interrupts(INT_TIMER5);                                      // Habilita interrupciones
         
-        if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
-            enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
-        }
+    //     if(bPolaridadElec[CHA_C]==1){                                           // Si es bipolar, activamos timer 7
+    //         enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+    //     }
         
-        // FIN INIT
-        i8Return=RETURN_FUNC_OK;
-        //bCanalesInicializados[CHA_C]=1;
-        structControlTiempo.sbValorAlcanzado[CHA_C]=0;
-        bValorAlcanzado[CHA_C]=0;
+    //     // FIN INIT
+    //     i8Return=RETURN_FUNC_OK;
+    //     //bCanalesInicializados[CHA_C]=1;
+    //     structControlTiempo.sbValorAlcanzado[CHA_C]=0;
+    //     bValorAlcanzado[CHA_C]=0;
     
         
-        i16TiempoPulsoA=I16PW_plusElecCargaTimer+(I16PW_minusElecCargaTimer*bPolaridadElec[CHA_C])+BG_MONOPOLAR+BG_MONOPOLAR*bPolaridadElec[CHA_C];
-        initMedidasCHA();
-    }
+    //     i16TiempoPulsoA=I16PW_plusElecCargaTimer+(I16PW_minusElecCargaTimer*bPolaridadElec[CHA_C])+BG_MONOPOLAR+BG_MONOPOLAR*bPolaridadElec[CHA_C];
+    //     initMedidasCHA();
+    // }
     
-    return i8Return;
+    // return i8Return;
 }
 
 int8 initCHB(){
@@ -5808,20 +5754,32 @@ int8 initCHB(){
     int32 i32PW_minusElecCargaTimer=i16PW_minusElec[CHB_C];
 
 
+    //TRIGUER
+    i8TriggerMode = 2;  
+    
+    gi16Timer7=65536-(500*16)+88;
+    TIMER7_ON=0;                                                    // Detenemos timer5  
+    set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+    clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+    enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+    
+    // output_low(PULSO_2p_CHA);                   // TRIGUER
+    // TIMER7_ON=1;                                                    // Detenemos timer5  
+    //TRIGUER
 
     if(i16PW_plusElec[CHB_C]>=125){ // Si el PW de CHA es mayorde 125 µs, la medida de la tension y la corriente se realiza al final del pulso
     
-        i32PW_plusElecCargaTimer=i16PW_plusElec[CHB_C]-64;//POLLAS
+        i32PW_plusElecCargaTimer=i16PW_plusElec[CHB_C]-64;//
     }
     if(bPolaridadElec[CHB_C]==1){
 
         if(i16PW_minusElec[CHB_C]>=125){ 
              
-            i32PW_minusElecCargaTimer=i16PW_minusElec[CHB_C]-64;//POLLAS
+            i32PW_minusElecCargaTimer=i16PW_minusElec[CHB_C]-64;//
         }
     }
 
-    
+
     // Configuraci�n de los PWM
     if(!i8IndicaCanalVuelveReposo )
     { 
@@ -5857,7 +5815,7 @@ int8 initCHB(){
     }
     
     pausa_ms(10);
-    
+
     if(!bTransistoresComprobados[CHB_C]){
         ///fprintf(DEBUG_UART,"Test transist. B\r\n");
         if(comprobacionTransistores(CHB_C)){
@@ -6170,13 +6128,6 @@ int8 initCHB(){
         set_adc_channel(ADC_SHUNT_CHB);     // Selecci�n del canal medicion corriente positiva canal B                          
         pausa_us(DELAY_INT_SIG);                         // Delay set ADC  
         i16OffsetCorriente=read_adc_chupi_piruli();           // Leer valor del shunt    
-        //fprintf(DEBUG_UART,"tpb: %lu\r\n",i16TiempoPulsoB);
-        
-//         output_high(LED_ALPP);
-// delay_us(700);
-// output_low(LED_ALPP);
- 
-
 
         structControlTiempo.sbValorAlcanzado[CHB_C]=0;
         bValorAlcanzado[CHB_C]=0;
@@ -6201,13 +6152,13 @@ int8 initCHC(){
 
     if(i16PW_plusElec[CHC_C]>=125){ // Si el PW de CHA es mayorde 125 µs, la medida de la tension y la corriente se realiza al final del pulso
 
-        i32PW_plusElecCargaTimer=i16PW_plusElec[CHC_C]-64;//POLLAS
+        i32PW_plusElecCargaTimer=i16PW_plusElec[CHC_C]-64;
     }
     if(bPolaridadElec[CHC_C]==1){
 
         if(i16PW_minusElec[CHC_C]>=125){ 
              
-            i32PW_minusElecCargaTimer=i16PW_minusElec[CHC_C]-64;//POLLAS
+            i32PW_minusElecCargaTimer=i16PW_minusElec[CHC_C]-64;
         }
     }
 
@@ -6586,155 +6537,155 @@ int8 initPointer(){
 
    
 
-    int8 i8Return=RETURN_FUNC_ERROR;
-    bCanalesInicializados[CHA_C]=0;
-    i8ContadorPropagacion[CHA_C][PULSO_POS]=0;
-    i8ContadorPropagacion[CHA_C][PULSO_NEG]=0;
+    // int8 i8Return=RETURN_FUNC_ERROR;
+    // bCanalesInicializados[CHA_C]=0;
+    // i8ContadorPropagacion[CHA_C][PULSO_POS]=0;
+    // i8ContadorPropagacion[CHA_C][PULSO_NEG]=0;
 
-    int32 i16PW_plusElecCargaTimer=i16PW_plusElec[POINTER_C];
-    int32 i16PW_minusElecCargaTimer=i16PW_minusElec[POINTER_C];
+    // int32 i16PW_plusElecCargaTimer=i16PW_plusElec[POINTER_C];
+    // int32 i16PW_minusElecCargaTimer=i16PW_minusElec[POINTER_C];
 
 
-    // if(i16PW_plusElec[POINTER_C]>=125){ // Si el PW de CHA es mayorde 125 µs, la medida de la tension y la corriente se realiza al final del pulso
+    // // if(i16PW_plusElec[POINTER_C]>=125){ // Si el PW de CHA es mayorde 125 µs, la medida de la tension y la corriente se realiza al final del pulso
         
-    //     i16PW_plusElecCargaTimer=i16PW_plusElec[POINTER_C]-64;//POLLAS
+    // //     i16PW_plusElecCargaTimer=i16PW_plusElec[POINTER_C]-64;//
 
-    //     if(bPolaridadElec[POINTER_C]==1){
+    // //     if(bPolaridadElec[POINTER_C]==1){
             
-    //         i16PW_minusElecCargaTimer=i16PW_minusElec[POINTER_C]-64;//POLLAS
-    //     }
+    // //         i16PW_minusElecCargaTimer=i16PW_minusElec[POINTER_C]-64;//
+    // //     }
     
+    // // }
+
+    
+    
+    // // Configuraci�n de los PWM
+    // set_pwm7_duty(0);
+    // set_pwm6_duty(0);
+    // setup_ccp7(CCP_PWM);                                // Configuraci�n PWM pulso positivo canal A      
+    // setup_ccp6(CCP_PWM);                                // Configuraci�n PWM pulso negativo canal A
+
+    // // Poner a nivel bajo todos los pines de control
+    // output_low(PULSO_1p_CHA);
+    // output_low(PULSO_2p_CHA);
+    // output_low(PULSO_1m_CHA);
+    // output_low(PULSO_2m_CHA);
+    
+    // // Activar alimentaci�n canal
+    // control_DC(1,EN_VCC_CH_A);                          // Habilitamos alimentacion al canal A
+    // //delay_ms(200);                                      // Delay para estabilizar tensi�n
+    
+    // if(i8IndicaCanalVuelveReposo!=CHA_ACT){             // Si estamos arrancando el canal cuando estaba en reposo
+    //     // Activar alimentaci�n canal
+    //     control_DC(1,EN_VCC_CH_A);                          // Habilitamos alimentacion al canal A
+    //     //delay_ms(200);                                      // Delay para estabilizar tensi�n
+    
+    //     while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
+        
+    //     output_high(ORCO_ENVIANDO);
+    //     envioDatos(MODO_FUNCION,FUNCION_ENABLE_30V);
+    //     output_low(ORCO_ENVIANDO);
     // }
-
     
+    // pausa_ms(10);
     
-    // Configuraci�n de los PWM
-    set_pwm7_duty(0);
-    set_pwm6_duty(0);
-    setup_ccp7(CCP_PWM);                                // Configuraci�n PWM pulso positivo canal A      
-    setup_ccp6(CCP_PWM);                                // Configuraci�n PWM pulso negativo canal A
-
-    // Poner a nivel bajo todos los pines de control
-    output_low(PULSO_1p_CHA);
-    output_low(PULSO_2p_CHA);
-    output_low(PULSO_1m_CHA);
-    output_low(PULSO_2m_CHA);
-    
-    // Activar alimentaci�n canal
-    control_DC(1,EN_VCC_CH_A);                          // Habilitamos alimentacion al canal A
-    //delay_ms(200);                                      // Delay para estabilizar tensi�n
-    
-    if(i8IndicaCanalVuelveReposo!=CHA_ACT){             // Si estamos arrancando el canal cuando estaba en reposo
-        // Activar alimentaci�n canal
-        control_DC(1,EN_VCC_CH_A);                          // Habilitamos alimentacion al canal A
-        //delay_ms(200);                                      // Delay para estabilizar tensi�n
-    
-        while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
+    // if(comprobacionTransistores(CHA_C)){
+    //     i16ErroresOcurridos|=ERROR_TRANSISTORES_CHA;       // Asigno error
         
-        output_high(ORCO_ENVIANDO);
-        envioDatos(MODO_FUNCION,FUNCION_ENABLE_30V);
-        output_low(ORCO_ENVIANDO);
-    }
-    
-    pausa_ms(10);
-    
-    if(comprobacionTransistores(CHA_C)){
-        i16ErroresOcurridos|=ERROR_TRANSISTORES_CHA;       // Asigno error
-        
-        while(input_state(SINC_COMMS) == MANDA_SAURON); // Si es el turno de Sauron para mandar, me espero
-        output_high(ORCO_ENVIANDO);                     // Indico que Orco va a enviar
-        envioDatos(MODO_ERRORES);                       // Envio el registro de errores
-        output_low(ORCO_ENVIANDO);                      // Indico que orco deja de enviar
+    //     while(input_state(SINC_COMMS) == MANDA_SAURON); // Si es el turno de Sauron para mandar, me espero
+    //     output_high(ORCO_ENVIANDO);                     // Indico que Orco va a enviar
+    //     envioDatos(MODO_ERRORES);                       // Envio el registro de errores
+    //     output_low(ORCO_ENVIANDO);                      // Indico que orco deja de enviar
 
-        apagadoCHA();                                   // Instrucci�n apagado
+    //     apagadoCHA();                                   // Instrucci�n apagado
 
-    }else{
+    // }else{
 
-        if(i8IndicaCanalVuelveReposo!=CHA_ACT){         // Si estamos arrancando el canal cuando estaba en reposo
+    //     if(i8IndicaCanalVuelveReposo!=CHA_ACT){         // Si estamos arrancando el canal cuando estaba en reposo
     
-            while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
+    //         while(input_state(SINC_COMMS) == MANDA_SAURON);                                // Si es el turno de Sauron para mandar  
             
-            output_high(ORCO_ENVIANDO);
-            envioDatos(MODO_FUNCION,FUNCION_ENABLE_RELE_A); 
-            output_low(ORCO_ENVIANDO);
-        }
+    //         output_high(ORCO_ENVIANDO);
+    //         envioDatos(MODO_FUNCION,FUNCION_ENABLE_RELE_A); 
+    //         output_low(ORCO_ENVIANDO);
+    //     }
 
-        // Configuracion frecuencia ChA--> TMR0
-        setup_timer_0(RTCC_INTERNAL|RTCC_DIV_256);                          // Configuracion con 16 bits y resolucion de 16 uSg
-        gi16Timer0=65536-(62500/i16frecElec[POINTER_C]);                    // Calculo del valor a cargar en el TMR0       
-        TIMER0_ON=0;                                                        // Detenemos Tmer 0
-        set_timer0(gi16Timer0);
+    //     // Configuracion frecuencia ChA--> TMR0
+    //     setup_timer_0(RTCC_INTERNAL|RTCC_DIV_256);                          // Configuracion con 16 bits y resolucion de 16 uSg
+    //     gi16Timer0=65536-(62500/i16frecElec[POINTER_C]);                    // Calculo del valor a cargar en el TMR0       
+    //     TIMER0_ON=0;                                                        // Detenemos Tmer 0
+    //     set_timer0(gi16Timer0);
         
-        // Configuracion PW positivo ChA--> TMR5                
-        // setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
-        // TIMER5_ON=0;                                                        // Detenemos timer5  
-        // gi16Timer5=65536-(i16PW_plusElecCargaTimer*16)+88;                 // Calculo del valor a cargar segun el PW en uSg offset=40
-        // set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
+    //     // Configuracion PW positivo ChA--> TMR5                
+    //     // setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //     // TIMER5_ON=0;                                                        // Detenemos timer5  
+    //     // gi16Timer5=65536-(i16PW_plusElecCargaTimer*16)+88;                 // Calculo del valor a cargar segun el PW en uSg offset=40
+    //     // set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
         
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //     setup_timer_5(T5_INTERNAL | T5_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
                      
-        gi16Timer5=65536-(i16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
-        i8DivTimer5=0;
+    //     gi16Timer5=65536-(i16PW_plusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
+    //     i8DivTimer5=0;
           
 
-        TIMER5_ON=0;                                                        // Detenemos timer5  
-        set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
-        i8ContTimer5=0;
+    //     TIMER5_ON=0;                                                        // Detenemos timer5  
+    //     set_timer5((int16)gi16Timer5);                                      // Cargamos valor del timer5
+    //     i8ContTimer5=0;
             
-                                                // Si es bipolar, activamos timer 7
-        // Configuracion PW negativo ChA--> TMR7  
-        // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
-        // TIMER7_ON=0;                                                    // Detenemos timer7 
-        // gi16Timer7=65536-(i16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
-        // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
+    //                                             // Si es bipolar, activamos timer 7
+    //     // Configuracion PW negativo ChA--> TMR7  
+    //     // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
+    //     // TIMER7_ON=0;                                                    // Detenemos timer7 
+    //     // gi16Timer7=65536-(i16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
+    //     // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
 
-        // Configuracion PW negativo ChA--> TMR7  
-        // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
-        setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
+    //     // Configuracion PW negativo ChA--> TMR7  
+    //     // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
+    //     setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                           // Configuracion con 16 bits y resolucion de 62.5nSg
                 
-        gi16Timer7=65536-(i16PW_minusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
-        i8DivTimer7=0;
+    //     gi16Timer7=65536-(i16PW_minusElecCargaTimer*16)+88;                         // Calculo del valor a cargar segun el PW en uSg offset=40
+    //     i8DivTimer7=0;
         
-        TIMER7_ON=0;                                                        // Detenemos timer5  
-        set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
-        i8ContTimer7=0;
+    //     TIMER7_ON=0;                                                        // Detenemos timer5  
+    //     set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
+    //     i8ContTimer7=0;
             
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-        // Configuracion PW negativo ChA--> TMR7  
-        // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
-        // TIMER7_ON=0;                                                    // Detenemos timer7 
-        // gi16Timer7=65536-(i16PW_minusElecCargaTimer*16)+88;            // Calculo del valor a cargar segun el PW en uSg offset=90
-        // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
+    //     // Configuracion PW negativo ChA--> TMR7  
+    //     // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
+    //     // TIMER7_ON=0;                                                    // Detenemos timer7 
+    //     // gi16Timer7=65536-(i16PW_minusElecCargaTimer*16)+88;            // Calculo del valor a cargar segun el PW en uSg offset=90
+    //     // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
 
         
-        // Activar timers correspondientes
-        clear_interrupt(INT_TIMER0);                                        // Limpia flags interrupciones
-        clear_interrupt(INT_TIMER5);                                        // Limpia flags interrupciones
+    //     // Activar timers correspondientes
+    //     clear_interrupt(INT_TIMER0);                                        // Limpia flags interrupciones
+    //     clear_interrupt(INT_TIMER5);                                        // Limpia flags interrupciones
         
-        clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+    //     clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
 
-        enable_interrupts(INT_TIMER0);                                      // Habilita interrupciones
-        enable_interrupts(INT_TIMER5);                                      // Habilita interrupciones
+    //     enable_interrupts(INT_TIMER0);                                      // Habilita interrupciones
+    //     enable_interrupts(INT_TIMER5);                                      // Habilita interrupciones
         
-        enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+    //     enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
 
         
-        // FIN INIT
-        i8Return=RETURN_FUNC_OK;
+    //     // FIN INIT
+    //     i8Return=RETURN_FUNC_OK;
         
-        i16TiempoPulsoA=i16PW_plusElecCargaTimer+i16PW_minusElecCargaTimer+BG_BIPOLAR;
+    //     i16TiempoPulsoA=i16PW_plusElecCargaTimer+i16PW_minusElecCargaTimer+BG_BIPOLAR;
         
-        structControlTiempo.sbValorAlcanzado[POINTER_C]=0;
-        bValorAlcanzado[POINTER_C]=0;
+    //     structControlTiempo.sbValorAlcanzado[POINTER_C]=0;
+    //     bValorAlcanzado[POINTER_C]=0;
         
-        initMedidasPoi();
-    }
-    return i8Return;
+    //     initMedidasPoi();
+    // }
+    // return i8Return;
 }
 
 int16 calculoCorriente(int16 medida){ // Devuelve la corriente ya procesada

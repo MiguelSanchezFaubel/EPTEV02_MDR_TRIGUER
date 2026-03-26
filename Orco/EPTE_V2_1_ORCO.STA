@@ -1,33 +1,33 @@
 
-ROM used:   116176/131072 (89%)
-            116274/131072 (89%) including unused fragments
+ROM used:   111302/131072 (85%)
+            115086/131072 (88%) including unused fragments
 
-            5.9 Average locations per line
-            13.8 Average locations per statement
+            5.6 Average locations per line
+            13.7 Average locations per statement
 
-RAM used:   1599/3862 (41%) at main() level
-            1735/3862 (45%) worst case
+RAM used:   1600/3862 (41%) at main() level
+            1736/3862 (45%) worst case
 
 Stack used: 10 worst case (6 in main + 4 for interrupts)
 Stack size: 31
 
 Lines Stmts  %   Files
 ----- ----- ---  -----
-10863  6508  77  EPTE_V2_1_ORCO.c
-  772     0   0  EPTE_V2_1_ORCO.h
- 1226     0   0  C:\Program Files\PICC\Devices\18F67K22.h
- 2227   258   3  C:\Program Files\PICC\Drivers\math.h
- 1352   359   4  C:\Program Files\PICC\Drivers\stdlib.h
-   32     0   0  C:\Program Files\PICC\Drivers\stddef.h
-  435   129   2  C:\Program Files\PICC\Drivers\string.h
-   28     0   0  C:\Program Files\PICC\Drivers\ctype.h
+10814  6191  76  EPTE_V2_1_ORCO.c
+  774     0   0  EPTE_V2_1_ORCO.h
+ 1226     0   0  ..\..\..\..\..\..\Program Files\PICC\Devices\18F67K22.h
+ 2227   258   3  ..\..\..\..\..\..\Program Files\PICC\Drivers\math.h
+ 1352   359   4  ..\..\..\..\..\..\Program Files\PICC\Drivers\stdlib.h
+   32     0   0  ..\..\..\..\..\..\Program Files\PICC\Drivers\stddef.h
+  435   129   2  ..\..\..\..\..\..\Program Files\PICC\Drivers\string.h
+   28     0   0  ..\..\..\..\..\..\Program Files\PICC\Drivers\ctype.h
    93    34   0  quickSort.h
    53    27   0  calibracion_adc.h
- 1450   938  11  ..\ComLib\comunicacion_struct.c
+ 1448   938  12  ..\ComLib\comunicacion_struct.c
   503     0   0  ..\ComLib\comunicacion_struct.h
   803   170   2  ..\ProtocolosTest\protocolos_test.h
 ----- -----
-19837  8423 Total
+19788  8106 Total
 
 Page ROM  %  RAM    Vol Diff  Functions:
 ---- --- --- ---    --- ----  ----------
@@ -51,16 +51,16 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0    182   0    5    483  5.5  calibracionInicial
 0     84   0    4    233  5.2  read_adc_chupi_piruli
 0   1056   1   16   5169 10.5  enviaPaquete
-0     68   0    0             @goto48011
+0     68   0    0             @goto56542
 0    254   0    4   1412  6.9  enviaPaquete
 0   2760   3   18  14844 13.7  lecturaPaquete
-0     42   0    0             @goto48198
-0     42   0    0             @goto48219
-0     42   0    0             @goto48274
-0     70   0    0             @goto48875
+0     42   0    0             @goto56659
+0     42   0    0             @goto56673
+0     42   0    0             @goto56718
+0     70   0    0             @goto57114
 0     14   0    2     39  2.0  obtencionChecksum
 0   2852   3    8  22661  8.0  calculoChecksum
-0     70   0    0             @goto49973
+0     70   0    0             @goto58018
 0     68   0    4    258  6.2  busquedaFIFO
 0     54   0    3    176  4.0  configuraDatos
 0    114   0    4    406  5.8  configuraDatos
@@ -69,84 +69,84 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     58   0    3    254  4.1  initFIFO
 0    154   0    3    527  6.2  checkSize
 0     78   0    0   1031  3.4  initArrayComms
-0     86   0    2    527  2.9  initMedidasCHA
+0     88   0    2    527  2.9  initMedidasCHA
 0     86   0    2    527  2.9  initMedidasCHB
 0     86   0    2    527  2.9  initMedidasCHC
-0     86   0    2    527  2.9  initMedidasPoi
+0     88   0    2    527  2.9  initMedidasPoi
 0     78   0    2    377  2.8  initMedidasGal
 0    118   0    2    606  3.8  initMedidasTB
 0     12   0    0     85  0.1  initMedidasElectro
-0      8   0    0             @const1997
+0      8   0    0             @const1998
 0     66   0    5             @FTOSD
 0    148   0   13             @DIV3232
-0      8   0    0             @const2009
-0     10   0    0             @const2010
-0      8   0    0             @const2014
-0      8   0    0             @const2016
-0     10   0    0             @const2017
-0    580   1    0   2611  7.9  TIMER0_isr
+0      8   0    0             @const2010
+0     10   0    0             @const2011
+0      8   0    0             @const2015
+0      8   0    0             @const2017
+0     10   0    0             @const2018
+0    614   1    0   2951  9.4  TIMER0_isr
 0    658   1    0   2853  7.0  TIMER5_isr
-0    418   0    0   1698  7.4  TIMER7_isr
+0     28   0    0     84  1.7  TIMER7_isr
 0   1558   2    4   6664 11.0  TIMER1_isr
 0    778   1    0   3370  6.4  TIMER4_isr
-0    500   0    0   1968  6.4  TIMER6_isr
+0    500   1    0   1968  6.4  TIMER6_isr
 0   1560   2    4   6231 11.9  TIMER3_isr
 0    974   1    1   4258  7.4  TIMER8_isr
-0   1498   1    1   6696  8.9  TIMER10_isr
+0   1530   2    1   7075 10.5  TIMER10_isr
 0    132   0    2    553  6.2  serial_isr
-0   1488   1   10   2886 11.3  TIMER12_isr
+0   1488   2   10   2886 11.3  TIMER12_isr
 0     56   0    4             @DTOF
 0      6   0    0      3  0.0  RB0_isr
-1   9924  10    7  46239 16.6  MAIN
-1     40   0    0             @goto53700
-1     46   0    0             @goto53811
-1     56   0    0             @goto53947
-1     46   0    0             @goto54058
-1     60   0    0             @goto54374
+1  10024  11    7  47515 16.6  MAIN
+1     40   0    0             @goto60420
+1     46   0    0             @goto60496
+1     56   0    0             @goto60588
+1     46   0    0             @goto60659
+1     60   0    0             @goto60848
 0     66   0    6             @WRITEBITA
 0    210   0    1   1460  3.5  apagadoMicrocorrientes
 0    222   0    1   1289  4.9  apagadoGalvanica
 0    214   0    1   1371  4.5  apagadoTB
-0    376   0    1   2712  6.5  apagadoCHA
-0    674   1    2   2900  8.1  apagadoCHB
+0      2   0    0      3  0.0  apagadoCHA
+0    704   1    2   3241  9.7  apagadoCHB
 0    308   0    1   2101  7.1  apagadoCHC
 0   3184   3    3   9462  9.5  initTratamientoMicrocorrientes
 0    272   0    2   1364  5.9  initTratamientoGalvanica
-0   3376   3    7   5791 10.6  initTratamientoTB
+0   3378   4    7   5830 10.6  initTratamientoTB
 0    714   1    1   5451  7.4  initTratamientoElec
-0     60   0    0             @goto56764
-0   3700   4   13   7355 11.5  initCHA
-0   7644   8   13  12842 12.8  initCHB
-0   8888   9   13  12891 13.3  initCHC
-0    644   1   13   2502  9.5  initPointer
+0     60   0    0             @goto62431
+0      2   0    0      3  0.0  initCHA
+0   7674   8   13  13200 12.8  initCHB
+0   8888  10   13  12891 13.3  initCHC
+0      2   0    0      3  0.0  initPointer
 0    304   0   10    125  3.0  calculoCorriente
-1  19096  19   79  80436 18.6  obtencionMedidas
-1     46   0    0             @goto58639
-1     46   0    0             @goto58800
-1     46   0    0             @goto59161
-1     46   0    0             @goto59350
-1     46   0    0             @goto59560
-1     46   0    0             @goto59814
-1     46   0    0             @goto59932
+1  19096  21   79  80436 18.6  obtencionMedidas
+1     46   0    0             @goto63283
+1     46   0    0             @goto63417
+1     46   0    0             @goto63681
+1     46   0    0             @goto63813
+1     46   0    0             @goto63970
+1     46   0    0             @goto64168
+1     46   0    0             @goto64256
 0     56   0    5             @READBITA
-1     46   0    0             @goto61188
+1     46   0    0             @goto65256
 0     52   0    2     47  1.8  control_DC
 0     40   0    4     92  3.2  pausa_us
 0    240   0   11    165  4.2  calculoTension
-1  19634  19    4  38783 11.5  calculo_ramp
-1     60   0    0             @goto61608
-1     60   0    0             @goto62227
-1     60   0    0             @goto62488
+1  19634  21    4  38783 11.5  calculo_ramp
+1     60   0    0             @goto65508
+1     60   0    0             @goto422
+1     60   0    0             @goto629
 0    220   0    6     68  2.7  redondeoI_50
 0     46   0    1    170  2.7  control_releB
 0    560   1   12   1004  9.1  isVrefOK
-1    604   1    9    399  5.6  prediccionCorriente
-1     46   0    0             @goto62876
+0    604   1    9    399  5.6  prediccionCorriente
+0     46   0    0             @goto851
 0     66   0    6    163  3.5  pausa_ms
 0     88   0    5    227  6.5  potencia
 0   2680   3    2   6789  9.9  comprobacionTransistores
-0   1560   2   10   4479  9.2  obtencionMedidasTransistores
-1    638   1    4    330  4.5  calculoRampaDescendente
+0   1558   2   10   4479  9.2  obtencionMedidasTransistores
+0    638   1    4    330  4.5  calculoRampaDescendente
 0    870   1    8    561  5.1  CalculaIncrementosFrecuencia
 0    980   1    8   1141  7.2  IncrementaFrecuencia
 0   1058   1    4   1039  5.3  CalculaYCargaValorTimer1
@@ -154,28 +154,28 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0    990   1    4   1327  9.3  CalculatiempoActual
 0    808   1    6    697  7.5  ConfiguraDutyMAxyMin
 0    244   0    4    149  3.7  CalculaPWMActual
-0   1412   1    4   1251  7.3  CargaPWMActual
+0   1412   2    4   1251  7.3  CargaPWMActual
  Inline         0             @cinit1
 
 Program metrics:
     Functions               74
-    Statements              8423
-    Comments                7098
-    Volume (V)              523356
-    Difficulty (D)          503.6
-    Effort to implement (E) 263558933
-    Time to implement (T)   4067 hours, 16 minutes
-    Est Delivered Bugs (B)  137
-    Cyclomatic Complexity   1236
-    Maintainability (MI)    70
+    Statements              8106
+    Comments                7265
+    Volume (V)              499773
+    Difficulty (D)          478.2
+    Effort to implement (E) 238970520
+    Time to implement (T)   3687 hours, 49 minutes
+    Est Delivered Bugs (B)  128
+    Cyclomatic Complexity   1189
+    Maintainability (MI)    63
 
  Segment     Used  Free
 -----------  ----  ----
 00000-00002     4  0  
 00004-00006     4  0  
 00008-00140   314  0  
-00142-0FFFE  65116  98  
-10000-1FFFE  50738  14798  
+00142-0FFFE  61430  3784  
+10000-1FFFE  49550  15986  
 
 
 

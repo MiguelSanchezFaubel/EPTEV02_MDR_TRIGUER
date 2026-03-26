@@ -1,0 +1,23 @@
+>>> Warning 225 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\ComLib\comunicacion_struct.h" Line 60(24,75): Duplicate #define
+>>> Warning 225 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\ComLib\comunicacion_struct.h" Line 61(24,75): Duplicate #define
+>>> Warning 203 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Sauron\menus_epte2.c" Line 6463(1,1): Condition always TRUE
+>>> Warning 225 "EPTE_V2_1_SAURON.c" Line 346(1,1): Interrupt level changed  : NORMAL=>HIGH
+>>> Warning 203 "EPTE_V2_1_SAURON.c" Line 4546(1,1): Condition always TRUE
+>>> Warning 203 "EPTE_V2_1_SAURON.c" Line 4565(1,1): Condition always TRUE
+>>> Warning 203 "EPTE_V2_1_SAURON.c" Line 4607(1,1): Condition always TRUE
+>>> Warning 205 "EPTE_V2_1_SAURON.c" Line 6902(1,1): Unsigned variable is never less than zero
+>>> Warning 204 "EPTE_V2_1_SAURON.c" Line 6902(1,1): Condition always FALSE
+>>> Warning 216 "EPTE_V2_1_SAURON.c" Line 7073(1,2): Interrupts disabled during call to prevent re-entrancy:  (@delay_ms1)
+>>> Warning 216 "EPTE_V2_1_SAURON.c" Line 7073(1,2): Interrupts disabled during call to prevent re-entrancy:  (delay_ms_wdt)
+>>> Warning 216 "EPTE_V2_1_SAURON.c" Line 7073(1,2): Interrupts disabled during call to prevent re-entrancy:  (@ITOF)
+>>> Warning 216 "EPTE_V2_1_SAURON.c" Line 7073(1,2): Interrupts disabled during call to prevent re-entrancy:  (@MULFF)
+>>> Warning 216 "EPTE_V2_1_SAURON.c" Line 7073(1,2): Interrupts disabled during call to prevent re-entrancy:  (@SFTOI)
+>>> Warning 216 "EPTE_V2_1_SAURON.c" Line 7073(1,2): Interrupts disabled during call to prevent re-entrancy:  (ControlSonido)
+>>> Warning 202 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Sauron\EPTE_V2_1_SAURON.h" Line 831(7,19): Variable never used:   i16IMedTrans
+>>> Warning 202 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Sauron\EPTE_V2_1_SAURON.h" Line 832(7,19): Variable never used:   i16VMedTrans
+>>> Warning 202 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Sauron\EPTE_V2_1_SAURON.h" Line 833(7,18): Variable never used:   i16ResTrans
+>>> Warning 202 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Sauron\EPTE_V2_1_SAURON.h" Line 883(7,27): Variable never used:   i32DensidadCorriente
+>>> Warning 202 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\ComLib\comunicacion_struct.h" Line 173(6,28): Variable never used:   bSeleccionTranscraneal
+      Memory usage:   ROM=90%      RAM=59% - 63%
+      0 Errors,  20 Warnings.
+Build Successful.
