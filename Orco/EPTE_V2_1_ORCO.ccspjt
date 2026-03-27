@@ -23,7 +23,7 @@ Type=4
 1=EPTE_V2_1_ORCO.c
 
 [ProjectLog]
-Days=397
+Days=398
 D1=21-02-2018
 D1_L=2
 D1_L1=[57229]Project Opened.
@@ -33,7 +33,7 @@ D2_L=4
 D2_L1=[33055]Project Opened.
 D2_L2=[33159]Started Editing.
 D2_L3=[33521]Stopped Editing.
-TotalEdit=10196
+TotalEdit=10197
 TotalDebug=11
 D2_E=2
 D2_D=0
@@ -8568,9 +8568,15 @@ D396_L1=[44132]Project Opened.
 D396_L2=[44225]Project Closed.
 D396_L3=[44322]Project Opened.
 D397=26-03-2026
-D397_L=2
+D397_L=3
 D397_L1=[43647]Project Opened.
 D397_L2=[54613]Started Editing.
+D397_L3=[54913]Stopped Editing.
+D398=27-03-2026
+D398_E=1
+D398_D=0
+D398_L=1
+D398_L1=[31318]Project Closed.
 
 [Opened Files]
 1=EPTE_V2_1_ORCO.c

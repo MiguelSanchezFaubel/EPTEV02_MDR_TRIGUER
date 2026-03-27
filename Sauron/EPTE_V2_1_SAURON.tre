@@ -341,14 +341,14 @@
    ³  ³  ³  ÀÄST7529_printfg  0/110  Ram=9
    ³  ³  ³     ÀÄST7529_putChar  0/596  Ram=11
    ³  ³  ³        ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÃÄST7529_clear  0/192  Ram=2
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄST7529_printf  0/436  Ram=80
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄpantalla_seleccion  0/674  Ram=11
    ³  ³  ³  ³  ÀÄ*
-   ³  ³  ³  ÃÄ@goto59679  0/40  Ram=0
+   ³  ³  ³  ÃÄ@goto14487  0/40  Ram=0
    ³  ³  ³  ÃÄST7529_printf  0/436  Ram=80
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄCalc_representacion_t  0/274  Ram=12
@@ -361,8 +361,8 @@
    ³  ³  ³  ³  ÃÄ@SFTOI  0/60  Ram=4
    ³  ³  ³  ³  ÀÄ@DIV1616  0/70  Ram=5
    ³  ³  ³  ÃÄcomprobacionLimitesFrecuencia  0/682  Ram=5
-   ³  ³  ³  ³  ÀÄ@goto1201  0/58  Ram=0
-   ³  ³  ³  ÃÄ@goto59793  0/46  Ram=0
+   ³  ³  ³  ³  ÀÄ@goto21734  0/58  Ram=0
+   ³  ³  ³  ÃÄ@goto14605  0/46  Ram=0
    ³  ³  ³  ÃÄST7529_printfg  0/444  Ram=81
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄ@PSTRINGCN_2595  0/50  Ram=4
@@ -789,14 +789,14 @@
    ³  ³  ³     ³  ÀÄ*
    ³  ³  ³     ÃÄST7529_printf  0/436  Ram=80
    ³  ³  ³     ³  ÀÄ*
-   ³  ³  ³     ÃÄ@goto59374  0/40  Ram=0
+   ³  ³  ³     ÃÄ@goto14192  0/40  Ram=0
    ³  ³  ³     ÃÄST7529_printf  0/436  Ram=80
    ³  ³  ³     ³  ÀÄ*
    ³  ³  ³     ÃÄST7529_printf  0/436  Ram=80
    ³  ³  ³     ³  ÀÄ*
    ³  ³  ³     ÀÄST7529_printf  0/436  Ram=80
    ³  ³  ³        ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÃÄST7529_clear  0/192  Ram=2
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄST7529_printf  0/436  Ram=80
@@ -814,19 +814,19 @@
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄST7529_printf  0/436  Ram=80
    ³  ³  ³  ³  ÀÄ*
-   ³  ³  ³  ÃÄ@goto60710  0/40  Ram=0
+   ³  ³  ³  ÃÄ@goto15502  0/40  Ram=0
    ³  ³  ³  ÃÄpantalla_seleccion  0/674  Ram=11
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄponer_guardar  0/24  Ram=0
    ³  ³  ³  ³  ÀÄST7529_putIcon  0/30  Ram=3
    ³  ³  ³  ³     ÀÄ*
-   ³  ³  ³  ÃÄ@goto60738  0/40  Ram=0
+   ³  ³  ³  ÃÄ@goto15528  0/40  Ram=0
    ³  ³  ³  ÀÄrepresentacionPresets  0/996  Ram=2
    ³  ³  ³     ÀÄ*
    ³  ³  ÃÄmenu_140  0/6392  Ram=51
    ³  ³  ³  ÃÄpantalla_seleccion  0/674  Ram=11
    ³  ³  ³  ³  ÀÄ*
-   ³  ³  ³  ÃÄ@goto60785  0/40  Ram=0
+   ³  ³  ³  ÃÄ@goto15584  0/40  Ram=0
    ³  ³  ³  ÃÄinitMedidasCHA  0/88  Ram=2
    ³  ³  ³  ÃÄinitMedidasCHB  0/88  Ram=2
    ³  ³  ³  ÃÄinitMedidasCHC  0/88  Ram=2
@@ -1348,7 +1348,7 @@
    ³  ³  ³  ³  ³  ³  ÃÄ@I2C_READU_1  0/28  Ram=1
    ³  ³  ³  ³  ³  ³  ÃÄ@I2C_READU_1  0/28  Ram=1
    ³  ³  ³  ³  ³  ³  ÀÄ@I2C_READU_1  0/28  Ram=1
-   ³  ³  ³  ³  ³  ÃÄ@goto64817  0/40  Ram=0
+   ³  ³  ³  ³  ³  ÃÄ@goto19709  0/40  Ram=0
    ³  ³  ³  ³  ³  ÃÄwrite_PCA955X  0/104  Ram=5
    ³  ³  ³  ³  ³  ³  ÃÄ@I2C_WRITEU_1  0/28  Ram=1
    ³  ³  ³  ³  ³  ³  ÃÄ@I2C_WRITEU_1  0/28  Ram=1
@@ -1802,13 +1802,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -1874,13 +1874,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -1912,13 +1912,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -1943,13 +1943,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -1983,13 +1983,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -2022,13 +2022,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -2075,7 +2075,7 @@
    ³  ³  ÃÄenviaPaquete  0/1054  Ram=16
    ³  ³  ³  ÃÄ@PUTCHARI_BIU_2  0/12  Ram=0
    ³  ³  ³  ÃÄcalculoChecksum  0/2824  Ram=8
-   ³  ³  ³  ³  ÃÄ@goto58329  0/70  Ram=0
+   ³  ³  ³  ³  ÃÄ@goto13231  0/70  Ram=0
    ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
    ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
    ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
@@ -2100,7 +2100,7 @@
    ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
    ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
    ³  ³  ³  ³  ÀÄobtencionChecksum  0/14  Ram=2
-   ³  ³  ³  ÃÄ@goto56342  0/68  Ram=0
+   ³  ³  ³  ÃÄ@goto11592  0/68  Ram=0
    ³  ³  ³  ÃÄ@PUTCHARI_BIU_2  0/12  Ram=0
    ³  ³  ³  ÃÄ@PUTCHARI_BIU_2  0/12  Ram=0
    ³  ³  ³  ÃÄ@PUTCHARI_BIU_2  0/12  Ram=0
@@ -2126,13 +2126,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2157,13 +2157,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2184,7 +2184,7 @@
    ³  ³  ÃÄmenu_207  0/96  Ram=0
    ³  ³  ³  ÀÄ*
    ³  ³  ÀÄlecturaPaquete  0/3248  Ram=18
-   ³  ³     ÃÄ@goto57206  0/70  Ram=0
+   ³  ³     ÃÄ@goto12253  0/70  Ram=0
    ³  ³     ÃÄenviaPaquete  0/226  Ram=3
    ³  ³     ³  ÃÄ@PUTCHARI_BIU_2  0/12  Ram=0
    ³  ³     ³  ÃÄ@PUTCHARI_BIU_2  0/12  Ram=0
@@ -2199,9 +2199,9 @@
    ³  ³     ³  ÃÄ@PUTCHARI_BIU_2  0/12  Ram=0
    ³  ³     ³  ÃÄ@PUTCHARI_BIU_2  0/12  Ram=0
    ³  ³     ³  ÀÄ@PUTCHARI_BIU_2  0/12  Ram=0
-   ³  ³     ÃÄ@goto56477  0/42  Ram=0
-   ³  ³     ÃÄ@goto56501  0/42  Ram=0
-   ³  ³     ÃÄ@goto56564  0/42  Ram=0
+   ³  ³     ÃÄ@goto11693  0/42  Ram=0
+   ³  ³     ÃÄ@goto11718  0/42  Ram=0
+   ³  ³     ÃÄ@goto11753  0/42  Ram=0
    ³  ³     ÃÄenviaPaquete  0/226  Ram=3
    ³  ³     ³  ÀÄ*
    ³  ³     ÃÄobtencionChecksum  0/14  Ram=2
@@ -2240,7 +2240,7 @@
    ³  ³     ³  ³  ÀÄ*
    ³  ³     ³  ÃÄST7529_printf  0/436  Ram=80
    ³  ³     ³  ³  ÀÄ*
-   ³  ³     ³  ÃÄ@goto740  0/60  Ram=0
+   ³  ³     ³  ÃÄ@goto21231  0/60  Ram=0
    ³  ³     ³  ÃÄST7529_printf  0/436  Ram=80
    ³  ³     ³  ³  ÀÄ*
    ³  ³     ³  ÀÄST7529_printf  0/436  Ram=80
@@ -2259,7 +2259,7 @@
    ³  ³     ³  ÀÄ*
    ³  ³     ÃÄenviaPaquete  0/226  Ram=3
    ³  ³     ³  ÀÄ*
-   ³  ³     ÃÄ@goto57084  0/72  Ram=0
+   ³  ³     ÃÄ@goto12150  0/72  Ram=0
    ³  ³     ÃÄcontrol_DC  0/52  Ram=2
    ³  ³     ³  ÀÄ*
    ³  ³     ÃÄcontrol_rele  0/238  Ram=8
@@ -2331,13 +2331,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -2372,13 +2372,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -2427,13 +2427,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2458,13 +2458,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2562,13 +2562,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2593,13 +2593,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2660,13 +2660,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2691,13 +2691,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2726,13 +2726,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2757,13 +2757,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2792,13 +2792,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2823,13 +2823,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2858,13 +2858,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2889,13 +2889,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2924,13 +2924,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2955,13 +2955,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -2990,13 +2990,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -3021,13 +3021,13 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ³  ÀÄ*
@@ -3047,7 +3047,7 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄmenu_207  0/96  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄ@goto2153  0/60  Ram=0
+   ³  ³  ÃÄ@goto22746  0/60  Ram=0
    ³  ³  ÃÄenciendeLEDVerde  0/38  Ram=1
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄenciendeLEDVerde  0/38  Ram=1
@@ -3161,13 +3161,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -3235,13 +3235,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -3271,13 +3271,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -3307,13 +3307,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -3379,13 +3379,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -3453,7 +3453,7 @@
    ³  ÃÄfuncion_dormir  0/440  Ram=4
    ³  ³  ÀÄ*
    ³  ÃÄrestart_wdt_hw  0/6  Ram=0
-   ³  ÃÄ@goto64253  1/40  Ram=0
+   ³  ÃÄ@goto19108  1/40  Ram=0
    ³  ÃÄincRegTiempo  1/922  Ram=13
    ³  ³  ÃÄpausa_I  0/42  Ram=4
    ³  ³  ³  ÀÄ*
@@ -3482,7 +3482,7 @@
    ³  ÃÄconfiguraDatos  0/114  Ram=4
    ³  ³  ÀÄ*
    ³  ÃÄswitchApagadoCanalElectro  1/116  Ram=1
-   ³  ³  ÃÄ@goto1407  1/40  Ram=0
+   ³  ³  ÃÄ@goto21957  1/40  Ram=0
    ³  ³  ÃÄcontrol_led  0/160  Ram=13
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄcontrol_led  0/160  Ram=13
@@ -3563,13 +3563,13 @@
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -3591,20 +3591,20 @@
    ³  ³  ÀÄ*
    ³  ÃÄrestart_wdt_hw  0/6  Ram=0
    ³  ÃÄrestart_wdt_hw  0/6  Ram=0
-   ³  ÃÄcheckAutoapagado  0/88  Ram=0
+   ³  ÃÄcheckAutoapagado  1/88  Ram=0
    ³  ÃÄrestart_wdt_hw  0/6  Ram=0
    ³  ÃÄ@MUL1616  0/34  Ram=5
    ³  ÃÄmenu_0  0/472  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_10  0/820  Ram=3
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_40  0/7838  Ram=21
+   ³  ÃÄmenu_40  0/7842  Ram=21
    ³  ³  ÀÄ*
    ³  ÃÄmenu_80  0/3924  Ram=19
    ³  ³  ÀÄ*
    ³  ÃÄmenu_90  0/106  Ram=0
    ³  ³  ÀÄ*
-   ³  ÃÄmenu_91  0/198  Ram=2
+   ³  ÃÄmenu_91  0/226  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄmenu_92  0/310  Ram=0
    ³  ³  ÀÄ*
@@ -3631,7 +3631,7 @@
    ³  ³  ÀÄ*
    ³  ÃÄrestart_wdt_hw  0/6  Ram=0
    ³  ÃÄdeteccionTeclaPulsada  1/88  Ram=0
-   ³  ³  ÃÄpitidoTecla  1/40  Ram=0
+   ³  ³  ÃÄpitidoTecla  0/40  Ram=0
    ³  ³  ³  ÀÄControlSonido  0/52  Ram=1
    ³  ³  ÀÄrestart_wdt_hw  0/6  Ram=0
    ³  ÃÄrestart_wdt_hw  0/6  Ram=0
@@ -3713,12 +3713,12 @@
    ³  ÃÄteclaDerechaPulsada  1/932  Ram=4
    ³  ³  ÃÄrestart_wdt_hw  0/6  Ram=0
    ³  ³  ÃÄsaltosMenuTratamientoElectro  1/160  Ram=0
-   ³  ³  ³  ÀÄ@goto1738  1/40  Ram=0
+   ³  ³  ³  ÀÄ@goto22309  1/40  Ram=0
    ³  ³  ÃÄ@DIV88  0/44  Ram=3
-   ³  ³  ÃÄ@goto4029  1/40  Ram=0
+   ³  ³  ÃÄ@goto24672  1/40  Ram=0
    ³  ³  ÃÄguardarPresets  1/3460  Ram=11
-   ³  ³  ³  ÃÄ@goto54693  1/42  Ram=0
-   ³  ³  ³  ÃÄ@goto54966  1/48  Ram=0
+   ³  ³  ³  ÃÄ@goto10259  1/42  Ram=0
+   ³  ³  ³  ÃÄ@goto10511  1/48  Ram=0
    ³  ³  ³  ÃÄwriteEEPROM_16bits  0/172  Ram=8
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄwriteEEPROM_16bits  0/172  Ram=8
@@ -3816,9 +3816,9 @@
    ³  ³  ³     ÀÄ*
    ³  ³  ÃÄcargaElectro  1/170  Ram=8
    ³  ³  ÃÄcargarPresets  1/4054  Ram=10
-   ³  ³  ³  ÃÄ@goto55036  1/44  Ram=0
-   ³  ³  ³  ÃÄ@goto55073  1/44  Ram=0
-   ³  ³  ³  ÃÄ@goto55419  1/48  Ram=0
+   ³  ³  ³  ÃÄ@goto10568  1/44  Ram=0
+   ³  ³  ³  ÃÄ@goto10598  1/44  Ram=0
+   ³  ³  ³  ÃÄ@goto10875  1/48  Ram=0
    ³  ³  ³  ÃÄreadEEPROM_16bits  0/86  Ram=7
    ³  ³  ³  ÃÄreadEEPROM_16bits  0/86  Ram=7
    ³  ³  ³  ÃÄreadEEPROM_8bits  0/34  Ram=3
@@ -3876,12 +3876,12 @@
    ³  ³  ÃÄ@DIV88  0/44  Ram=3
    ³  ³  ÃÄsaltosMenuTratamientoElectro  1/160  Ram=0
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄ@goto4180  1/48  Ram=0
+   ³  ³  ÃÄ@goto24828  1/48  Ram=0
    ³  ³  ÃÄsaltosMenuTratamientoElectro  1/160  Ram=0
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄ@DIV88  0/44  Ram=3
    ³  ³  ÃÄ@DIV88  0/44  Ram=3
-   ³  ³  ÃÄ@goto4248  1/40  Ram=0
+   ³  ³  ÃÄ@goto24900  1/40  Ram=0
    ³  ³  ÃÄsaltosMenuTratamientoElectro  1/160  Ram=0
    ³  ³  ³  ÀÄ*
    ³  ³  ÀÄControlSonido  0/52  Ram=1
@@ -3950,7 +3950,7 @@
    ³  ³  ÃÄconfiguraDatos  0/114  Ram=4
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄapagadoCanalElectro  1/164  Ram=1
-   ³  ³  ³  ÃÄ@goto1460  1/40  Ram=0
+   ³  ³  ³  ÃÄ@goto22007  1/40  Ram=0
    ³  ³  ³  ÃÄcontrol_led  0/160  Ram=13
    ³  ³  ³  ³  ÀÄ*
    ³  ³  ³  ÃÄincRegCont  0/442  Ram=7
@@ -3969,7 +3969,7 @@
    ³  ³  ³     ÀÄ*
    ³  ³  ÃÄconfiguraDatos  0/114  Ram=4
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄ@goto4514  1/40  Ram=0
+   ³  ³  ÃÄ@goto25171  1/40  Ram=0
    ³  ³  ÃÄinitMedidasCHA  0/88  Ram=2
    ³  ³  ÃÄinitMedidasCHB  0/88  Ram=2
    ³  ³  ÃÄinitMedidasCHC  0/88  Ram=2
@@ -3988,20 +3988,7 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄconfiguraDatos  0/114  Ram=4
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄ@goto4622  1/40  Ram=0
-   ³  ³  ÃÄinitMedidasCHA  0/88  Ram=2
-   ³  ³  ÃÄinitMedidasCHB  0/88  Ram=2
-   ³  ³  ÃÄinitMedidasCHC  0/88  Ram=2
-   ³  ³  ÃÄinitMedidasPoi  0/88  Ram=2
-   ³  ³  ÃÄswitchApagadoCanalElectro  1/116  Ram=1
-   ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄpausaCanalesElectro  1/88  Ram=0
-   ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄconfiguraDatos  0/114  Ram=4
-   ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄconfiguraDatos  0/114  Ram=4
-   ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄ@goto4657  1/40  Ram=0
+   ³  ³  ÃÄ@goto25287  1/40  Ram=0
    ³  ³  ÃÄinitMedidasCHA  0/88  Ram=2
    ³  ³  ÃÄinitMedidasCHB  0/88  Ram=2
    ³  ³  ÃÄinitMedidasCHC  0/88  Ram=2
@@ -4014,7 +4001,20 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄconfiguraDatos  0/114  Ram=4
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄ@goto4691  1/40  Ram=0
+   ³  ³  ÃÄ@goto25314  1/40  Ram=0
+   ³  ³  ÃÄinitMedidasCHA  0/88  Ram=2
+   ³  ³  ÃÄinitMedidasCHB  0/88  Ram=2
+   ³  ³  ÃÄinitMedidasCHC  0/88  Ram=2
+   ³  ³  ÃÄinitMedidasPoi  0/88  Ram=2
+   ³  ³  ÃÄswitchApagadoCanalElectro  1/116  Ram=1
+   ³  ³  ³  ÀÄ*
+   ³  ³  ÃÄpausaCanalesElectro  1/88  Ram=0
+   ³  ³  ³  ÀÄ*
+   ³  ³  ÃÄconfiguraDatos  0/114  Ram=4
+   ³  ³  ³  ÀÄ*
+   ³  ³  ÃÄconfiguraDatos  0/114  Ram=4
+   ³  ³  ³  ÀÄ*
+   ³  ³  ÃÄ@goto25354  1/40  Ram=0
    ³  ³  ÃÄinitMedidasCHA  0/88  Ram=2
    ³  ³  ÃÄinitMedidasCHB  0/88  Ram=2
    ³  ³  ÃÄinitMedidasCHC  0/88  Ram=2
@@ -4253,7 +4253,7 @@
    ³     ³  ÀÄ*
    ³     ÃÄapagadoCHC  0/196  Ram=2
    ³     ³  ÀÄ*
-   ³     ÃÄ@goto4838  1/40  Ram=0
+   ³     ÃÄ@goto25507  1/40  Ram=0
    ³     ÃÄapagadoCHA  0/198  Ram=2
    ³     ³  ÀÄ*
    ³     ÃÄapagadoCHB  0/198  Ram=2

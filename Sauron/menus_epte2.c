@@ -1358,7 +1358,9 @@ int8 menu_40(){
         
         pantalla_seleccion();                       // Colocamos los emoticonos
        
+        i8ConfigCanal = CHB_C;                  // TRIGUER SOLO SE PUEDE USAR ELECTRO EN EL CANAL B
         switch(i8ConfigCanal){                      // Dependiendo del canal que estemos configurando
+            
             case CHA_C:                             // Canal A
                 i8RepVal1=sSEL_CANAL_A;                 // Muestra el texto del canal A   
                 break;
@@ -1373,10 +1375,6 @@ int8 menu_40(){
                 break;
         }
 
-        // Added 05/04/2022 Espacio para actualizar el texto, ya que no hace falta entrar a configurar parámetro
-        // if(giPos==1){
-        //     ST7529_printf("          ",COLUMNA_1,18,M_,giPos==1);                   // Borro lo la terapia que había antes
-        // }
         ST7529_printf(i8RepVal1,COLUMNA_1,18,M_,(giPos==1));                        // Muestra por pantalla los títulos
 
         Calc_representacion_t(i16TacElec[i8ConfigCanal],i16TdElec[i8ConfigCanal]);  // Calcula la representación de tiempos
@@ -3720,16 +3718,18 @@ int8 menu_43(){
 */
 int8 menu_91(){                                                  // Menú de selección del canal de electroestimulación a cargar en el menú de presets             
     if(bRefrescoPantalla){                                       // Si se ha cambiado algún valor
+        
+        giPos=SEL_CANAL_B;                                   // Inicializo giPos TRIGUER FORZAMOS CARGAR PRESET AL CANAL B
+        
         if(iMenuAnterior!=91){                                   // Si venimos de otro menú
             ST7529_clear();                                      // Limpio pantalla
             ST7529_printf(sPRESETS,0,0,L_,NORMAL);               // Muestra este titulo
             ST7529_printf(sSELEC_TITULO,10,36,L_,NORMAL);        // Muestra este titulo
             giPos=0;                                             // Inicializo giPos
         }       
-
+        giPos=SEL_CANAL_B;                                   // Inicializo giPos TRIGUER FORZAMOS CARGAR PRESET AL CANAL B
         pantalla_seleccion();                                    // Muestro iconos
         poner_cargar();                                          // Pone el icono de cargar en la interfaz
-
         if(giPos<=SEL_CANAL_A){                                  // Si el valor de selección es menor o igual a SEL_CANAL_A
             giPos=SEL_CANAL_A;                                   // Inicializo giPos
         }       
