@@ -1541,14 +1541,14 @@ ROM Allocation:
 002F0A  @DIV1616
 002F50  Calc_representacion_t
 003062  comprobacionLimitesFrecuencia
-00330C  @goto21734
+00330C  @goto24761
 003346  @FTOSD
 003388  @ADDFF
 003600  conversionPW
 00368A  @PRINTF_L32U_2595
 00374E  menu_40
-0055F0  @goto14487
-005618  @goto14605
+0055F0  @goto18234
+005618  @goto18339
 005646  @FLT
 0056C0  redondeo50
 005778  redondeo10
@@ -1556,13 +1556,13 @@ ROM Allocation:
 0058D4  menu_80
 006828  poner_cargar
 00683E  representacionPresets
-006C22  @goto14192
+006C22  @goto17975
 006C4A  menu_90
 006CB4  menu_91
 006D96  poner_guardar
 006DAE  menu_92
-006EE4  @goto15502
-006F0C  @goto15528
+006EE4  @goto19161
+006F0C  @goto19189
 006F34  initMedidasCHA
 006F8C  initMedidasCHB
 006FE4  initMedidasCHC
@@ -1576,111 +1576,111 @@ ROM Allocation:
 007504  pitidoErrorElectrodoIndefinido
 00752A  redondeoI_50
 0075E2  menu_140
-008EDA  @goto15584
-008F02  initMedidasTB
-008F86  quitar_cancelar
-008F9E  menu_180
-00961C  menu_200
-009798  menu_201
-0097C8  Read_bq
-00985E  getSOC
-00986E  nivelBateria
-009874  getFlags
-009888  getFC
-0098AE  getATTF
-0098C2  getVoltage
-0098E8  getCurrent
-00990E  @PRINTF_LD_2595
-009A0E  menu_204
-009ED2  pausa_ms
-009F1E  read_PCA955X
-009FCA  write_PCA955X
-00A032  control_rele
-00A120  @goto19709
-00A148  control_led
-00A1E8  apagadoTB
-00A270  apagadoCHA
-00A336  apagadoCHB
-00A3FC  apagadoCHC
-00A4C0  apagadoCanales
-00A544  initMedidasTrans
-00A592  apagadoTranscraneal
-00A63C  initMedidasGal
-00A6A8  apagadoGalvanica
-00A7C0  apagadoMicrocorrientes
-00A7F4  initReles
-00A820  encendidoLedsRojos
-00A842  pitidoLargoError
-00A86A  reset_orco
-00A886  apagadoLedsRojos
-00A8A8  menu_205
-00A98A  menu_206
-00AA1C  menu_207
-00AA7C  funcion_dormir
-00AC34  isPower12OK
-00AC4C  conf_PCA955X
-00ACBC  ST7529_reset
-00ACEA  ST7529_displayOn
-00AD22  ST7529_init
-00B22E  ST7529_putImageGS
-00B4BE  readRegister8_MMA8451
-00B510  writeRegister8_MMA8451
-00B546  begin_MMA8451
-00B630  isPower48OK
-00B648  initArrayComms
-00B696  tensionCargadorCorrecta
-00B89C  preparacionEntradaCarga
-00B992  getDeviceType
-00B9A6  comprobacionComunicacionBQ
-00B9CE  initRegError
-00BA2C  initRegCont
-00BA8C  initRegistros
-00BAB4  initRegistrosParciales
-00BACC  @PUTCHARI_BIU_2
-00BAD8  obtencionChecksum
-00BAE6  calculoChecksum
-00C5EE  @goto13231
-00C634  enviaPaquete
-00CA52  @goto11592
-00CA96  enviaPaquete
-00CB78  pitidoLargo
-00CBA0  f_avisos
-00D77A  @goto21231
-00D7B6  lecturaPaquete
-00E466  @goto11693
-00E490  @goto11718
-00E4BA  @goto11753
-00E4E4  @goto12150
-00E52C  @goto12253
-00E572  envioDatos
-00E6FC  incRegCont
-00E8B6  envioDatos
-00EA22  getCycleCount
-00EA38  @PRINTF_LU_9600_31766_31767
-00EAEC  @PRINTF_L32D_9600_31766_31767FPFPF
-00ECA2  muestraRegContMejorado
-00F062  @PRINTF_U_9600_31766_31767
-00F0E6  muestraRegErrorMejorado
-00F166  informeIngenieria
-00F1B0  initRegistroPresets
-00F222  initMedidasElectro
-00F236  hayErrorComunicaciones
-00F386  enciendeLEDVRojo
-00F3AA  enciendeLEDVerde
-00F3D0  pitidoCorto
-00F3F8  pitidoPointerConectado
-00F422  pitidoPointerDesconectado
-00F44C  hayDatoRecibido
-00FD9C  @goto22746
-00FDD8  detectarCableBipolar
-00FDF0  comprobacionAlimentacionesOK
-00FE36  configuraDatos
-00FEA8  calc_Tgalv
-00FF8A  apagadoLEDS
-00FFBE  pitidoTecla
+008EDE  @goto19230
+008F06  initMedidasTB
+008F8A  quitar_cancelar
+008FA2  menu_180
+009620  menu_200
+00979C  menu_201
+0097CC  Read_bq
+009862  getSOC
+009872  nivelBateria
+009878  getFlags
+00988C  getFC
+0098B2  getATTF
+0098C6  getVoltage
+0098EC  getCurrent
+009912  @PRINTF_LD_2595
+009A12  menu_204
+009ED6  pausa_ms
+009F22  read_PCA955X
+009FCE  write_PCA955X
+00A036  control_rele
+00A124  @goto22978
+00A14C  control_led
+00A1EC  apagadoTB
+00A274  apagadoCHA
+00A33A  apagadoCHB
+00A400  apagadoCHC
+00A4C4  apagadoCanales
+00A548  initMedidasTrans
+00A596  apagadoTranscraneal
+00A640  initMedidasGal
+00A6AC  apagadoGalvanica
+00A7C4  apagadoMicrocorrientes
+00A7F8  initReles
+00A824  encendidoLedsRojos
+00A846  pitidoLargoError
+00A86E  reset_orco
+00A88A  apagadoLedsRojos
+00A8AC  menu_205
+00A98E  menu_206
+00AA20  menu_207
+00AA80  funcion_dormir
+00AC38  isPower12OK
+00AC50  conf_PCA955X
+00ACC0  ST7529_reset
+00ACEE  ST7529_displayOn
+00AD26  ST7529_init
+00B232  ST7529_putImageGS
+00B4C2  readRegister8_MMA8451
+00B514  writeRegister8_MMA8451
+00B54A  begin_MMA8451
+00B634  isPower48OK
+00B64C  initArrayComms
+00B69A  tensionCargadorCorrecta
+00B8A0  preparacionEntradaCarga
+00B996  getDeviceType
+00B9AA  comprobacionComunicacionBQ
+00B9D2  initRegError
+00BA30  initRegCont
+00BA90  initRegistros
+00BAB8  initRegistrosParciales
+00BAD0  @PUTCHARI_BIU_2
+00BADC  obtencionChecksum
+00BAEA  calculoChecksum
+00C5F2  @goto17088
+00C638  enviaPaquete
+00CA56  @goto15552
+00CA9A  enviaPaquete
+00CB7C  pitidoLargo
+00CBA4  f_avisos
+00D77E  @goto24345
+00D7BA  lecturaPaquete
+00E46A  @goto15650
+00E494  @goto15666
+00E4BE  @goto15708
+00E4E8  @goto16060
+00E530  @goto16154
+00E576  envioDatos
+00E700  incRegCont
+00E8BA  envioDatos
+00EA26  getCycleCount
+00EA3C  @PRINTF_LU_9600_31766_31767
+00EAF0  @PRINTF_L32D_9600_31766_31767FPFPF
+00ECA6  muestraRegContMejorado
+00F066  @PRINTF_U_9600_31766_31767
+00F0EA  muestraRegErrorMejorado
+00F16A  informeIngenieria
+00F1B4  initRegistroPresets
+00F226  initMedidasElectro
+00F23A  hayErrorComunicaciones
+00F38A  enciendeLEDVRojo
+00F3AE  enciendeLEDVerde
+00F3D4  pitidoCorto
+00F3FC  pitidoPointerConectado
+00F426  pitidoPointerDesconectado
+00F450  hayDatoRecibido
+00FDA0  @goto25654
+00FDDC  detectarCableBipolar
+00FDF4  comprobacionAlimentacionesOK
+00FE3A  configuraDatos
+00FEAC  calc_Tgalv
+00FF8E  apagadoLEDS
+00FFC2  pitidoTecla
 010000  incRegTiempo
 01039A  switchApagadoCanalElectro
-01040E  @goto21957
+01040E  @goto24953
 010436  calculoJulios
 01050E  calculoJuliosRampa
 010618  checkAutoapagado
@@ -1690,30 +1690,30 @@ ROM Allocation:
 011EA6  decrementoCorriente
 011EFC  teclaAbajoPulsada
 013722  saltosMenuTratamientoElectro
-0137C2  @goto22309
+0137C2  @goto25267
 0137EA  writeEEPROM_32bits
 01394A  guardarPresets
-0146CE  @goto10259
-0146F8  @goto10511
+0146CE  @goto14430
+0146F8  @goto14653
 014728  cargaElectro
 0147D2  readEEPROM_32bits
 01487C  cargarPresets
-015852  @goto10568
-01587E  @goto10598
-0158AA  @goto10875
+015852  @goto14701
+01587E  @goto14726
+0158AA  @goto14933
 0158DA  teclaDerechaPulsada
-015C7E  @goto24672
+015C7E  @goto27468
 015CA6  teclaIzquierdaPulsada
-015F2C  @goto24828
-015F5C  @goto24900
+015F2C  @goto27617
+015F5C  @goto27683
 015F84  pausaCanalesElectro
 015FDC  apagadoCanalElectro
-016080  @goto22007
+016080  @goto24999
 0160A8  teclaStartStopPulsada
-016D94  @goto25171
-016DBC  @goto25287
-016DE4  @goto25314
-016E0C  @goto25354
+016D94  @goto27946
+016DBC  @goto28054
+016DE4  @goto28085
+016E0C  @goto28120
 016E34  submenu_11
 016EE6  submenu_14
 016FDC  submenu_12
@@ -1745,11 +1745,11 @@ ROM Allocation:
 019E22  bloqueCambiosGalvanica
 019E84  bloqueCambiosTranscraneal
 019ECC  bloqueEnvioDatos
-01A13C  @goto25507
+01A13C  @goto28260
 01A164  @cinit1
 01A164  MAIN
 01A528  @cinit2
-01CD98  @goto19108
+01CD98  @goto22450
 0136  StrtoulGO
 0136  StrtolGO
 D4C7  dormir
@@ -1764,34 +1764,34 @@ Project Directory:
     C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Sauron\
 
 Project Files:
-    EPTE_V2_1_SAURON.c                                      [27-mar.-26 09:06  CRC=E2CBD858]
-    EPTE_V2_1_SAURON.h                                      [04-dic.-24 09:57  CRC=394A5E10]
-    ..\..\..\..\..\..\Program Files\PICC\Devices\18F67K22.h [08-oct.-24 13:23  CRC=96F1E4B4]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\stdlib.h   [21-dic.-23 13:03  CRC=9F79B83C]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\stddef.h   [05-sep.-14 10:47  CRC=897CEC6C]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\string.h   [26-mar.-15 11:34  CRC=C4814297]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\ctype.h    [03-ene.-08 13:55  CRC=2D1F019F]
-    ..\Drivers\driver_MMA8451.h                             [30-ene.-24 08:44  CRC=55D0D2B0]
-    ..\Drivers\driver_PCA9555_PCA9554.h                     [30-ene.-24 08:44  CRC=8ABEA0CF]
-    ..\Drivers\BQ34Z100G1.h                                 [30-ene.-24 08:44  CRC=7E6EA4B9]
-    internal_eeprom_registers.h                             [30-ene.-24 08:44  CRC=671D4A05]
-    ..\Drivers\fat.c                                        [30-ene.-24 08:44  CRC=4B63F50F]
-    ..\Drivers\M25AA1024.c                                  [30-ene.-24 08:44  CRC=B992A315]
-    ..\Drivers\M25AA1024.h                                  [30-ene.-24 08:44  CRC=B392ECCA]
-    ..\Drivers\ST7529_MEM.c                                 [30-ene.-24 08:44  CRC=191C340B]
-    ..\Drivers\ST7529_MEM.h                                 [30-ene.-24 08:44  CRC=6FAC780C]
-    preset_registers.h                                      [30-ene.-24 08:44  CRC=F26BFFAF]
-    informeIngenieria.c                                     [30-ene.-24 08:44  CRC=60222D51]
-    informeIngenieria.h                                     [30-ene.-24 08:44  CRC=8C7B99D0]
-    ..\ComLib\comunicacion_struct.c                         [05-mar.-26 08:53  CRC=3A7DE651]
-    ..\ComLib\comunicacion_struct.h                         [30-ene.-24 08:44  CRC=A7019576]
-    menus_epte2.c                                           [27-mar.-26 09:07  CRC=436BE088]
-    menus_epte2.h                                           [30-ene.-24 08:44  CRC=36BC9658]
+    EPTE_V2_1_SAURON.c                                      [27-mar.-26 11:15  CRC=E2CBD858]
+    EPTE_V2_1_SAURON.h                                      [04-dic.-24 10:57  CRC=394A5E10]
+    ..\..\..\..\..\..\Program Files\PICC\Devices\18F67K22.h [08-oct.-24 14:23  CRC=96F1E4B4]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\stdlib.h   [21-dic.-23 14:03  CRC=9F79B83C]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\stddef.h   [05-sep.-14 11:47  CRC=897CEC6C]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\string.h   [26-mar.-15 12:34  CRC=C4814297]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\ctype.h    [03-ene.-08 14:55  CRC=2D1F019F]
+    ..\Drivers\driver_MMA8451.h                             [30-ene.-24 09:44  CRC=55D0D2B0]
+    ..\Drivers\driver_PCA9555_PCA9554.h                     [30-ene.-24 09:44  CRC=8ABEA0CF]
+    ..\Drivers\BQ34Z100G1.h                                 [30-ene.-24 09:44  CRC=7E6EA4B9]
+    internal_eeprom_registers.h                             [30-ene.-24 09:44  CRC=671D4A05]
+    ..\Drivers\fat.c                                        [30-ene.-24 09:44  CRC=4B63F50F]
+    ..\Drivers\M25AA1024.c                                  [30-ene.-24 09:44  CRC=B992A315]
+    ..\Drivers\M25AA1024.h                                  [30-ene.-24 09:44  CRC=B392ECCA]
+    ..\Drivers\ST7529_MEM.c                                 [30-ene.-24 09:44  CRC=191C340B]
+    ..\Drivers\ST7529_MEM.h                                 [30-ene.-24 09:44  CRC=6FAC780C]
+    preset_registers.h                                      [30-ene.-24 09:44  CRC=F26BFFAF]
+    informeIngenieria.c                                     [30-ene.-24 09:44  CRC=60222D51]
+    informeIngenieria.h                                     [30-ene.-24 09:44  CRC=8C7B99D0]
+    ..\ComLib\comunicacion_struct.c                         [05-mar.-26 09:53  CRC=3A7DE651]
+    ..\ComLib\comunicacion_struct.h                         [30-ene.-24 09:44  CRC=A7019576]
+    menus_epte2.c                                           [01-abr.-26 11:28  CRC=3676E027]
+    menus_epte2.h                                           [30-ene.-24 09:44  CRC=36BC9658]
 
-Source signature=467AE70B
-Program memory checksum=0BBE
+Source signature=3985E6AA
+Program memory checksum=8BE9
 Program memory CRC=74AE
-Hex file CRC=1B9B
+Hex file CRC=59D4
 
 Units:
     EPTE_V2_1_SAURON (main)
@@ -1805,7 +1805,7 @@ Compiler Settings:
     Float,Double:   32,32
     Compile Mode:       CCS5
     Predefined symbols:
-       #define __BUILDCOUNT__ 4739
+       #define __BUILDCOUNT__ 4740
 
 Output Files:
     XREF file:   EPTE_V2_1_SAURON.xsym

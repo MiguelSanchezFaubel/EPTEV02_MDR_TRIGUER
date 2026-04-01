@@ -1,6 +1,6 @@
 >>> Warning 225 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\ComLib\comunicacion_struct.h" Line 60(24,75): Duplicate #define
 >>> Warning 225 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\ComLib\comunicacion_struct.h" Line 61(24,75): Duplicate #define
->>> Warning 203 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Sauron\menus_epte2.c" Line 6463(1,1): Condition always TRUE
+>>> Warning 203 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Sauron\menus_epte2.c" Line 6464(1,1): Condition always TRUE
 >>> Warning 225 "EPTE_V2_1_SAURON.c" Line 346(1,1): Interrupt level changed  : NORMAL=>HIGH
 >>> Warning 203 "EPTE_V2_1_SAURON.c" Line 4546(1,1): Condition always TRUE
 >>> Warning 203 "EPTE_V2_1_SAURON.c" Line 4565(1,1): Condition always TRUE

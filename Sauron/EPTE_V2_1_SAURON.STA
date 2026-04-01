@@ -1,9 +1,9 @@
 
-ROM used:   118178/131072 (90%)
+ROM used:   118182/131072 (90%)
             118204/131072 (90%) including unused fragments
 
             4.6 Average locations per line
-            13.6 Average locations per statement
+            13.5 Average locations per statement
 
 RAM used:   2260/3862 (59%) at main() level
             2435/3862 (63%) worst case
@@ -34,10 +34,10 @@ Lines Stmts  %   Files
   197     0   0  informeIngenieria.h
  1448  1042  12  ..\ComLib\comunicacion_struct.c
   503     0   0  ..\ComLib\comunicacion_struct.h
- 6665  1781  20  menus_epte2.c
+ 6666  1782  20  menus_epte2.c
   797     0   0  menus_epte2.h
 ----- -----
-25524  8721 Total
+25525  8722 Total
 
 Page ROM  %  RAM    Vol Diff  Functions:
 ---- --- --- ---    --- ----  ----------
@@ -47,13 +47,13 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     28   0    1             @I2C_WRITEU_1
 0     28   0    1             @I2C_READU_1
 0    246   0   11             @MULFF
-0     54   0    2     78  2.8  @ITOF
-0    632   1   16     76  2.4  @ADDFF
-0    350   0   14     59  1.8  @DIVFF
-0     92   0   14    367  7.8  @MUL3232
-0     70   0    5    140  5.0  @DIV1616
+0     54   0    2             @ITOF
+0    632   1   16             @ADDFF
+0    350   0   14             @DIVFF
+0     92   0   14             @MUL3232
+0     70   0    5             @DIV1616
 0     20   0    0             @GOTOPTR
-0     34   0    5    234  7.5  @MUL1616
+0     34   0    5             @MUL1616
 0     54   0    3    183  3.8  writeRegister8_MMA8451
 0     82   0    3    272  3.7  readRegister8_MMA8451
 0    234   0    2    625  5.2  begin_MMA8451
@@ -78,7 +78,7 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     56   0    0    119  3.0  ST7529_displayOn
 0     46   0    0     67  1.2  ST7529_reset
 0   1292   1    3   4000  6.4  ST7529_init
-0     60   0    4    338  2.8  @SFTOI
+0     60   0    4             @SFTOI
 0     40   0    2    242  4.1  ST7529_send
 0    192   0    2    693  4.9  ST7529_clear
 0    596   1   11   1794 10.2  ST7529_putChar
@@ -98,14 +98,14 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     86   0    7     68  2.4  readEEPROM_16bits
 1    170   0   11    131  2.5  readEEPROM_32bits
 1   3460   3   11   9534  8.5  guardarPresets
-1     42   0    0             @goto10259
+1     42   0    0             @goto14430
 0     66   0    5             @FTOSD
-1     48   0    0             @goto10511
+1     48   0    0             @goto14653
 1   4054   4   10  13318 11.5  cargarPresets
-1     44   0    0             @goto10568
-1     44   0    0   2951  9.4  @goto10598
-0     56   0    4   2853  7.0  @DTOF
-1     48   0    0     84  1.7  @goto10875
+1     44   0    0             @goto14701
+1     44   0    0             @goto14726
+0     56   0    4             @DTOF
+1     48   0    0             @goto14933
 1    170   0    8    128  4.3  cargaElectro
 0    114   0    4    282  5.1  initRegistroPresets
 0     94   0    2    168  4.4  initRegError
@@ -120,20 +120,20 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0    132   0    2             @PRINTF_U_9600_31766_31767
 0    960   1   26   1066  5.2  muestraRegContMejorado
 0    180   0    9             @PRINTF_LU_9600_31766_31767
-0    438   0   13   1289  4.9  @PRINTF_L32D_9600_31766_31767FPFPF
+0    438   0   13             @PRINTF_L32D_9600_31766_31767FPFPF
 0     74   0    0    180  0.2  informeIngenieria
 0   1054   1   16   5169 10.5  enviaPaquete
-0     68   0    0   5830 10.6  @goto11592
+0     68   0    0             @goto15552
 0    226   0    3   1098  6.5  enviaPaquete
 0   3248   3   18  17955 13.6  lecturaPaquete
-0     42   0    0      3  0.0  @goto11693
-0     42   0    0  13200 12.8  @goto11718
-0     42   0    0  12891 13.3  @goto11753
-0     72   0    0      3  0.0  @goto12150
-0     70   0    0    125  3.0  @goto12253
+0     42   0    0             @goto15650
+0     42   0    0             @goto15666
+0     42   0    0             @goto15708
+0     72   0    0             @goto16060
+0     70   0    0             @goto16154
 0     14   0    2     39  2.0  obtencionChecksum
 0   2824   3    8  22661  8.0  calculoChecksum
-0     70   0    0             @goto13231
+0     70   0    0             @goto17088
 0     68   0    4    258  6.2  busquedaFIFO
 0     54   0    3    176  4.0  configuraDatos
 0    114   0    4    406  5.8  configuraDatos
@@ -151,8 +151,8 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0    132   0    2    843  3.8  initMedidasTB
 0     20   0    0     44  1.0  initMedidasElectro
 0    674   1   11   2033  7.8  pantalla_seleccion
-0     34   0    1   1004  9.1  @SPRINTF
-0    124   0    2    399  5.6  @PRINTF_U_2595
+0     34   0    1             @SPRINTF
+0    124   0    2             @PRINTF_U_2595
 0     24   0    0     33  1.3  quitar_cancelar
 0     22   0    0     33  1.3  poner_config
 0     20   0    0     33  1.3  poner_flecha_izq
@@ -162,7 +162,7 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     24   0    0     33  1.3  poner_guardar
 0     22   0    0     33  1.3  poner_cargar
 0    996   1    2   3594  7.9  representacionPresets
-0     40   0    0             @goto14192
+0     40   0    0             @goto17975
 0    472   0    2   1461  6.9  menu_0
 0    820   1    3   2053  5.9  menu_10
 0    204   0    6             @PRINTF_D_2595
@@ -171,8 +171,8 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     50   0    4             @PSTRINGCN_2595
 0     74   0    2             @PRINTF_X_2595
 0   7842   7   21  18557 13.0  menu_40
-0     40   0    0             @goto14487
-0     46   0    0             @goto14605
+0     40   0    0             @goto18234
+0     46   0    0             @goto18339
 0     14   0    0             @const2619
 0     14   0    0             @const2620
 0     12   0    0             @const2621
@@ -209,10 +209,10 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0    106   0    0    394  5.1  menu_90
 0    226   0    2    595  5.3  menu_91
 0    310   0    0    993  6.8  menu_92
-0     40   0    0             @goto15502
-0     40   0    0             @goto15528
-0   6392   6   51  18550 13.0  menu_140
-0     40   0    0             @goto15584
+0     40   0    0             @goto19161
+0     40   0    0             @goto19189
+0   6396   6   51  18595 13.0  menu_140
+0     40   0    0             @goto19230
 0     18   0    0             @const2669
 0     26   0    0             @const2670
 0     12   0    0             @const2671
@@ -283,13 +283,13 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     44   0    2    349  4.6  RB_isr
 1  11316  11   18  47173 21.0  MAIN
 0     12   0    0             @const2764
-1     40   0    0             @goto19108
+1     40   0    0             @goto22450
 0     44   0    1    114  3.4  initReles
 0    160   0   13    736  7.5  control_led
 0     52   0    2     47  1.8  control_DC
 0     66   0    6             @WRITEBITA
 0    238   0    8   1186  6.0  control_rele
-0     40   0    0             @goto19709
+0     40   0    0             @goto22978
 0     52   0    1    188  3.1  ControlSonido
 0    144   0    3    176  3.4  ControlSonidoSinTimer
 0     60   0    1    197  2.7  ControlSonidoObligatorio
@@ -313,7 +313,7 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0    164   0    6     68  2.7  redondeo1
 0    186   0    6     68  2.7  redondeoI_100
 0   3034   3    5  27794  9.0  f_avisos
-0     60   0    0             @goto21231
+0     60   0    0             @goto24345
 0     52   0    4    179  3.3  delay_ms_wdt
 0     52   0    0    152  3.4  apagadoMicrocorrientes
 0    280   0    3   1076  7.3  apagadoGalvanica
@@ -325,7 +325,7 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0    132   0    0    976  5.3  apagadoCanales
 1    236   0    1   1233  4.9  copiarDatosSimetria
 0    682   1    5   3391  8.4  comprobacionLimitesFrecuencia
-0     58   0    0             @goto21734
+0     58   0    0             @goto24761
 0     24   0    0     74  2.9  isPower12OK
 0     24   0    0     74  2.9  isPower48OK
 0     28   0    0     48  1.1  reset_orco
@@ -338,10 +338,10 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     40   0    0     33  1.3  pitidoLargoError
 0    246   0    3   1260  3.5  preparacionEntradaCarga
 1    116   0    1    567  4.8  switchApagadoCanalElectro
-1     40   0    0             @goto21957
+1     40   0    0             @goto24953
 1     88   0    0    421  3.8  pausaCanalesElectro
 1    164   0    1    519  4.3  apagadoCanalElectro
-1     40   0    0             @goto22007
+1     40   0    0             @goto24999
 0     70   0    1    125  2.5  comprobacionAlimentacionesOK
 0     52   0    1    147  3.5  apagadoLEDS
 0    176   0    0    391  3.3  initValoresSistema
@@ -351,7 +351,7 @@ Page ROM  %  RAM    Vol Diff  Functions:
 1     70   0    0     63  2.9  incrementoCorriente
 1     86   0    0     63  2.9  decrementoCorriente
 1    160   0    0    907  5.3  saltosMenuTratamientoElectro
-1     40   0    0             @goto22309
+1     40   0    0             @goto25267
 0     24   0    0     61  2.3  detectarCableBipolar
 0    518   0   10    646  8.4  tensionCargadorCorrecta
 0     40   0    3     86  2.8  comprobacionComunicacionBQ
@@ -361,22 +361,22 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0      6   0    0     32  1.0  restart_wdt_hw
 0    336   0    3   1206  7.3  hayErrorComunicaciones
 0   2384   2    4   9363 10.5  hayDatoRecibido
-0     60   0    0             @goto22746
+0     60   0    0             @goto25654
 1     88   0    0    439  3.8  deteccionTeclaPulsada
 1   6040   6    6  17832 16.9  teclaArribaPulsada
 1   6182   6    6  19537 16.4  teclaAbajoPulsada
 1    932   1    4   4061 13.2  teclaDerechaPulsada
-1     40   0    0             @goto24672
+1     40   0    0             @goto27468
 1    646   1    1   4184 13.4  teclaIzquierdaPulsada
-1     48   0    0             @goto24828
-1     40   0    0             @goto24900
+1     48   0    0             @goto27617
+1     40   0    0             @goto27683
 1   3308   3    6  12262 11.5  teclaStartStopPulsada
-1     40   0    0             @goto25171
-1     40   0    0             @goto25287
-1     40   0    0             @goto25314
-1     40   0    0             @goto25354
+1     40   0    0             @goto27946
+1     40   0    0             @goto28054
+1     40   0    0             @goto28085
+1     40   0    0             @goto28120
 1    624   1    6   2731 10.5  bloqueEnvioDatos
-1     40   0    0             @goto25507
+1     40   0    0             @goto28260
 1     80   0    2    218  4.1  bloqueCambiosElectro
 1     50   0    0    136  3.5  bloqueCambiosTB
 1     98   0    2    254  4.1  bloqueCambiosGalvanica
@@ -388,23 +388,23 @@ Page ROM  %  RAM    Vol Diff  Functions:
  Inline         0             @cinit1
 
 Program metrics:
-    Functions               234
-    Statements              8721
-    Comments                15822
-    Volume (V)              719314
-    Difficulty (D)          1214.4
-    Effort to implement (E) 873550282
-    Time to implement (T)   13480 hours, 43 minutes
-    Est Delivered Bugs (B)  305
-    Cyclomatic Complexity   1888
-    Maintainability (MI)    77
+    Functions               215
+    Statements              8722
+    Comments                15823
+    Volume (V)              639738
+    Difficulty (D)          1100.2
+    Effort to implement (E) 703849240
+    Time to implement (T)   10861 hours, 52 minutes
+    Est Delivered Bugs (B)  264
+    Cyclomatic Complexity   1749
+    Maintainability (MI)    101
 
  Segment     Used  Free
 -----------  ----  ----
 00000-00002     4  0  
 00004-00006     0  4  
 00008-001CA   452  0  
-001CC-0FFFE  65050  26  
+001CC-0FFFE  65054  22  
 10000-1FFFE  52672  12864  
 
 

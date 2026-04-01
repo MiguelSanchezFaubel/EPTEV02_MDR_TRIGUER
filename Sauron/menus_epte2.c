@@ -4481,6 +4481,7 @@ int8 menu_92(){                                     // Menú de guardado de pres
 *         - 
 */
 int8 menu_140(){                                                    // Menú de tratamiento de electroestimulación
+    i8ConfigCanal = CHB_C;                                          // TRIGUER
     if(bRefrescoPantalla){                                          // Si debo de refrescar la pantalla
         int8 i8Time_min, i8Time_seg, i8Time1_min, i8Time1_seg;      // Variables utilizadas para la asignación de tiempo
         
