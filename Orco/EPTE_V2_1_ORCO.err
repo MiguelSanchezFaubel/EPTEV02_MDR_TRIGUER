@@ -4,24 +4,24 @@
 >>> Warning 225 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\ProtocolosTest\protocolos_test.h" Line 77(22,81): Duplicate #define
 >>> Warning 208 "EPTE_V2_1_ORCO.c" Line 37(6,13): Function not void and does not return a value  initCHA
 >>> Warning 208 "EPTE_V2_1_ORCO.c" Line 40(6,17): Function not void and does not return a value  initPointer
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DIV3232)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DTOF)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@MULFF)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DIVFF)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@FLT)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@MUL1616)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@SFTOI)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@ITOF)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (read_adc_chupi_piruli)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@FTOSD)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (@ADDFF)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaIncrementosFrecuencia)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (IncrementaFrecuencia)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (ConfiguraDutyMAxyMin)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculatiempoActual)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaDutyActualAM)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (CargaPWMActual)
->>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10812(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaYCargaValorTimer1)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DIV3232)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DTOF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@MULFF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@DIVFF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@FLT)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@MUL1616)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@SFTOI)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@ITOF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (read_adc_chupi_piruli)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@FTOSD)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (@ADDFF)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaIncrementosFrecuencia)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (IncrementaFrecuencia)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (ConfiguraDutyMAxyMin)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculatiempoActual)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaDutyActualAM)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (CargaPWMActual)
+>>> Warning 216 "EPTE_V2_1_ORCO.c" Line 10836(2,3): Interrupts disabled during call to prevent re-entrancy:  (CalculaYCargaValorTimer1)
 >>> Warning 202 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Orco\EPTE_V2_1_ORCO.h" Line 472(6,16): Variable never used:   bEnviaOrco
 >>> Warning 202 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Orco\EPTE_V2_1_ORCO.h" Line 473(6,23): Variable never used:   bPrimeraIteracion
 >>> Warning 202 "C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Orco\EPTE_V2_1_ORCO.h" Line 474(6,27): Variable never used:   bComprobacionMaxValue
@@ -62,7 +62,7 @@
 >>> Warning 202 "EPTE_V2_1_ORCO.c" Line 0(0,0): Variable never used:   STOP_TEST
 >>> Warning 202 "EPTE_V2_1_ORCO.c" Line 0(0,0): Variable never used:   PROTO_TEST
 >>> Warning 202 "EPTE_V2_1_ORCO.c" Line 0(0,0): Variable never used:   PARTE_TEST
->>> Warning 202 "EPTE_V2_1_ORCO.c" Line 6730(11,27): Variable never used:   tras_i8increDuty
+>>> Warning 202 "EPTE_V2_1_ORCO.c" Line 6754(11,27): Variable never used:   tras_i8increDuty
       Memory usage:   ROM=85%      RAM=41% - 45%
       0 Errors,  65 Warnings.
 Build Successful.

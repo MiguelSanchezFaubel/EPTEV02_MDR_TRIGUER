@@ -933,105 +933,105 @@ ROM Allocation:
 00167A  @DTOF
 0016B2  CargaPWMActual
 001C36  TIMER1_isr
-00224C  TIMER4_isr
-002556  TIMER6_isr
-00274A  @MUL1616
-00276C  TIMER3_isr
-002D84  TIMER8_isr
-003152  TIMER10_isr
-00374C  @GETCH_BIU_1
-003764  checkSize
-0037FE  serial_isr
-003882  CalculaIncrementosFrecuencia
-003BE8  CalculatiempoActual
-003FC6  ConfiguraDutyMAxyMin
-0042EE  CalculaDutyActualAM
-0044EC  TIMER12_isr
-004ABC  RB0_isr
-004AC2  isVrefOK
-004CF2  @delay_ms1
-004D1C  @DIVS1616
-004D96  calibracionInicial
-004E4C  initFIFO
-004E86  initArrayComms
-004ED4  initMedidasCHA
-004F2C  initMedidasCHB
-004F82  initMedidasCHC
-004FD8  initMedidasPoi
-005030  initMedidasElectro
-00503C  @PUTCHARI_BIU_1
-005044  enviaPaquete
-005142  potencia
-00519A  obtencionChecksum
-0051A8  pausa_ms
-0051EA  control_releB
-005218  lecturaPaquete
-005CE0  @goto56659
-005D0A  @goto56673
-005D34  @goto56718
-005D5E  @goto57114
-005DA4  pausa_us
-005DCC  @WRITEBITA
-005E0E  control_DC
-005E42  apagadoCHB
-006102  apagadoCHC
-006236  envioDatos
-0062F4  Array_sort
-00644E  calculoCorriente
-00657E  printArr
-006582  calculoTension
-006672  obtencionMedidasTransistores
-006C88  comprobacionTransistores
-007700  calculoChecksum
-008224  @goto58018
-00826A  enviaPaquete
-00868A  @goto56542
-0086CE  envioDatos
-008788  @MUL3232
-0087E4  initCHB
-00A5DE  initCHC
-00C896  initPointer
-00C898  initTratamientoElec
-00CB62  @goto62431
-00CB9E  busquedaFIFO
-00CBE2  configuraDatos
-00CC18  initMedidasTB
-00CC8E  apagadoTB
-00CD64  @DIV1616
-00CDAA  initTratamientoTB
-00DADC  initMedidasGal
-00DB2A  apagadoGalvanica
-00DC08  initTratamientoGalvanica
-00DD18  apagadoMicrocorrientes
-00DDEA  initTratamientoMicrocorrientes
-00EA5A  calculoRampaDescendente
-00ECD8  prediccionCorriente
-00EF34  @goto851
-00EF62  configuraDatos
-00EFD4  redondeoI_50
-00F0B0  @SITOF
-00F100  @READBITA
+00226A  TIMER4_isr
+002574  TIMER6_isr
+002768  @MUL1616
+00278A  TIMER3_isr
+002DC2  TIMER8_isr
+003190  TIMER10_isr
+00376A  @GETCH_BIU_1
+003782  checkSize
+00381C  serial_isr
+0038A0  CalculaIncrementosFrecuencia
+003C06  CalculatiempoActual
+003FE4  ConfiguraDutyMAxyMin
+00430C  CalculaDutyActualAM
+00450A  TIMER12_isr
+004ADA  RB0_isr
+004AE0  isVrefOK
+004D10  @delay_ms1
+004D3A  @DIVS1616
+004DB4  calibracionInicial
+004E6A  initFIFO
+004EA4  initArrayComms
+004EF2  initMedidasCHA
+004F4A  initMedidasCHB
+004FA0  initMedidasCHC
+004FF6  initMedidasPoi
+00504E  initMedidasElectro
+00505A  @PUTCHARI_BIU_1
+005062  enviaPaquete
+005160  potencia
+0051B8  obtencionChecksum
+0051C6  pausa_ms
+005208  control_releB
+005236  lecturaPaquete
+005CFE  @goto40849
+005D28  @goto40867
+005D52  @goto40913
+005D7C  @goto41371
+005DC2  pausa_us
+005DEA  @WRITEBITA
+005E2C  control_DC
+005E60  apagadoCHB
+006120  apagadoCHC
+006254  envioDatos
+006312  Array_sort
+00646C  calculoCorriente
+00659C  printArr
+0065A0  calculoTension
+006690  obtencionMedidasTransistores
+006CA6  comprobacionTransistores
+00771E  calculoChecksum
+008242  @goto42323
+008288  enviaPaquete
+0086A8  @goto40728
+0086EC  envioDatos
+0087A6  @MUL3232
+008802  initCHB
+00A5FC  initCHC
+00C8B4  initPointer
+00C8B6  initTratamientoElec
+00CB80  @goto46841
+00CBBC  busquedaFIFO
+00CC00  configuraDatos
+00CC36  initMedidasTB
+00CCAC  apagadoTB
+00CD82  @DIV1616
+00CDC8  initTratamientoTB
+00DAFA  initMedidasGal
+00DB48  apagadoGalvanica
+00DC26  initTratamientoGalvanica
+00DD36  apagadoMicrocorrientes
+00DE08  initTratamientoMicrocorrientes
+00EA78  calculoRampaDescendente
+00ECF6  prediccionCorriente
+00EF52  @goto50830
+00EF80  configuraDatos
+00EFF2  redondeoI_50
+00F0CE  @SITOF
+00F11E  @READBITA
 010000  calculo_ramp
-014CB2  @goto65508
-014CEE  @goto422
-014D2A  @goto629
+014CB2  @goto49973
+014CEE  @goto50395
+014D2A  @goto50606
 014D66  obtencionMedidas
-0197FE  @goto63283
-01982C  @goto63417
-01985A  @goto63681
-019888  @goto63813
-0198B6  @goto63970
-0198E4  @goto64168
-019912  @goto64256
-019940  @goto65256
+0197FE  @goto47745
+01982C  @goto47889
+01985A  @goto48162
+019888  @goto48294
+0198B6  @goto48445
+0198E4  @goto48645
+019912  @goto48730
+019940  @goto49719
 01996E  MAIN
 01996E  @cinit1
 019DC4  @cinit2
-01C096  @goto60420
-01C0BE  @goto60496
-01C0EC  @goto60588
-01C124  @goto60659
-01C152  @goto60848
+01C096  @goto44719
+01C0BE  @goto44803
+01C0EC  @goto44898
+01C124  @goto44974
+01C152  @goto45165
 0136  StrtoulGO
 0136  StrtolGO
 C7D1  fin_obtencion
@@ -1040,24 +1040,24 @@ Project Directory:
     C:\Users\ingen\Desktop\Repositorios\EPTEV02_MDR_TRIGUER\Orco\
 
 Project Files:
-    EPTE_V2_1_ORCO.c                                        [26-mar.-26 15:07  CRC=0FD23E6B]
-    EPTE_V2_1_ORCO.h                                        [05-mar.-26 10:34  CRC=891DECD9]
-    ..\..\..\..\..\..\Program Files\PICC\Devices\18F67K22.h [08-oct.-24 13:23  CRC=96F1E4B4]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\math.h     [22-sep.-16 07:36  CRC=9CF8C837]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\stdlib.h   [21-dic.-23 13:03  CRC=9F79B83C]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\stddef.h   [05-sep.-14 10:47  CRC=897CEC6C]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\string.h   [26-mar.-15 11:34  CRC=C4814297]
-    ..\..\..\..\..\..\Program Files\PICC\Drivers\ctype.h    [03-ene.-08 13:55  CRC=2D1F019F]
-    quickSort.h                                             [30-ene.-24 08:44  CRC=8E9FB138]
-    calibracion_adc.h                                       [30-ene.-24 08:44  CRC=DBA1A86A]
-    ..\ComLib\comunicacion_struct.c                         [05-mar.-26 08:53  CRC=3A7DE651]
-    ..\ComLib\comunicacion_struct.h                         [30-ene.-24 08:44  CRC=A7019576]
-    ..\ProtocolosTest\protocolos_test.h                     [30-ene.-24 08:44  CRC=6E2852DA]
+    EPTE_V2_1_ORCO.c                                        [08-may.-26 14:34  CRC=1DD0C530]
+    EPTE_V2_1_ORCO.h                                        [05-mar.-26 11:34  CRC=891DECD9]
+    ..\..\..\..\..\..\Program Files\PICC\Devices\18F67K22.h [08-oct.-24 14:23  CRC=96F1E4B4]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\math.h     [22-sep.-16 08:36  CRC=9CF8C837]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\stdlib.h   [21-dic.-23 14:03  CRC=9F79B83C]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\stddef.h   [05-sep.-14 11:47  CRC=897CEC6C]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\string.h   [26-mar.-15 12:34  CRC=C4814297]
+    ..\..\..\..\..\..\Program Files\PICC\Drivers\ctype.h    [03-ene.-08 14:55  CRC=2D1F019F]
+    quickSort.h                                             [30-ene.-24 09:44  CRC=8E9FB138]
+    calibracion_adc.h                                       [30-ene.-24 09:44  CRC=DBA1A86A]
+    ..\ComLib\comunicacion_struct.c                         [05-mar.-26 09:53  CRC=3A7DE651]
+    ..\ComLib\comunicacion_struct.h                         [30-ene.-24 09:44  CRC=A7019576]
+    ..\ProtocolosTest\protocolos_test.h                     [30-ene.-24 09:44  CRC=6E2852DA]
 
-Source signature=0F833C2A
+Source signature=1D81C2EF
 Program memory checksum=0000
 Program memory CRC=0000
-Hex file CRC=E729
+Hex file CRC=907D
 
 Units:
     EPTE_V2_1_ORCO (main)
@@ -1071,7 +1071,7 @@ Compiler Settings:
     Float,Double:   32,32
     Compile Mode:       CCS5
     Predefined symbols:
-       #define __BUILDCOUNT__ 3407
+       #define __BUILDCOUNT__ 3412
 
 Output Files:
     XREF file:   EPTE_V2_1_ORCO.xsym

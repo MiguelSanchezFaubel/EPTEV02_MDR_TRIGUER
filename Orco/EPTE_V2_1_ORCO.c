@@ -468,7 +468,7 @@ void  TIMER7_isr(void){
     TIMER7_ON=0;                                // Deshabilito Timer 7
     clear_interrupt(INT_TIMER7);                // Limpiamos interrupciones timer 12
     set_timer7((int16)gi16Timer7);              // Recargo Timer 7
-    output_high(PULSO_2p_CHA);                   // TRIGUER
+    output_high(PULSO_2p_CHA);                  // TRIGUER
 }
 // Frecuencia del canal B
 // IMPORTANTE: Debido a que el Timer 1 solo nos permite una frecuencia m�nima de ~30 Hz, 
@@ -824,8 +824,19 @@ void  TIMER1_isr(void){
             // Posible solucion: reset contador de pulsos
             
             //i16NPulsosBurstRestanteTB=i16NPulsosBurstTB;
-         
+
+            
             if(i8NBurstTrenRestanteTB>0){
+                // TRIGUER THETA -----------------------------------------------------------------------------------------------------------------------------
+                gi16Timer7=65536-(500*16)+88;
+                TIMER7_ON=0;                                                    // Detenemos timer5  
+                set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+                clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+                enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+                
+                output_low(PULSO_2p_CHA);                  
+                TIMER7_ON=1;   
+                // TRIGUSER THETA-----------------------------------------------------------------------------------------------------------------------------
 
                 output_low(PULSO_2m_CHC);                               // Nivel bajo pulso 2 negativo canal C
                                                
@@ -1545,11 +1556,22 @@ void  TIMER3_isr(void){
                 output_high(PULSO_1p_CHC);      // Activo pulso positivo
                 
                 TIMER8_ON=1;                    // Habilito Timer 8
-           
+            
             }else{
                
                 TIMER3_ON=0;
 
+                // TRIGUER THETA -----------------------------------------------------------------------------------------------------------------------------
+                gi16Timer7=65536-(500*16)+88;
+                TIMER7_ON=0;                                                    // Detenemos timer5  
+                set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+                clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+                enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+                
+                output_low(PULSO_2p_CHA);                  
+                TIMER7_ON=1;   
+                // TRIGUSER THETA-----------------------------------------------------------------------------------------------------------------------------
+                
                 if(i8NTrenesRestanteTB<=1 && i8NBurstTrenRestanteTB<=1){
 
                     TIMER0_ON=0;
@@ -2168,14 +2190,14 @@ void  TIMER10_isr(void){
                 bMedidaActualizada[CHC_C]=1;
                 
                 // TRIGUER THETA -----------------------------------------------------------------------------------------------------------------------------
-                gi16Timer7=65536-(500*16)+88;
-                TIMER7_ON=0;                                                    // Detenemos timer5  
-                set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
-                clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
-                enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+                // gi16Timer7=65536-(500*16)+88;
+                // TIMER7_ON=0;                                                    // Detenemos timer5  
+                // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+                // clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+                // enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
                 
-                output_low(PULSO_2p_CHA);                  
-                TIMER7_ON=1;   
+                // output_low(PULSO_2p_CHA);                  
+                // TIMER7_ON=1;   
                 // TRIGUSER THETA-----------------------------------------------------------------------------------------------------------------------------
                 
            
