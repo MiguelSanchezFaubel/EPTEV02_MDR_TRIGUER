@@ -20,7 +20,7 @@
    ³  ³  ÃÄinitMedidasCHC  0/86  Ram=2
    ³  ³  ÀÄinitMedidasPoi  0/88  Ram=2
    ³  ÃÄlecturaPaquete  0/2760  Ram=18
-   ³  ³  ÃÄ@goto41371  0/70  Ram=0
+   ³  ³  ÃÄ@goto50859  0/70  Ram=0
    ³  ³  ÃÄenviaPaquete  0/254  Ram=4
    ³  ³  ³  ÃÄ@PUTCHARI_BIU_1  0/8  Ram=0
    ³  ³  ³  ÃÄ@PUTCHARI_BIU_1  0/8  Ram=0
@@ -40,11 +40,11 @@
    ³  ³  ³  ÃÄ@PUTCHARI_BIU_1  0/8  Ram=0
    ³  ³  ³  ÃÄ@PUTCHARI_BIU_1  0/8  Ram=0
    ³  ³  ³  ÀÄ@PUTCHARI_BIU_1  0/8  Ram=0
-   ³  ³  ÃÄ@goto40849  0/42  Ram=0
-   ³  ³  ÃÄ@goto40867  0/42  Ram=0
+   ³  ³  ÃÄ@goto50374  0/42  Ram=0
+   ³  ³  ÃÄ@goto50388  0/42  Ram=0
    ³  ³  ÃÄpotencia  0/88  Ram=5
    ³  ³  ³  ÀÄ@MUL1616  0/34  Ram=5
-   ³  ³  ÃÄ@goto40913  0/42  Ram=0
+   ³  ³  ÃÄ@goto50448  0/42  Ram=0
    ³  ³  ÃÄenviaPaquete  0/254  Ram=4
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
@@ -96,7 +96,7 @@
    ³  ³  ÀÄenviaPaquete  0/254  Ram=4
    ³  ³     ÀÄ*
    ³  ÃÄapagadoCHA  0/2  Ram=0
-   ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ÃÄinitFIFO  0/58  Ram=3
    ³  ³  ÃÄ@SFTOI  0/60  Ram=4
    ³  ³  ÃÄ@SFTOI  0/60  Ram=4
@@ -117,20 +117,20 @@
    ³  ³  ÃÄcontrol_DC  0/52  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÀÄinitMedidasCHC  0/86  Ram=2
-   ³  ÃÄ@goto44719  1/40  Ram=0
+   ³  ÃÄ@goto54260  1/40  Ram=0
    ³  ÃÄapagadoCHA  0/2  Ram=0
-   ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄapagadoCHC  0/308  Ram=1
    ³  ³  ÀÄ*
    ³  ÃÄapagadoCHA  0/2  Ram=0
    ³  ÃÄapagadoCHA  0/2  Ram=0
-   ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄapagadoCHC  0/308  Ram=1
    ³  ³  ÀÄ*
    ³  ÃÄapagadoCHA  0/2  Ram=0
-   ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄapagadoCHC  0/308  Ram=1
    ³  ³  ÀÄ*
@@ -262,7 +262,7 @@
    ³  ³  ³  ÃÄenviaPaquete  0/1056  Ram=16
    ³  ³  ³  ³  ÃÄ@PUTCHARI_BIU_1  0/8  Ram=0
    ³  ³  ³  ³  ÃÄcalculoChecksum  0/2852  Ram=8
-   ³  ³  ³  ³  ³  ÃÄ@goto42323  0/70  Ram=0
+   ³  ³  ³  ³  ³  ÃÄ@goto51784  0/70  Ram=0
    ³  ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
    ³  ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
    ³  ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
@@ -287,7 +287,7 @@
    ³  ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
    ³  ³  ³  ³  ³  ÃÄobtencionChecksum  0/14  Ram=2
    ³  ³  ³  ³  ³  ÀÄobtencionChecksum  0/14  Ram=2
-   ³  ³  ³  ³  ÃÄ@goto40728  0/68  Ram=0
+   ³  ³  ³  ³  ÃÄ@goto50250  0/68  Ram=0
    ³  ³  ³  ³  ÃÄ@PUTCHARI_BIU_1  0/8  Ram=0
    ³  ³  ³  ³  ÃÄ@PUTCHARI_BIU_1  0/8  Ram=0
    ³  ³  ³  ³  ÃÄ@PUTCHARI_BIU_1  0/8  Ram=0
@@ -307,7 +307,7 @@
    ³  ³  ³  ³  ÀÄ@PUTCHARI_BIU_1  0/8  Ram=0
    ³  ³  ³  ÀÄlecturaPaquete  0/2760  Ram=18
    ³  ³  ³     ÀÄ*
-   ³  ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄenvioDatos  0/190  Ram=2
    ³  ³  ³  ÀÄ*
@@ -451,9 +451,9 @@
    ³  ³  ÃÄpausa_us  0/40  Ram=4
    ³  ³  ÃÄread_adc_chupi_piruli  0/84  Ram=4
    ³  ³  ÀÄinitMedidasCHB  0/86  Ram=2
-   ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ÀÄ*
-   ³  ÃÄ@goto44803  1/46  Ram=0
+   ³  ÃÄ@goto54340  1/46  Ram=0
    ³  ÃÄ@ITOF  0/54  Ram=2
    ³  ÃÄCalculaIncrementosFrecuencia  0/870  Ram=8
    ³  ³  ÃÄ@ITOF  0/54  Ram=2
@@ -797,7 +797,7 @@
    ³  ³  ÀÄ*
    ³  ÃÄpausa_us  0/40  Ram=4
    ³  ÃÄinitTratamientoElec  0/714  Ram=1
-   ³  ³  ÃÄ@goto46841  0/60  Ram=0
+   ³  ³  ÃÄ@goto56355  0/60  Ram=0
    ³  ³  ÃÄinitCHA  0/2  Ram=0
    ³  ³  ÃÄinitCHB  0/7674  Ram=13
    ³  ³  ³  ÀÄ*
@@ -831,11 +831,11 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÀÄinitPointer  0/2  Ram=0
    ³  ÃÄapagadoCHA  0/2  Ram=0
-   ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ÀÄ*
    ³  ÃÄapagadoCHC  0/308  Ram=1
    ³  ³  ÀÄ*
-   ³  ÃÄ@goto44898  1/56  Ram=0
+   ³  ÃÄ@goto54439  1/56  Ram=0
    ³  ÃÄ@MUL3232  0/92  Ram=14
    ³  ÃÄ@MUL3232  0/92  Ram=14
    ³  ÃÄ@MUL3232  0/92  Ram=14
@@ -848,9 +848,9 @@
    ³  ÃÄ@DIV3232  0/148  Ram=13
    ³  ÃÄ@DIV3232  0/148  Ram=13
    ³  ÃÄ@DIV3232  0/148  Ram=13
-   ³  ÃÄ@goto45165  1/60  Ram=0
+   ³  ÃÄ@goto54706  1/60  Ram=0
    ³  ÃÄcalculo_ramp  1/19634  Ram=4
-   ³  ³  ÃÄ@goto49973  1/60  Ram=0
+   ³  ³  ÃÄ@goto59373  1/60  Ram=0
    ³  ³  ÃÄ@MUL1616  0/34  Ram=5
    ³  ³  ÃÄ@ITOF  0/54  Ram=2
    ³  ³  ÃÄ@ADDFF  0/632  Ram=16
@@ -951,7 +951,7 @@
    ³  ³  ÃÄ@ADDFF  0/632  Ram=16
    ³  ³  ÃÄ@DIVFF  0/350  Ram=14
    ³  ³  ÃÄ@SFTOI  0/60  Ram=4
-   ³  ³  ÃÄ@goto50395  1/60  Ram=0
+   ³  ³  ÃÄ@goto59816  1/60  Ram=0
    ³  ³  ÃÄ@ITOF  0/54  Ram=2
    ³  ³  ÃÄ@MUL1616  0/34  Ram=5
    ³  ³  ÃÄ@MUL1616  0/34  Ram=5
@@ -1132,7 +1132,7 @@
    ³  ³  ÃÄ@ADDFF  0/632  Ram=16
    ³  ³  ÃÄ@ITOF  0/54  Ram=2
    ³  ³  ÃÄ@DIVFF  0/350  Ram=14
-   ³  ³  ÃÄ@goto50606  1/60  Ram=0
+   ³  ³  ÃÄ@goto60033  1/60  Ram=0
    ³  ³  ÃÄ@ITOF  0/54  Ram=2
    ³  ³  ÃÄ@MUL1616  0/34  Ram=5
    ³  ³  ÃÄ@ITOF  0/54  Ram=2
@@ -1174,7 +1174,7 @@
    ³  ÃÄcalculo_ramp  1/19634  Ram=4
    ³  ³  ÀÄ*
    ³  ÃÄpausa_us  0/40  Ram=4
-   ³  ÃÄ@goto44974  1/46  Ram=0
+   ³  ÃÄ@goto54512  1/46  Ram=0
    ³  ÃÄ@ITOF  0/54  Ram=2
    ³  ÃÄCalculaIncrementosFrecuencia  0/870  Ram=8
    ³  ³  ÀÄ*
@@ -1450,7 +1450,7 @@
    ³  ÃÄpausa_us  0/40  Ram=4
    ³  ÃÄread_adc_chupi_piruli  0/84  Ram=4
    ³  ÃÄobtencionMedidas  1/19096  Ram=79
-   ³  ³  ÃÄ@goto47745  1/46  Ram=0
+   ³  ³  ÃÄ@goto57235  1/46  Ram=0
    ³  ³  ÃÄ@MUL1616  0/34  Ram=5
    ³  ³  ÃÄ@SFTOI  0/60  Ram=4
    ³  ³  ÃÄ@SFTOI  0/60  Ram=4
@@ -1487,9 +1487,9 @@
    ³  ³  ÃÄ@FLT  0/122  Ram=10
    ³  ³  ÃÄ@FLT  0/122  Ram=10
    ³  ³  ÃÄ@FLT  0/122  Ram=10
-   ³  ³  ÃÄ@goto47889  1/46  Ram=0
+   ³  ³  ÃÄ@goto57364  1/46  Ram=0
    ³  ³  ÃÄprediccionCorriente  0/604  Ram=9
-   ³  ³  ³  ÃÄ@goto50830  0/46  Ram=0
+   ³  ³  ³  ÃÄ@goto60258  0/46  Ram=0
    ³  ³  ³  ÃÄ@ITOF  0/54  Ram=2
    ³  ³  ³  ÃÄ@MULFF  0/246  Ram=11
    ³  ³  ³  ÃÄ@ADDFF  0/632  Ram=16
@@ -1540,7 +1540,7 @@
    ³  ³  ÃÄ@FLT  0/122  Ram=10
    ³  ³  ÃÄ@FLT  0/122  Ram=10
    ³  ³  ÃÄ@FLT  0/122  Ram=10
-   ³  ³  ÃÄ@goto48162  1/46  Ram=0
+   ³  ³  ÃÄ@goto57628  1/46  Ram=0
    ³  ³  ÃÄconfiguraDatos  0/54  Ram=3
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄ@SFTOI  0/60  Ram=4
@@ -1574,7 +1574,7 @@
    ³  ³  ÃÄ@FLT  0/122  Ram=10
    ³  ³  ÃÄ@FLT  0/122  Ram=10
    ³  ³  ÃÄ@FLT  0/122  Ram=10
-   ³  ³  ÃÄ@goto48294  1/46  Ram=0
+   ³  ³  ÃÄ@goto57759  1/46  Ram=0
    ³  ³  ÃÄconfiguraDatos  0/54  Ram=3
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄcalculo_ramp  1/19634  Ram=4
@@ -1608,7 +1608,7 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄ@FLT  0/122  Ram=10
    ³  ³  ÃÄ@FLT  0/122  Ram=10
-   ³  ³  ÃÄ@goto48445  1/46  Ram=0
+   ³  ³  ÃÄ@goto57914  1/46  Ram=0
    ³  ³  ÃÄconfiguraDatos  0/54  Ram=3
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄcalculo_ramp  1/19634  Ram=4
@@ -1680,13 +1680,13 @@
    ³  ³  ÃÄ@MULFF  0/246  Ram=11
    ³  ³  ÃÄ@SITOF  0/80  Ram=2
    ³  ³  ÃÄ@FLT  0/122  Ram=10
-   ³  ³  ÃÄ@goto48645  1/46  Ram=0
+   ³  ³  ÃÄ@goto58101  1/46  Ram=0
    ³  ³  ÃÄenvioDatos  0/186  Ram=1
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄapagadoCHA  0/2  Ram=0
    ³  ³  ÃÄenvioDatos  0/186  Ram=1
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄenvioDatos  0/186  Ram=1
    ³  ³  ³  ÀÄ*
@@ -1717,13 +1717,13 @@
    ³  ³  ÃÄ@MULFF  0/246  Ram=11
    ³  ³  ÃÄ@SITOF  0/80  Ram=2
    ³  ³  ÃÄ@FLT  0/122  Ram=10
-   ³  ³  ÃÄ@goto48730  1/46  Ram=0
+   ³  ³  ÃÄ@goto58182  1/46  Ram=0
    ³  ³  ÃÄenvioDatos  0/186  Ram=1
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄapagadoCHA  0/2  Ram=0
    ³  ³  ÃÄenvioDatos  0/186  Ram=1
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄapagadoCHB  0/704  Ram=2
+   ³  ³  ÃÄapagadoCHB  0/674  Ram=2
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄenvioDatos  0/186  Ram=1
    ³  ³  ³  ÀÄ*
@@ -1798,7 +1798,7 @@
    ³  ³  ³  ÀÄ*
    ³  ³  ÃÄconfiguraDatos  0/54  Ram=3
    ³  ³  ³  ÀÄ*
-   ³  ³  ÃÄ@goto49719  1/46  Ram=0
+   ³  ³  ÃÄ@goto59139  1/46  Ram=0
    ³  ³  ÃÄ@MULFF  0/246  Ram=11
    ³  ³  ÃÄ@SFTOI  0/60  Ram=4
    ³  ³  ÃÄ@MULFF  0/246  Ram=11
@@ -1872,7 +1872,7 @@
    ³  ÃÄread_adc_chupi_piruli  0/84  Ram=4
    ³  ÀÄread_adc_chupi_piruli  0/84  Ram=4
    ÃÄTIMER7_isr  0/28  Ram=0
-   ÃÄTIMER1_isr  0/1588  Ram=4
+   ÃÄTIMER1_isr  0/1616  Ram=4
    ³  ÃÄ@ITOF  0/54  Ram=2
    ³  ÃÄ@DIVFF  0/350  Ram=14
    ³  ÃÄIncrementaFrecuencia  0/980  Ram=8

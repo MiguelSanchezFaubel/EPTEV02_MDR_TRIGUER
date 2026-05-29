@@ -628,6 +628,19 @@ void  TIMER1_isr(void){
 
         if(TRATAMIENTO_ELECTRO == i8TratamientoSeleccionado){   // Si estamos en un tratamiento de electroestimulaci�n
 
+            // TRIGUER CANAL B NEW------------------------------------------------------------------------------------------------------------
+            
+            enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+            TIMER7_ON=0;                                                    // Detenemos timer5  
+            clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+            set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+            output_low(PULSO_2p_CHA);                  
+            TIMER7_ON=1;                                                    // Detenemos timer5  
+            i8TriggerMode = 0;
+            
+            // TRIGUER CANAL B ------------------------------------------------------------------------------------------------------------
+
+
             if((i8CanalesActivados == CANALES_ABC) && (i16frecElec[CHA_C]==i16frecElec[CHB_C])&&(i16frecElec[CHB_C]==i16frecElec[CHC_C])){  // Si los 3 canales se encuentran activados y con la misma frecuencia
                 bDeboResincronizarC=1;          // Indico que debo resincronizar el canal C
             }
@@ -893,6 +906,7 @@ void TIMER4_isr(void){
          
         
         if(TRATAMIENTO_ELECTRO == i8TratamientoSeleccionado){ 
+
 
             if(i16PW_plusElec[CHB_C]>=125){                                 // Si el PW es mayor o igual de 125uS, tomo medida de tensión y de corriente del pulso POSITIVO
 
@@ -2189,18 +2203,6 @@ void  TIMER10_isr(void){
                 bImpedirIncremento=1;
                 bMedidaActualizada[CHC_C]=1;
                 
-                // TRIGUER THETA -----------------------------------------------------------------------------------------------------------------------------
-                // gi16Timer7=65536-(500*16)+88;
-                // TIMER7_ON=0;                                                    // Detenemos timer5  
-                // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
-                // clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
-                // enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
-                
-                // output_low(PULSO_2p_CHA);                  
-                // TIMER7_ON=1;   
-                // TRIGUSER THETA-----------------------------------------------------------------------------------------------------------------------------
-                
-           
             }
             bMedidaCorrienteC=1;            // Avisamos de que ya se puede procesar la medida       
         }
@@ -3041,7 +3043,7 @@ void main(){
                                                 case CANALES_B:         // Canal B
                                                     //output_high(SINCRONIZACION);
                                                 
-                                                 
+
                                                     bPulsoB=1;
                                                    
                                                     output_low(PULSO_2m_CHB);               // Me aseguro de que se encuentra a nivel bajo para que no haya un corto  
@@ -4461,17 +4463,17 @@ void apagadoCHA(){
 
 void apagadoCHB(){
     
-    //TRIGUER
+    //TRIGUER CANAL B
     
-    gi16Timer7=65536-(500*16)+88;
-    TIMER7_ON=0;                                                    // Detenemos timer5  
-    set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
-    clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
-    enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
+    // gi16Timer7=65536-(500*16)+88;
+    // TIMER7_ON=0;                                                    // Detenemos timer5  
+    // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer5
+    // clear_interrupt(INT_TIMER7);                                    // Limpia flags interrupciones
+    // enable_interrupts(INT_TIMER7);                                  // Habilita interrupciones
     
-    output_low(PULSO_2p_CHA);                   // TRIGUER
-    TIMER7_ON=1;                                                    // Detenemos timer5  
-    //TRIGUER
+    // output_low(PULSO_2p_CHA);                   // TRIGUER
+    // TIMER7_ON=1;                                                    // Detenemos timer5  
+    //TRIGUER CANAL B
 
     disable_interrupts(INT_TIMER1);             // Deshabilita interrupciones          
     disable_interrupts(INT_TIMER4);             // Deshabilita interrupciones          
@@ -5315,7 +5317,7 @@ int8 initTratamientoElec(){
 
     //output_low(SINCRONIZACION);             // DEBUG
     int8 i8Return=RETURN_FUNC_ERROR;
-    // i8TriggerMode = 2;                      // Activamos el triger deelectro  TRIGUER
+
     if(!bCanalesInicializados[CHA_C]){
         bMedidaCorriente[CHA_C]=0;              // Flag que indica medida para procesar CHA
         bErrorElectrodoA=0;               // Flag que indica error de electrodo CHA
@@ -5616,7 +5618,7 @@ int8 initCHA(){
     //             // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
     //             // TIMER7_ON=0;                                                    // Detenemos timer7 
     //             // gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
-    //             // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
+    //             // set_timer((int16)gi16Timer7);                                  // Cargamos valor del timer7
 
     //             // Configuracion PW negativo ChA--> TMR7  
     //             // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
@@ -5636,7 +5638,7 @@ int8 initCHA(){
     //                 gi16Timer7=65536-(65536*fCargaTimer7);          // Calculo del valor a cargar segun el PW en uSg offset=40
     //             }
     //             TIMER7_ON=0;                                                        // Detenemos timer5  
-    //             set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
+    //             set_timer((int16)gi16Timer7);                                      // Cargamos valor del timer5
     //             i8ContTimer7=0;
     //         }
             
@@ -5712,7 +5714,7 @@ int8 initCHA(){
     //         // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
     //         // TIMER7_ON=0;                                                    // Detenemos timer7 
     //         // gi16Timer7=65536-(I16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
-    //         // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
+    //         // set_timer((int16)gi16Timer7);                                  // Cargamos valor del timer7
 
     //         // Configuracion PW negativo ChA--> TMR7
     //         // Added 31/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
@@ -5732,7 +5734,7 @@ int8 initCHA(){
     //             gi16Timer7=65536-(65536*fCargaTimer7);          // Calculo del valor a cargar segun el PW en uSg offset=40
     //         }
     //         TIMER7_ON=0;                                                        // Detenemos timer5  
-    //         set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
+    //         set_timer((int16)gi16Timer7);                                      // Cargamos valor del timer5
     //     }
         
     //     // Activar timers correspondientes
@@ -5776,7 +5778,7 @@ int8 initCHB(){
     int32 i32PW_minusElecCargaTimer=i16PW_minusElec[CHB_C];
 
 
-    //TRIGUER
+    //TRIGUER CANAL B
     i8TriggerMode = 2;  
     
     gi16Timer7=65536-(500*16)+88;
@@ -5787,7 +5789,7 @@ int8 initCHB(){
     
     // output_low(PULSO_2p_CHA);                   // TRIGUER
     // TIMER7_ON=1;                                                    // Detenemos timer5  
-    //TRIGUER
+    //TRIGUER CANAL B
 
     if(i16PW_plusElec[CHB_C]>=125){ // Si el PW de CHA es mayorde 125 µs, la medida de la tension y la corriente se realiza al final del pulso
     
@@ -6661,7 +6663,7 @@ int8 initPointer(){
     //     // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
     //     // TIMER7_ON=0;                                                    // Detenemos timer7 
     //     // gi16Timer7=65536-(i16PW_minusElecCargaTimer*16)+88;                    // Calculo del valor a cargar segun el PW en uSg offset=90
-    //     // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
+    //     // set_timer((int16)gi16Timer7);                                  // Cargamos valor del timer7
 
     //     // Configuracion PW negativo ChA--> TMR7  
     //     // Added 30/03/2022 Para un PW mayor de 4096uS, es necesario crear una variable que permite disparar los timers varias veces
@@ -6671,7 +6673,7 @@ int8 initPointer(){
     //     i8DivTimer7=0;
         
     //     TIMER7_ON=0;                                                        // Detenemos timer5  
-    //     set_timer7((int16)gi16Timer7);                                      // Cargamos valor del timer5
+    //     set_timer((int16)gi16Timer7);                                      // Cargamos valor del timer5
     //     i8ContTimer7=0;
             
     //     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -6682,7 +6684,7 @@ int8 initPointer(){
     //     // setup_timer_7(T7_INTERNAL | T7_DIV_BY_1);                       // Configuracion con 16 bits y resolucion de 62.5nSg
     //     // TIMER7_ON=0;                                                    // Detenemos timer7 
     //     // gi16Timer7=65536-(i16PW_minusElecCargaTimer*16)+88;            // Calculo del valor a cargar segun el PW en uSg offset=90
-    //     // set_timer7((int16)gi16Timer7);                                  // Cargamos valor del timer7
+    //     // set_timer((int16)gi16Timer7);                                  // Cargamos valor del timer7
 
         
     //     // Activar timers correspondientes

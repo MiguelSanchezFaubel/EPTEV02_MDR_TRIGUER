@@ -1,5 +1,5 @@
 
-ROM used:   111332/131072 (85%)
+ROM used:   111330/131072 (85%)
             115086/131072 (88%) including unused fragments
 
             5.6 Average locations per line
@@ -31,36 +31,36 @@ Lines Stmts  %   Files
 
 Page ROM  %  RAM    Vol Diff  Functions:
 ---- --- --- ---    --- ----  ----------
-0     42   0    1   1251  7.3  @delay_ms1
+0     42   0    1             @delay_ms1
 0     36   0    1             @delay_us1
 0      8   0    0             @PUTCHARI_BIU_1
 0     24   0    0             @GETCH_BIU_1
-0    122   0   10   1251  7.3  @FLT
-0     60   0    4   1251  7.3  @SFTOI
+0    122   0   10             @FLT
+0     60   0    4             @SFTOI
 0     54   0    2             @ITOF
 0    246   0   11             @MULFF
-0    632   1   16   1251  7.3  @ADDFF
-0    350   0   14   1251  7.3  @DIVFF
-0     80   0    2   1251  7.3  @SITOF
-0    122   0    6   1251  7.3  @DIVS1616
-0     92   0   14   1251  7.3  @MUL3232
-0     70   0    5   1251  7.3  @DIV1616
-0     34   0    5   1251  7.3  @MUL1616
+0    632   1   16             @ADDFF
+0    350   0   14             @DIVFF
+0     80   0    2             @SITOF
+0    122   0    6             @DIVS1616
+0     92   0   14             @MUL3232
+0     70   0    5             @DIV1616
+0     34   0    5             @MUL1616
 0    346   0   14    487  7.0  Array_sort
 0      4   0    3     27  1.3  printArr
 0    182   0    5    483  5.5  calibracionInicial
 0     84   0    4    233  5.2  read_adc_chupi_piruli
 0   1056   1   16   5169 10.5  enviaPaquete
-0     68   0    0             @goto40728
+0     68   0    0             @goto50250
 0    254   0    4   1412  6.9  enviaPaquete
 0   2760   3   18  14844 13.7  lecturaPaquete
-0     42   0    0             @goto40849
-0     42   0    0             @goto40867
-0     42   0    0             @goto40913
-0     70   0    0             @goto41371
+0     42   0    0             @goto50374
+0     42   0    0             @goto50388
+0     42   0    0             @goto50448
+0     70   0    0             @goto50859
 0     14   0    2     39  2.0  obtencionChecksum
 0   2852   3    8  22661  8.0  calculoChecksum
-0     70   0    0             @goto42323
+0     70   0    0             @goto51784
 0     68   0    4    258  6.2  busquedaFIFO
 0     54   0    3    176  4.0  configuraDatos
 0    114   0    4    406  5.8  configuraDatos
@@ -87,7 +87,7 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0    614   1    0   2951  9.4  TIMER0_isr
 0    658   1    0   2853  7.0  TIMER5_isr
 0     28   0    0     84  1.7  TIMER7_isr
-0   1588   2    4   7036 11.5  TIMER1_isr
+0   1616   2    4   7338 11.5  TIMER1_isr
 0    778   1    0   3370  6.4  TIMER4_isr
 0    500   1    0   1968  6.4  TIMER6_isr
 0   1592   2    4   6597 12.0  TIMER3_isr
@@ -98,50 +98,50 @@ Page ROM  %  RAM    Vol Diff  Functions:
 0     56   0    4             @DTOF
 0      6   0    0      3  0.0  RB0_isr
 1  10024  11    7  47515 16.6  MAIN
-1     40   0    0             @goto44719
-1     46   0    0             @goto44803
-1     56   0    0             @goto44898
-1     46   0    0             @goto44974
-1     60   0    0             @goto45165
+1     40   0    0             @goto54260
+1     46   0    0             @goto54340
+1     56   0    0             @goto54439
+1     46   0    0             @goto54512
+1     60   0    0             @goto54706
 0     66   0    6             @WRITEBITA
 0    210   0    1   1460  3.5  apagadoMicrocorrientes
 0    222   0    1   1289  4.9  apagadoGalvanica
 0    214   0    1   1371  4.5  apagadoTB
 0      2   0    0      3  0.0  apagadoCHA
-0    704   1    2   3241  9.7  apagadoCHB
+0    674   1    2   2900  8.1  apagadoCHB
 0    308   0    1   2101  7.1  apagadoCHC
 0   3184   3    3   9462  9.5  initTratamientoMicrocorrientes
 0    272   0    2   1364  5.9  initTratamientoGalvanica
 0   3378   4    7   5830 10.6  initTratamientoTB
 0    714   1    1   5451  7.4  initTratamientoElec
-0     60   0    0             @goto46841
+0     60   0    0             @goto56355
 0      2   0    0      3  0.0  initCHA
 0   7674   8   13  13200 12.8  initCHB
 0   8888  10   13  12891 13.3  initCHC
 0      2   0    0      3  0.0  initPointer
 0    304   0   10    125  3.0  calculoCorriente
 1  19096  21   79  80436 18.6  obtencionMedidas
-1     46   0    0             @goto47745
-1     46   0    0             @goto47889
-1     46   0    0             @goto48162
-1     46   0    0             @goto48294
-1     46   0    0             @goto48445
-1     46   0    0             @goto48645
-1     46   0    0             @goto48730
+1     46   0    0             @goto57235
+1     46   0    0             @goto57364
+1     46   0    0             @goto57628
+1     46   0    0             @goto57759
+1     46   0    0             @goto57914
+1     46   0    0             @goto58101
+1     46   0    0             @goto58182
 0     56   0    5             @READBITA
-1     46   0    0             @goto49719
+1     46   0    0             @goto59139
 0     52   0    2     47  1.8  control_DC
 0     40   0    4     92  3.2  pausa_us
 0    240   0   11    165  4.2  calculoTension
 1  19634  21    4  38783 11.5  calculo_ramp
-1     60   0    0             @goto49973
-1     60   0    0             @goto50395
-1     60   0    0             @goto50606
+1     60   0    0             @goto59373
+1     60   0    0             @goto59816
+1     60   0    0             @goto60033
 0    220   0    6     68  2.7  redondeoI_50
 0     46   0    1    170  2.7  control_releB
 0    560   1   12   1004  9.1  isVrefOK
 0    604   1    9    399  5.6  prediccionCorriente
-0     46   0    0             @goto50830
+0     46   0    0             @goto60258
 0     66   0    6    163  3.5  pausa_ms
 0     88   0    5    227  6.5  potencia
 0   2680   3    2   6789  9.9  comprobacionTransistores
@@ -158,23 +158,23 @@ Page ROM  %  RAM    Vol Diff  Functions:
  Inline         0             @cinit1
 
 Program metrics:
-    Functions               84
+    Functions               74
     Statements              8113
-    Comments                7280
-    Volume (V)              529999
-    Difficulty (D)          548.5
-    Effort to implement (E) 290710664
-    Time to implement (T)   4486 hours, 17 minutes
-    Est Delivered Bugs (B)  146
-    Cyclomatic Complexity   1239
-    Maintainability (MI)    96
+    Comments                7278
+    Volume (V)              500221
+    Difficulty (D)          475.7
+    Effort to implement (E) 237950811
+    Time to implement (T)   3672 hours, 5 minutes
+    Est Delivered Bugs (B)  128
+    Cyclomatic Complexity   1189
+    Maintainability (MI)    62
 
  Segment     Used  Free
 -----------  ----  ----
 00000-00002     4  0  
 00004-00006     4  0  
 00008-00140   314  0  
-00142-0FFFE  61460  3754  
+00142-0FFFE  61458  3756  
 10000-1FFFE  49550  15986  
 
 
